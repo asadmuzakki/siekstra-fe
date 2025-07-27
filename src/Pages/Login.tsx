@@ -7,6 +7,7 @@ import Popup from "../Components/Popup";
 import * as Auth from "../Hooks/useAuth";
 import { useGlobalContext } from "../Context/Context";
 import { useCookies } from "react-cookie";
+import Logo from '../assets/logo.png'
 
 const Login = () => {
   const { state } = useGlobalContext();
@@ -37,7 +38,7 @@ const Login = () => {
             cookie.role === "admin"
               ? "/dashboard-admin"
               : cookie.role === "tutor"
-              ? "/dashboard-tutor"
+              ? "/tutor-siswa"
               : "/dashboard-anak"
           }
           isSuccess={true}
@@ -57,9 +58,9 @@ const Login = () => {
       )}
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl flex flex-col items-center p-8 sm:p-12">
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrb7jv0MhppoJfDAyM8m_IUOVH4Cep3dPUTHNMhOMA3g&s&ec=72940543"
+          src={Logo}
           alt="Logo"
-          className="w-28 mb-6"
+          className="w- mb-6"
         />
 
         <h1 className="text-3xl font-bold text-gray-800 text-center">
