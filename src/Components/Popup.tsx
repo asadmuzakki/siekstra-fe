@@ -9,6 +9,7 @@ type PopupType = {
   isSuccess: boolean;
   stateName?: string;
   stateConcition?:boolean
+  reload?:boolean
 };
 const Popup: React.FC<PopupType> = ({
   label,
@@ -16,7 +17,8 @@ const Popup: React.FC<PopupType> = ({
   navigateTo,
   isSuccess,
   stateConcition,
-  stateName
+  stateName,
+  reload
 }) => {
   const navigate = useNavigate();
   const { stateHandle } = useGlobalContext();
@@ -43,6 +45,10 @@ const Popup: React.FC<PopupType> = ({
             {/* Tombol Oke */}
             <button
               onClick={() => {
+                if(reload){
+                  window.location.reload()
+                  return
+                }
                 navigate(`${navigateTo}`);
                 stateHandle(`${stateName}`, false);
               }}

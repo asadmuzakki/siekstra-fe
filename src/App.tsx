@@ -21,13 +21,20 @@ import TutorPresensi from "./Pages/tutor/TutorPresensi";
 import TutorPenilaian from "./Pages/tutor/TotorPenilaian";
 import DetailPenilaianTutor from "./Pages/tutor/DetailPenilaianTutor";
 import TambahPenilaianTutor from "./Pages/tutor/TambahPenilaianTutor";
+import ProtectedRoute from "./Auth/ProtectedRoute";
+import UpdatePenilaianTutor from "./Pages/tutor/UpdatePenilaianTutor";
 
 const App = () => {
   return (
     <Routes>
+            <Route path="/" element={<Login />} />
       {/* admin */}
-      <Route path="/dashboard-admin" element={<DashboardAdmin />} />
-      <Route path="/data-siswa" element={<DataSiswa />} />
+      <Route path="/dashboard-admin" element={  <ProtectedRoute allowedRoles={["admin"]}>
+            <DashboardAdmin />
+          </ProtectedRoute>} />
+      <Route path="/data-siswa" element={  <ProtectedRoute allowedRoles={["admin"]}>
+            <DataSiswa />
+          </ProtectedRoute>} />
       {/* admin */}
 
       {/* Orang Tua */}
@@ -38,7 +45,15 @@ const App = () => {
       {/* Orang Tua */}
 
       {/* Tutor */}
-      <Route path="/tutor-kegiatan" element={<Kegiatan />} />
+
+      <Route
+        path="/tutor-kegiatan"
+        element={
+          <ProtectedRoute allowedRoles={["tutor"]}>
+            <Kegiatan />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/tutor-kegiatan/riwayat/:id" element={<RiwayatKegiatan />} />
       <Route
         path="/tutor-kegiatan/riwayat/kegiatan/:id"
@@ -49,10 +64,19 @@ const App = () => {
         element={<UpdateAbsensiKegiatan />}
       />
 
-      <Route path="/tutor-siswa" element={<Siswa />} />
+      <Route path="/tutor-siswa" element={
+        <ProtectedRoute allowedRoles={['tutor']}>
+
+          <Siswa />
+        </ProtectedRoute>
+        } />
       <Route
         path="/tutor-siswa/riwayat/:id"
-        element={<RiwayatAbsensiEkskul />}
+        element={
+          <ProtectedRoute allowedRoles={["tutor"]}>
+            <RiwayatAbsensiEkskul />
+          </ProtectedRoute>
+        }
       />
       <Route
         path="/tutor-siswa/riwayat/absensi/:id"
@@ -62,13 +86,14 @@ const App = () => {
         path="/tutor-siswa/riwayat/update-absensi/:absensi_id/:ekskul_id"
         element={<UpdateAbsensiEkskul />}
       />
-      <Route
-        path="/tutor-siswa/penilaian/:id"
-        element={<TutorPenilaian />}
-      />
+      <Route path="/tutor-siswa/penilaian/:id" element={<TutorPenilaian />} />
       <Route
         path="/tutor-siswa/penilaian/tambah-penilaian/:id"
         element={<TambahPenilaianTutor />}
+      />
+      <Route
+        path="/tutor-siswa/penilaian/update-penilaian/:id/:ekskul_id"
+        element={<UpdatePenilaianTutor />}
       />
       <Route
         path="/tutor-siswa/penilaian/detail/:id"

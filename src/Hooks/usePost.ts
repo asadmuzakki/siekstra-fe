@@ -13,13 +13,20 @@ import {
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGlobalContext } from "../Context/Context";
+import { useCookies } from "react-cookie";
 
-const absensiKegiatan = async (data: FormModelType) => {
-  const response = await axiosInstance.post("api/absensi", data);
+const absensiKegiatan = async (data: FormModelType, token: string) => {
+  const response = await axiosInstance.post("api/tutor/absensi", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
 export const useAbsensiKegiatan = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { stateHandle } = useGlobalContext();
   const { register, control, handleSubmit, setValue } = useForm<FormModelType>({
     resolver: zodResolver(FormModel),
@@ -35,7 +42,7 @@ export const useAbsensiKegiatan = () => {
 
   const mutation = useMutation({
     mutationKey: ["absensi"],
-    mutationFn: (data: FormModelType) => absensiKegiatan(data),
+    mutationFn: (data: FormModelType) => absensiKegiatan(data, token),
     onSuccess: () => {
       stateHandle("post", true);
     },
@@ -58,13 +65,20 @@ export const useAbsensiKegiatan = () => {
 };
 
 const kegiatanEkskul = async (
-  data: KegiatanEkskulModelType
+  data: KegiatanEkskulModelType,
+  token: string
 ): Promise<KegiatanEkskulModelType> => {
-  const response = await axiosInstance.post("/api/kegiatan", data);
+  const response = await axiosInstance.post("/api/tutor/kegiatan", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
 export function useKegiatanEkskul() {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { register, handleSubmit, control, setValue } =
     useForm<KegiatanEkskulModelType>({
       resolver: zodResolver(KegiatanEkskulModel),
@@ -77,7 +91,7 @@ export function useKegiatanEkskul() {
   const { stateHandle } = useGlobalContext();
   const mutation = useMutation({
     mutationKey: ["kegiatan"],
-    mutationFn: (data: KegiatanEkskulModelType) => kegiatanEkskul(data),
+    mutationFn: (data: KegiatanEkskulModelType) => kegiatanEkskul(data, token),
     onSuccess: () => {
       stateHandle("post", true);
     },
@@ -98,13 +112,20 @@ export function useKegiatanEkskul() {
 }
 
 const postAbsenTutor = async (
-  data: AbsenTutorModelType
+  data: AbsenTutorModelType,
+  token: string
 ): Promise<AbsenTutorModelType> => {
-  const response = await axiosInstance.post("/api/absensi-tutor", data);
+  const response = await axiosInstance.post("/api/tutor/absensi-tutor", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
 export const usePostAbsenTutor = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { stateHandle } = useGlobalContext();
   const {
     register,
@@ -118,7 +139,7 @@ export const usePostAbsenTutor = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (data: AbsenTutorModelType) => postAbsenTutor(data),
+    mutationFn: (data: AbsenTutorModelType) => postAbsenTutor(data, token),
     mutationKey: ["post_absen_tutor"],
     onSuccess: () => {
       reset();
@@ -142,38 +163,61 @@ export const usePostAbsenTutor = () => {
   };
 };
 
-const addNilaiEkskulTutor = async (data: NilaiEkskulModelType) => {
-  const response = await axiosInstance.post("/api/nilais", data);
+const addNilaiEkskulTutor = async (
+  data: NilaiEkskulModelType,
+  token: string
+) => {
+  const response = await axiosInstance.post("/api/tutor/nilais", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
 export const useAddNilaiEkskulTutor = () => {
-  const { register, setValue, handleSubmit, control } = useForm<NilaiEkskulModelType>({
+  const [cookies] = useCookies(["authToken"]);
+  const { stateHandle } = useGlobalContext();
+  const token = cookies.authToken;
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    control,
+    getValues,
+    watch,
+    formState: { errors },
+  } = useForm<NilaiEkskulModelType>({
     resolver: zodResolver(NilaiEkskulModel),
     defaultValues: {
       penilaians: [],
     },
   });
-  const {fields} = useFieldArray({
+  const { fields } = useFieldArray({
     control,
     name: "penilaians",
-  })
+  });
   const mutation = useMutation({
     mutationKey: ["add_nilai_ekskul"],
-    mutationFn: (data: NilaiEkskulModelType) => addNilaiEkskulTutor(data),
+    mutationFn: (data: NilaiEkskulModelType) =>
+      addNilaiEkskulTutor(data, token),
     onSuccess: () => {
-      alert("Nilai Berhasil Ditambahkan");
+      stateHandle("post", true);
+   
     },
     onError: (error) => {
       console.log(error);
-      
-      alert("Nilai Gagal Ditambahkan");
+
+      stateHandle("post", true);
     },
   });
   return {
     register,
     handleSubmit,
+    getValues,
     setValue,
+    errors,
+    watch,
     fields,
     onSubmit: mutation.mutate,
     isLoading: mutation.isPending,

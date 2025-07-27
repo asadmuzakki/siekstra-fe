@@ -9,6 +9,7 @@ import {
 import { axiosInstance } from "../lib/axiosInstance";
 import { useMutation } from "@tanstack/react-query";
 import { useGlobalContext } from "../Context/Context";
+import { useCookies } from "react-cookie";
 
 const login = async (data: LoginModelsType) => {
   const response = await axiosInstance.post("/api/login", data);
@@ -16,6 +17,7 @@ const login = async (data: LoginModelsType) => {
 };
 export const useLogin = () => {
   const { stateHandle } = useGlobalContext();
+  const [, setCookie, ] = useCookies(["authToken", 'role', 'user_id']);
   const {
     register,
     reset,
@@ -28,7 +30,15 @@ export const useLogin = () => {
   const mutation = useMutation({
     mutationKey: ["login"],
     mutationFn: (data: LoginModelsType) => login(data),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data);
+      setCookie("authToken", data.access_token, {
+        path: "/",
+        secure: true,
+        sameSite: "strict",
+      });
+      setCookie('role', data.role[0])
+      setCookie('user_id', data.user_id)
       stateHandle("showPopup", true);
       reset();
     },

@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
-import * as Get from "../../Hooks/useGet";
-import * as Post from "../../Hooks/usePost";
+
 
 import { useParams } from "react-router-dom";
 import type { NilaiEkskulModelType } from "../../Models/ekskul.model";
@@ -14,43 +13,48 @@ import {
 import LoadingSpinner from "../../Components/LoadingSpinner";
 import Popup from "../../Components/Popup";
 import { useGlobalContext } from "../../Context/Context";
+import { useGetNilaiSiswaTutorById } from "../../Hooks/useGet";
+import { useupdateNilaiSiswaByTutor } from "../../Hooks/usePatch";
 
-const TambahPenilaianTutor = () => {
+const UpdatePenilaianTutor = () => {
   const { id } = useParams();
+  const {ekskul_id} = useParams();
   const { state } = useGlobalContext();
   // const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    errors,
-    onSubmit,
-    setValue,
-    success,
-    error,
 
-    isLoading: isLoading_post,
-  } = Post.useAddNilaiEkskulTutor();
-  const { data, isLoading } = Get.useGetSiswa1(String(id));
+  const { data: data_nilai, isLoading } = useGetNilaiSiswaTutorById(String(id));
+  const { register, setValue, handleSubmit, onSubmit, success, error, isLoading:isLoading_update } =
+    useupdateNilaiSiswaByTutor(String(id));
+
   const [kehadiran, setKehadiran] = useState<string[]>([]);
-  const [keaktifan, setKeaktifan] = useState<string[]>([]);
+  const [keaktifan, setKeaktifan] = useState<any[]>([]);
   const [praktik, setPraktik] = useState<string[]>([]);
-
-  // const editdelete = (id: string) => {
-  //   alert(id);
-  // };
+  const [tanggal, setTanggal] = useState<string>();
 
   const handleSubmitForm = (data: NilaiEkskulModelType) => {
     console.log(data);
     onSubmit(data);
   };
   useEffect(() => {
-    console.log(data?.data);
-    if (data?.data) {
-      data?.data?.forEach((item: any, index: number) => {
+    console.log(data_nilai?.data);
+    if (data_nilai?.data) {
+      data_nilai?.data?.details?.forEach((item: any, index: number) => {
         setValue(`penilaians.${index}.siswa_id`, item.siswa.id);
       });
     }
-  }, [data, setValue]);
+    if (data_nilai?.data?.details) {
+      setTanggal(data_nilai.data.tanggal);
+      setKeaktifan(
+        data_nilai.data.details.map((item: any) => item.keaktifan ?? "")
+      );
+      setKehadiran(
+        data_nilai.data.details.map((item: any) => item.kehadiran ?? "")
+      );
+      setPraktik(
+        data_nilai.data.details.map((item: any) => item.praktik ?? "")
+      );
+    }
+  }, [data_nilai, setValue]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -64,28 +68,24 @@ const TambahPenilaianTutor = () => {
 
         {success && (
           <Popup
-            label="Create Berhasil"
-            message="Create Berhasil"
-            navigateTo={`/tutor-siswa/penilaian/${id}`}
+            label="Update Berhasil"
+            message="Update Berhasil"
+            navigateTo={`/tutor-siswa/penilaian/${ekskul_id}`}
             isSuccess={true}
-            stateConcition={state.post}
-            stateName="post"
+            stateConcition={state.update}
+            stateName="update"
           />
         )}
         {error && (
           <Popup
-            label="Create Gagal"
-            message="Create Gagal"
+            label="Update Gagal"
+            message="Update Gagal"
             navigateTo=""
             isSuccess={false}
-            stateConcition={state.post}
-            stateName="post"
+            stateConcition={state.update}
+            stateName="update"
           />
         )}
-
-        {/* {isLoading_delete && (
-          <div className="fixed inset-0 w-full h-screen bg-black opacity-50 z-50"></div>
-        )} */}
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-lg text-gray-600">Loading...</div>
@@ -95,7 +95,7 @@ const TambahPenilaianTutor = () => {
             <div className="flex-1 m-4  scrollbar-hide">
               <div className="w-full flex justify-between mb-6">
                 <p className="text-2xl md:text-3xl text-gray-600 font-semibold">
-                  Tambah Nilai Siswa
+                  Update Nilai Siswa
                 </p>
               </div>
               <form onSubmit={handleSubmit(handleSubmitForm)}>
@@ -106,14 +106,15 @@ const TambahPenilaianTutor = () => {
                         Tanggal :
                       </label>
                       <input
+                        value={tanggal}
+                        onChange={(e) => setTanggal(e.target.value)}
                         type="date"
-                        {...register("tanggal")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <div>
-                        <p className="text-xs text-red-500 mt-1">
+                        {/* <p className="text-xs text-red-500 mt-1">
                           {errors ? errors.tanggal?.message : ""}
-                        </p>
+                        </p> */}
                       </div>
                     </div>
                   </div>
@@ -152,102 +153,118 @@ const TambahPenilaianTutor = () => {
                         </tr>
                       </thead>
                       <tbody className="text-sm text-gray-700">
-                        {data?.data.map((item: any, index: number) => (
-                          <tr className="hover:bg-gray-50">
-                            {/* Kolom Nomor */}
-                            <td className="px-4 py-3 text-center">
-                              {index + 1}
-                            </td>
-                            <td className="px-4 py-3 text-center truncate">
-                              <input
-                                className=" hidden"
-                                disabled
-                                {...register(`penilaians.${index}.siswa_id`)}
-                                type="number"
-                              />
-                              {item.siswa.nama}
-                            </td>
-                            <td className="px-4 py-3 text-center">
-                              {item.siswa.kelas}
-                            </td>
+                        {data_nilai?.data?.details?.map(
+                          (item: any, index: number) => {
+                            return (
+                              <tr key={index} className="hover:bg-gray-50">
+                                {/* Kolom Nomor */}
+                                <td className="px-4 py-3 text-center">
+                                  {index + 1}
+                                </td>
+                                <td className="px-4 py-3 text-center truncate">
+                                  <input
+                                    className=" hidden"
+                                    disabled
+                                    {...register(
+                                      `penilaians.${index}.siswa_id`
+                                    )}
+                                    type="number"
+                                  />
+                                  {item.siswa.nama}
+                                </td>
+                                <td className="px-4 py-3 text-center">
+                                  {item.siswa.kelas}
+                                </td>
 
-                            <td className="px-4 py-3 text-center">
-                              <input
-                                {...register(`penilaians.${index}.kehadiran`)}
-                                onChange={(e) => {
+                                <td className="px-4 py-3 text-center">
+                                  <input
+                                    defaultValue={item.kehadiran}
+                                    {...register(
+                                      `penilaians.${index}.kehadiran`
+                                    )}
+                                      onChange={(e) => {
                                   const newVal = [...kehadiran];
                                   newVal[index] = e.target.value;
                                   setKehadiran(newVal);
                                 }}
-                                className="border rounded px-2 py-1 w-30  outline-none"
-                                type="number"
-                              />
-                            </td>
-                            <td className="px-4 py-3 text-center">
-                              <input
-                                {...register(`penilaians.${index}.keaktifan`)}
-                                onChange={(e) => {
+                                    className="border rounded px-2 py-1 w-30   outline-none"
+                                    type="number"
+                                  />
+                                </td>
+                                <td className="px-4 py-3 text-center">
+                                  <input
+                                    defaultValue={item.keaktifan}
+                                    {...register(
+                                      `penilaians.${index}.keaktifan`
+                                    )}
+                                      onChange={(e) => {
                                   const newVal = [...keaktifan];
                                   newVal[index] = e.target.value;
                                   setKeaktifan(newVal);
                                 }}
-                                className="border rounded px-2 py-1 w-30   outline-none"
-                                type="number"
-                              />
-                            </td>
-                            <td className="px-4 py-3 text-center">
-                              <input
-                                {...register(`penilaians.${index}.praktik`)}
-                                onChange={(e) => {
+                                    className="border rounded px-2 py-1 w-30   outline-none"
+                                    type="number"
+                                  />
+                                </td>
+                                <td className="px-4 py-3 text-center">
+                                  <input
+                                    defaultValue={item.praktik}
+                                    {...register(
+                                      `penilaians.${index}.praktik`
+                                    )}
+                                     onChange={(e) => {
                                   const newVal = [...praktik];
                                   newVal[index] = e.target.value;
                                   setPraktik(newVal);
                                 }}
-                                className="border rounded px-2 py-1 w-30   outline-none"
-                                type="number"
-                              />
-                            </td>
-                            <td className="px-4 py-3 text-center w-15">
-                              {calculateNilai(
-                                kehadiran[index] || "",
-                                keaktifan[index] || "",
-                                praktik[index] || ""
-                              )}
-                            </td>
-                            <td className="px-4 py-3 text-center w-15">
-                              {calculateIndexNilai(
-                                String(
-                                  calculateNilai(
+                                    className="border rounded px-2 py-1 w-30   outline-none"
+                                    type="number"
+                                  />
+                                </td>
+                                <td className="px-4 py-3 text-center w-15">
+                                  {calculateNilai(
                                     kehadiran[index] || "",
                                     keaktifan[index] || "",
                                     praktik[index] || ""
-                                  )
-                                )
-                              )}
-                            </td>
-                            <td className="px-4 py-3 text-center">
-                              <input
-                                className="border rounded px-2 py-1  outline-none"
-                                type="text"
-                              />
-                            </td>
+                                  )}
+                                </td>
+                                <td className="px-4 py-3 text-center w-15">
+                                  {calculateIndexNilai(
+                                    String(
+                                      calculateNilai(
+                                        kehadiran[index] || "",
+                                        keaktifan[index] || "",
+                                        praktik[index] || ""
+                                      )
+                                    )
+                                  )}
+                                </td>
+                                <td className="px-4 py-3 text-center">
+                                  <input
+                                    className="border rounded px-2 py-1  outline-none"
+                                    type="text"
+                                  />
+                                </td>
 
-                            {/* Kolom Aksi */}
-                          </tr>
-                        ))}
+                                {/* Kolom Aksi */}
+                              </tr>
+                            );
+                          }
+                        )}
                       </tbody>
                     </table>
                   </div>
                   <div className="w-full flex justify-center items-center mt-10">
                     <button
                       onClick={() => {
-                        setValue("ekskul_id", Number(id));
+                        setValue("tanggal", tanggal || "");
+                        setValue("ekskul_id", Number(ekskul_id));
                       }}
                       type="submit"
                       className="px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400"
                     >
                       <p>Submit</p>
-                      {isLoading_post && <LoadingSpinner />}
+                      {isLoading_update&& <LoadingSpinner />}
                     </button>
                   </div>
                 </div>
@@ -260,4 +277,4 @@ const TambahPenilaianTutor = () => {
   );
 };
 
-export default TambahPenilaianTutor;
+export default UpdatePenilaianTutor;

@@ -1,0 +1,39 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { axiosInstance } from "../../lib/axiosInstance";
+import { useCookies } from "react-cookie";
+import { useGlobalContext } from "../../Context/Context";
+
+const deleteDataSiswaById = async (id: string, token: string) => {
+  const response = await axiosInstance.delete(`/api/admin/siswas/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useDeleteDataSiswaById = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const { stateHandle } = useGlobalContext();
+  const token = cookies.authToken;
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationKey: ["delete_data_siswa_by_id"],
+    mutationFn: (id: string) => deleteDataSiswaById(id, token),
+    onSuccess: () => {
+      stateHandle("delete", true);
+      queryClient.invalidateQueries({ queryKey: ["get_data_siswa_admin"] });
+    },
+    onError: (err) => {
+      console.log(err);
+
+      stateHandle("delete", true);
+    },
+  });
+  return {
+    onDelete: mutation.mutate,
+    isLoadingDelete: mutation.isPending,
+    successDelete: mutation.isSuccess,
+    errorDelete: mutation.isError,
+  };
+};

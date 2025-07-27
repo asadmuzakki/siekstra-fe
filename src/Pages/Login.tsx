@@ -6,6 +6,7 @@ import { LuLoader } from "react-icons/lu";
 import Popup from "../Components/Popup";
 import * as Auth from "../Hooks/useAuth";
 import { useGlobalContext } from "../Context/Context";
+import { useCookies } from "react-cookie";
 
 const Login = () => {
   const { state } = useGlobalContext();
@@ -21,6 +22,8 @@ const Login = () => {
     succes_message,
     success,
   } = Auth.useLogin();
+
+  const [cookie] = useCookies(["role"]);
   const handleLogin = (data: LoginModelsType) => {
     onSubmit(data);
   };
@@ -30,7 +33,13 @@ const Login = () => {
         <Popup
           label="Login Berhasil"
           message={succes_message}
-          navigateTo=""
+          navigateTo={
+            cookie.role === "admin"
+              ? "/dashboard-admin"
+              : cookie.role === "tutor"
+              ? "/dashboard-tutor"
+              : "/dashboard-anak"
+          }
           isSuccess={true}
           stateConcition={state.showPopup}
           stateName="showPopup"

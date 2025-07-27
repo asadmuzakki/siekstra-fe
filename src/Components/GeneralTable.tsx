@@ -49,6 +49,18 @@ const GeneralTable: React.FC<TableType> = ({
             <tr key={row.id || rowIndex} className="hover:bg-gray-50">
               {/* Kolom Nomor */}
               <td className="px-4 py-3 text-center">{rowIndex + 1}</td>
+              {fromComponent === "GeneralComponent" &&
+                keys.map((key, index) => (
+                  <td key={index} className="px-4 py-3 text-center truncate">
+                    {key === "pendaftarans"
+                      ? row.pendaftarans?.length <= 0
+                        ? "-"
+                        : row.pendaftarans?.map((item: any) => {
+                            return item.ekskul.nama_ekskul || "-";
+                          }) || "-"
+                      : row[key] || "-"}
+                  </td>
+                ))}
 
               {fromComponent === "DetailPenilaianTutor" &&
                 keys.map((key, index) => (
@@ -80,7 +92,7 @@ const GeneralTable: React.FC<TableType> = ({
 
               {/* Kolom Aksi */}
               {action && (
-                <td className=" text-center space-x-2">
+                <td className=" text-center space-x-2 truncate">
                   <button
                     onClick={() => onEdit?.(row.id)}
                     className="bg-blue-100  text-blue-700 p-2 rounded cursor-pointer"

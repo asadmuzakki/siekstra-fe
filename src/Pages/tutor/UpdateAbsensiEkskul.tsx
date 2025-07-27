@@ -207,7 +207,7 @@ const UpdateAbsensiEkskul = () => {
           <Popup
             label="Update Berhasil"
             message="Update Berhasil"
-            navigateTo=""
+            navigateTo={`/tutor-siswa/riwayat/${ekskul_id}`}
             isSuccess={true}
             stateConcition={state.update}
             stateName="update"

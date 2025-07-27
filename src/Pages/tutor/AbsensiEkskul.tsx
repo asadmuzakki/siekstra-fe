@@ -173,7 +173,7 @@ const AbsensiEkskul = () => {
           <Popup
             label="Absen Berhasil"
             message={success_message}
-            navigateTo=""
+            navigateTo={`/tutor-siswa/riwayat/${id}`}
             isSuccess={true}
             stateConcition={state.post}
             stateName="post"

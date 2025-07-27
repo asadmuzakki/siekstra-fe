@@ -1,15 +1,15 @@
 import { useEffect } from "react";
-import Button from "../../Components/Button";
+
 import GeneralTable from "../../Components/GeneralTable";
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
 import * as Get from "../../Hooks/useGet";
 
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 
 const DetailPenilaianTutor = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+ 
 
   const { data, isLoading } = Get.useGetNilaiSiswaTutorById(String(id));
 
@@ -49,16 +49,9 @@ const DetailPenilaianTutor = () => {
                 <div className="flex justify-start items-center w-full py-5 text-gray-600 ">
                   Riwayat Presensi
                 </div>
-                <div
-                  onClick={() => {
-                    navigate(`/tutor-siswa/riwayat/absensi/${id}`);
-                  }}
-                >
-                  <Button buttonLabel="Tambah" />
-                </div>
 
                 <GeneralTable
-                    fromComponent="DetailPenilaianTutor"
+                  fromComponent="DetailPenilaianTutor"
                   label={[
                     "Nama",
                     "Kelas",
@@ -69,7 +62,7 @@ const DetailPenilaianTutor = () => {
                     "Index Nilai",
                   ]}
                   data={(data ? data?.data?.details : []) as any[]}
-                  action={true}
+                  action={false}
                   keys={[
                     "siswa",
                     "kelas",

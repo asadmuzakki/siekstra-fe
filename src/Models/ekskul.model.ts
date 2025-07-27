@@ -55,8 +55,7 @@ const NilaiModel = z.object({
 });
 export const NilaiEkskulModel = z.object({
   ekskul_id: z.number(),
-  tanggal: z.string(),
-  index_nilai:z.string(),
+  tanggal: z.string().min(1, 'Tanggal Tidak Boleh Kosong'),
   penilaians: z.array(NilaiModel),
 });
 
