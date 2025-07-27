@@ -5,12 +5,14 @@ import type { RegisterModelType } from "../Models/AuthModels";
 import { LuLoader } from "react-icons/lu";
 import { useGlobalContext } from "../Context/Context";
 import Popup from "../Components/Popup";
+import { useNavigate } from "react-router-dom";
 const Registration = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const { register, handleSubmit, errors, onSubmit, isLoading, success, error } = Auth.useRegistration();
 const {state} = useGlobalContext()
 
+const navigate =useNavigate()
   const handleRegister = (data: RegisterModelType) => {
     console.log(data);
 
@@ -167,7 +169,7 @@ const {state} = useGlobalContext()
 
         <p className="mt-2 w-full text-end text-sm">
           Sudah punya akun?{" "}
-          <span className="underline text-blue-600 cursor-pointer">Login</span>
+          <span onClick={() => navigate("/login")} className="underline text-blue-600 cursor-pointer">Login</span>
         </p>
       </div>
     </div>

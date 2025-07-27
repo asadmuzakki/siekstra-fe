@@ -8,6 +8,7 @@ import * as Auth from "../Hooks/useAuth";
 import { useGlobalContext } from "../Context/Context";
 import { useCookies } from "react-cookie";
 import Logo from '../assets/logo.png'
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { state } = useGlobalContext();
@@ -23,6 +24,7 @@ const Login = () => {
     succes_message,
     success,
   } = Auth.useLogin();
+  const navigate =useNavigate()
 
   const [cookie] = useCookies(["role"]);
   const handleLogin = (data: LoginModelsType) => {
@@ -135,9 +137,9 @@ const Login = () => {
             </div>
           </button>
         </form>
-        <p className="mt-2 w-full text-end text-sm">
+        <p  className="mt-2 w-full text-end text-sm">
           Belum Memiliki Akun ?{" "}
-          <span className="underline text-blue-600 cursor-pointer">
+          <span onClick={() => navigate("/registration")} className="underline text-blue-600 cursor-pointer">
             Sign up
           </span>{" "}
         </p>
