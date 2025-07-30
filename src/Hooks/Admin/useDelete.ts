@@ -37,3 +37,37 @@ export const useDeleteDataSiswaById = () => {
     errorDelete: mutation.isError,
   };
 };
+
+const deleteDataWaliMuridById = async (id: string, token: string) => {
+  const response = await axiosInstance.delete(`/api/admin/delete-wali-murid/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useDeleteDataWaliMuridById = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const { stateHandle } = useGlobalContext();
+  const token = cookies.authToken;
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationKey: ["delete_data_wali_murid_by_id"],
+    mutationFn: (id: string) => deleteDataWaliMuridById(id, token),
+    onSuccess: () => {
+      stateHandle("delete", true);
+      queryClient.invalidateQueries({ queryKey: ["get_data_wali_murid_admin"] });
+    },
+    onError: (err) => {
+      console.log(err);
+      stateHandle("delete", true);
+    },
+  });
+  return {
+    onDelete: mutation.mutate,
+    isLoadingDelete: mutation.isPending,
+    successDelete: mutation.isSuccess,
+    errorDelete: mutation.isError,
+  };
+};

@@ -23,18 +23,22 @@ import DetailPenilaianTutor from "./Pages/tutor/DetailPenilaianTutor";
 import TambahPenilaianTutor from "./Pages/tutor/TambahPenilaianTutor";
 import ProtectedRoute from "./Auth/ProtectedRoute";
 import UpdatePenilaianTutor from "./Pages/tutor/UpdatePenilaianTutor";
+import DataWaliMurid from "./Pages/admin/DataWaliMurid";
 
 const App = () => {
   return (
     <Routes>
-            <Route path="/" element={<Login />} />
+      <Route path="/" element={<Login />} />
       {/* admin */}
-      <Route path="/dashboard-admin" element={  <ProtectedRoute allowedRoles={["admin"]}>
-            <DashboardAdmin />
-          </ProtectedRoute>} />
-      <Route path="/data-siswa" element={  <ProtectedRoute allowedRoles={["admin"]}>
-            <DataSiswa />
-          </ProtectedRoute>} />
+      <Route path="/dashboard-admin" element={<ProtectedRoute allowedRoles={["admin"]}>
+        <DashboardAdmin />
+      </ProtectedRoute>} />
+      <Route path="/data-siswa" element={<ProtectedRoute allowedRoles={["admin"]}>
+        <DataSiswa />
+      </ProtectedRoute>} />
+      <Route path="/data-wali-murid" element={<ProtectedRoute allowedRoles={["admin"]}>
+        <DataWaliMurid />
+      </ProtectedRoute>} />
       {/* admin */}
 
       {/* Orang Tua */}
@@ -69,7 +73,7 @@ const App = () => {
 
           <Siswa />
         </ProtectedRoute>
-        } />
+      } />
       <Route
         path="/tutor-siswa/riwayat/:id"
         element={

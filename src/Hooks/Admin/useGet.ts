@@ -26,22 +26,45 @@ export const useGetDataSiswaAdmin = () => {
   };
 };
 
-const getDataSiswaAdminByAdmin = async(id:string, token:string)=>{
-
-  const response = await axiosInstance.get( `/api/admin/siswas/${id}`, {
-    headers:{
+const getDataSiswaAdminByAdmin = async (id: string, token: string) => {
+  const response = await axiosInstance.get(`/api/admin/siswas/${id}`, {
+    headers: {
       Authorization: `Bearer ${token}`,
-    }
-  })
-  return response.data
-}
+    },
+  });
+  return response.data;
+};
 
-export const useGetDataSiswaAdminByAdmin = (id:string) => {
+export const useGetDataSiswaAdminByAdmin = (id: string) => {
   const [cookies] = useCookies(["authToken"]);
   const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get_data_siswa_admin_by_id", id],
     queryFn: () => getDataSiswaAdminByAdmin(id, token),
+  });
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+
+const getDataWaliMuridAdmin = async (token: string) => {
+  const response = await axiosInstance.get("/api/admin/getWaliMurids", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useGetDataWaliMuridAdmin = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_data_wali_murid_admin"],
+    queryFn: () => getDataWaliMuridAdmin(token),
   });
   return {
     data,
