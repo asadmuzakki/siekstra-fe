@@ -71,3 +71,37 @@ export const useDeleteDataWaliMuridById = () => {
     errorDelete: mutation.isError,
   };
 };
+
+const deleteDataTutorById = async (id: string, token: string) => {
+  const response = await axiosInstance.delete(`/api/admin/delete-tutor/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useDeleteDataTutorById = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const { stateHandle } = useGlobalContext();
+  const token = cookies.authToken;
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationKey: ["delete_data_tutor_by_id"],
+    mutationFn: (id: string) => deleteDataTutorById(id, token),
+    onSuccess: () => {
+      stateHandle("delete", true);
+      queryClient.invalidateQueries({ queryKey: ["get_data_tutor_admin"] });
+    },
+    onError: (err) => {
+      console.log(err);
+      stateHandle("delete", true);
+    },
+  });
+  return {
+    onDelete: mutation.mutate,
+    isLoadingDelete: mutation.isPending,
+    successDelete: mutation.isSuccess,
+    errorDelete: mutation.isError,
+  };
+};

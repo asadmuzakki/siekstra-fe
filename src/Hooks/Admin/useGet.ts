@@ -73,3 +73,27 @@ export const useGetDataWaliMuridAdmin = () => {
     error,
   };
 };
+
+const getDataTutorAdmin = async (token: string) => {
+  const response = await axiosInstance.get("/api/admin/getTutors", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useGetDataTutorAdmin = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_data_tutor_admin"],
+    queryFn: () => getDataTutorAdmin(token),
+  });
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};

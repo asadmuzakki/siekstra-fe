@@ -108,3 +108,55 @@ export const useCreateDataWaliMurid = () => {
   };
 };
 
+const createDataTutor = async (
+  data: { name: string; email: string },
+  token: string
+) => {
+  const response = await axiosInstance.post("/api/admin/add-tutor", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useCreateDataTutor = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const { stateHandle } = useGlobalContext();
+  const token = cookies.authToken;
+  const query = useQueryClient();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<{
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+  }>();
+  const mutation = useMutation({
+    mutationKey: ["create_data_tutor"],
+    mutationFn: (data: { name: string; email: string; password: string; password_confirmation: string }) =>
+      createDataTutor(data, token),
+    onSuccess: () => {
+      reset();
+      stateHandle("post", true);
+      query.invalidateQueries({ queryKey: ["get_data_tutor_admin"] });
+    },
+    onError: () => {
+      stateHandle("post", true);
+    },
+  });
+  return {
+    register,
+    handleSubmit,
+    errors,
+    onSubmit: mutation.mutate,
+    isLoading: mutation.isPending,
+    success: mutation.isSuccess,
+    error: mutation.isError,
+  };
+};
+

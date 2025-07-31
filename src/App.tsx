@@ -24,6 +24,7 @@ import TambahPenilaianTutor from "./Pages/tutor/TambahPenilaianTutor";
 import ProtectedRoute from "./Auth/ProtectedRoute";
 import UpdatePenilaianTutor from "./Pages/tutor/UpdatePenilaianTutor";
 import DataWaliMurid from "./Pages/admin/DataWaliMurid";
+import DataTutor from "./Pages/admin/DataTutor";
 
 const App = () => {
   return (
@@ -38,6 +39,9 @@ const App = () => {
       </ProtectedRoute>} />
       <Route path="/data-wali-murid" element={<ProtectedRoute allowedRoles={["admin"]}>
         <DataWaliMurid />
+      </ProtectedRoute>} />
+      <Route path="/data-tutor" element={<ProtectedRoute allowedRoles={["admin"]}>
+        <DataTutor />
       </ProtectedRoute>} />
       {/* admin */}
 

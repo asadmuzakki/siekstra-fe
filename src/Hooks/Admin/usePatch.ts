@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCookies } from "react-cookie";
 import { useGlobalContext } from "../../Context/Context";
+import { z } from "zod";
 
 async function updateDataSiswa(
   id: string,
@@ -93,6 +94,63 @@ export function useUpdateDataWaliMurid(id: string) {
     onSuccess: () => {
       stateHandle("update", true);
       queryClient.invalidateQueries({ queryKey: ["get_data_wali_murid_admin"] });
+    },
+    onError: () => {
+      stateHandle("update", true);
+    },
+  });
+  return {
+    setValue,
+    errors,
+    handleSubmit_update,
+    onSubmit_update: mutation.mutate,
+    isLoading_update: mutation.isPending,
+    isSuccess_update: mutation.isSuccess,
+    isError_update: mutation.isError,
+  };
+}
+
+async function updateDataTutor(
+  id: string,
+  data: { name: string; email: string; password?: string; password_confirmation?: string },
+  token: string
+) {
+  const response = await axiosInstance.patch(`/api/admin/update-tutor/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+export function useUpdateDataTutor(id: string) {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { stateHandle } = useGlobalContext();
+
+  const queryClient = useQueryClient();
+
+  const {
+    setValue,
+    handleSubmit: handleSubmit_update,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(
+      z.object({
+        name: z.string().min(1, "Nama Tidak Boleh Kosong"),
+        email: z.string().email("Email Tidak Valid"),
+        password: z.string().optional(),
+        password_confirmation: z.string().optional(),
+      })
+    ),
+  });
+  const mutation = useMutation({
+    mutationKey: ["update_data_tutor", id],
+    mutationFn: (data: { name: string; email: string; password?: string; password_confirmation?: string }) =>
+      updateDataTutor(id, data, token),
+    onSuccess: () => {
+      stateHandle("update", true);
+      queryClient.invalidateQueries({ queryKey: ["get_data_tutor_admin"] });
     },
     onError: () => {
       stateHandle("update", true);
