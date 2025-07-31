@@ -1,18 +1,27 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { useCreateDataWaliMurid } from "../Hooks/Admin/usePost";
+import { useUpdateDataWaliMurid } from "../Hooks/Admin/usePatch";
 import LoadingSpinner from "./LoadingSpinner";
 
 type Props = {
    setShow: (val: boolean) => void;
    setSuccessCreate: (val: boolean) => void;
    setErrorCreate: (val: boolean) => void;
+   setSuccessUpdate: (val: boolean) => void;
+   setErrorUpdate: (val: boolean) => void;
+   isEdit?: boolean; // Menambahkan properti isEdit
+   idSiswa?: string;
 };
 
 const CardCreateDataWaliMurid: React.FC<Props> = ({
    setShow,
    setSuccessCreate,
    setErrorCreate,
+   setErrorUpdate,
+   setSuccessUpdate,
+   idSiswa,
+   isEdit,
 }) => {
    const [name, setName] = useState<string>("");
    const [email, setEmail] = useState<string>("");
@@ -29,12 +38,26 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
       isLoading,
    } = useCreateDataWaliMurid();
 
+   const {
+      setValue,
+      onSubmit_update,
+      isSuccess_update,
+      isError_update,
+   } = useUpdateDataWaliMurid(idSiswa || "");
+
    const handleFormSubmit = (data: { name: string; email: string; password: string; password_confirmation: string }) => {
       onSubmit({ ...data, password_confirmation: passwordConfirmation });
       console.log({ ...data, password_confirmation: passwordConfirmation });
    };
 
    useEffect(() => {
+      if (isEdit && idSiswa) {
+         setValue("name", name);
+         setValue("email", email);
+         setValue("password", password);
+         setValue("password_confirmation", passwordConfirmation);
+      }
+
       if (success) {
          setSuccessCreate(true);
          setShow(false);
@@ -43,7 +66,25 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
          setErrorCreate(true);
          setShow(false);
       }
-   }, [success, error, setSuccessCreate, setErrorCreate, setShow]);
+      if (isSuccess_update) {
+         setSuccessUpdate(true);
+         setShow(false);
+      }
+      if (isError_update) {
+         setErrorUpdate(true);
+         setShow(false);
+      }
+   }, [isEdit, idSiswa, name, email, password, passwordConfirmation, success, error, isSuccess_update, isError_update, setSuccessCreate, setErrorCreate, setSuccessUpdate, setErrorUpdate, setShow, setValue]);
+
+   const handleFormUpdate = (data: {
+      name: string;
+      email: string;
+      password: string;
+      password_confirmation: string;
+   }) => {
+      onSubmit_update(data);
+      console.log(data);
+   };
 
    return (
       <>
@@ -63,10 +104,17 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
                   </button>
 
                   <h2 className="text-xl font-semibold text-gray-700 mb-4">
-                     Create Data Wali Murid
+                     {isEdit ? "Edit Data Wali Murid" : "Create Data Wali Murid"}
                   </h2>
                   <form
-                     onSubmit={handleSubmit(handleFormSubmit)}
+                     onSubmit={
+                        isEdit
+                           ? (e) => {
+                                e.preventDefault();
+                                handleFormUpdate({ name, email, password, password_confirmation: passwordConfirmation });
+                             }
+                           : handleSubmit(handleFormSubmit)
+                     }
                      className="space-y-4"
                   >
                      <div>
@@ -141,7 +189,7 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
                            type="submit"
                            className="px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400"
                         >
-                           <p>Simpan Data</p>
+                           <p>{isEdit ? "Update Data" : "Simpan Data"}</p>
                            {isLoading && <LoadingSpinner />}
                         </button>
                      </div>

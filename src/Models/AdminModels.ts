@@ -10,3 +10,14 @@ export const DataSiswaModel = z.object({
 });
 
 export type DataSiswaModelType = z.infer<typeof DataSiswaModel>;
+
+export const DataWaliMuridModel = z.object({
+  name: z.string().min(1, "Nama Tidak Boleh Kosong"),
+  email: z.string().email("Email Tidak Valid"),
+  password: z.string().min(6, "Password Minimal 6 Karakter"),
+  password_confirmation: z
+    .string()
+    .min(6, "Konfirmasi Password Minimal 6 Karakter"),
+});
+
+export type DataWaliMuridModelType = z.infer<typeof DataWaliMuridModel>;

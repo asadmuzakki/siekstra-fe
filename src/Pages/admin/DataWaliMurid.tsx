@@ -6,13 +6,19 @@ import { useGetDataWaliMuridAdmin } from "../../Hooks/Admin/useGet";
 import Popup from "../../Components/Popup";
 import { useDeleteDataWaliMuridById } from "../../Hooks/Admin/useDelete";
 import CardCreateDataWaliMurid from "../../Components/CardCreateDataWaliMurid";
+import { useGlobalContext } from "../../Context/Context";
 
 const DataWaliMurid = () => {
+   const { state } = useGlobalContext();
    const { data, isLoading } = useGetDataWaliMuridAdmin();
    const { onDelete, isLoadingDelete, errorDelete, successDelete } = useDeleteDataWaliMuridById();
    const [showPopup, setShowPopup] = useState(false);
    const [successCreate, setSuccessCreate] = useState(false);
    const [errorCreate, setErrorCreate] = useState(false);
+   const [isEdit, setIsEdit] = useState(false);
+   const [idWaliMurid, setIdWaliMurid] = useState<string | null>(null);
+   const [successUpdate, setSuccessUpdate] = useState(false);
+   const [errorUpdate, setErrorUpdate] = useState(false);
 
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    const formattedData = data?.data.map((item: any) => ({
@@ -23,9 +29,17 @@ const DataWaliMurid = () => {
       onDelete(id);
    };
 
+   const handleEditDataWaliMurid = (id: string) => {
+      setIdWaliMurid(id);
+      setIsEdit(true);
+      setShowPopup(true);
+   };
+
    useEffect(() => {
       console.log(data);
    }, [data]);
+
+   const idWaliMuridString = idWaliMurid || undefined; // Menyesuaikan tipe untuk idSiswa
 
    return (
       <div className="flex h-screen overflow-hidden">
@@ -45,8 +59,8 @@ const DataWaliMurid = () => {
                   message="Create Berhasil"
                   navigateTo=""
                   isSuccess={true}
-                  stateConcition={true}
-                  stateName="create"
+                  stateConcition={state.post}
+                  stateName="post"
                />
             )}
             {errorCreate && (
@@ -55,8 +69,8 @@ const DataWaliMurid = () => {
                   message="Create Gagal"
                   navigateTo=""
                   isSuccess={false}
-                  stateConcition={true}
-                  stateName="create"
+                  stateConcition={state.post}
+                  stateName="post"
                />
             )}
             {successDelete && (
@@ -65,7 +79,7 @@ const DataWaliMurid = () => {
                   message="Delete Berhasil"
                   navigateTo=""
                   isSuccess={true}
-                  stateConcition={true}
+                  stateConcition={state.delete}
                   stateName="delete"
                />
             )}
@@ -75,8 +89,28 @@ const DataWaliMurid = () => {
                   message="Delete Gagal"
                   navigateTo=""
                   isSuccess={false}
-                  stateConcition={true}
+                  stateConcition={state.delete}
                   stateName="delete"
+               />
+            )}
+            {successUpdate && (
+               <Popup
+                  label="Update Berhasil"
+                  message="Update Berhasil"
+                  navigateTo=""
+                  isSuccess={true}
+                  stateConcition={state.update}
+                  stateName="update"
+               />
+            )}
+            {errorUpdate && (
+               <Popup
+                  label="Update Gagal"
+                  message="Update Gagal"
+                  navigateTo=""
+                  isSuccess={false}
+                  stateConcition={state.update}
+                  stateName="update"
                />
             )}
             {isLoading ? (
@@ -108,6 +142,10 @@ const DataWaliMurid = () => {
                               setShow={setShowPopup}
                               setSuccessCreate={setSuccessCreate}
                               setErrorCreate={setErrorCreate}
+                              setSuccessUpdate={setSuccessUpdate}
+                              setErrorUpdate={setErrorUpdate}
+                              isEdit={isEdit}
+                              idSiswa={idWaliMuridString}
                            />
                         )}
 
@@ -123,6 +161,7 @@ const DataWaliMurid = () => {
                            action={true}
                            keys={["name", "email", "created_at", "anak_count"]}
                            onDelete={handleDeleteDataWaliMurid}
+                           onEdit={handleEditDataWaliMurid}
                         />
                      </div>
                   </div>
