@@ -146,8 +146,10 @@ export const usePostAbsenTutor = () => {
       queryClient.invalidateQueries({ queryKey: ["get_absensi_tutor"] });
       stateHandle("post", true);
     },
-    onError: () => {
+    onError: (err) => {
+      console.log(err);
       reset();
+      
       stateHandle("post", true);
     },
   });

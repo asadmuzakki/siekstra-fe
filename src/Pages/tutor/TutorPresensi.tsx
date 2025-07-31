@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../../Components/Button";
+
 import GeneralTable from "../../Components/GeneralTable";
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
@@ -8,8 +8,10 @@ import * as Delete from "../../Hooks/useDelete";
 import { useGlobalContext } from "../../Context/Context";
 import AttendanceForm from "../../Components/AttendenceForm";
 import Popup from "../../Components/Popup";
+import { useCookies } from "react-cookie";
 
 const TutorPresensi = () => {
+  const [cookie] = useCookies(['user_id'])
   const { stateHandle, state } = useGlobalContext();
   const [successPost, setSuccessPost] = useState(false);
   const [errorPost, setErrorPost] = useState(false);
@@ -116,8 +118,6 @@ const TutorPresensi = () => {
     </>
   );
 
-  
-
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar sidebar="TUTOR" />
@@ -129,9 +129,9 @@ const TutorPresensi = () => {
           <div className="fixed inset-0 w-full h-screen bg-black opacity-50 z-50" />
         )}
 
-        {(openCreate || openEdit) && data?.data?.[0]?.tutor_id && (
+        {(openCreate || openEdit)  && (
           <AttendanceForm
-            tutor_id={data.data[0].tutor_id}
+            tutor_id={cookie.user_id}
             update={openCreate ? false : true}
             success={openCreate ? setSuccessPost : setSuccessUpdate}
             error={openCreate ? setErrorPost : setErrorUpdate}
@@ -159,9 +159,15 @@ const TutorPresensi = () => {
                 <div className="flex justify-start items-center w-full py-5 text-gray-600">
                   Riwayat Presensi
                 </div>
-
-                <div onClick={handleOpenCreate}>
-                  <Button buttonLabel="Tambah" />
+                <div className="w-full flex justify-end items-center">
+                  <button
+                    onClick={() => {
+                      handleOpenCreate();
+                    }}
+                    className="text-white bg-blue-500 px-5 py-2 rounded hover:cursor-pointer"
+                  >
+                    Tambah
+                  </button>
                 </div>
 
                 <GeneralTable
@@ -171,11 +177,17 @@ const TutorPresensi = () => {
                     "Status",
                     "Keterangan",
                     "waktu",
-                    'Jam'
+                    "Jam",
                   ]}
                   data={data?.data || []}
                   action={true}
-                  keys={["ekskul", "status", "keterangan", "tanggal", 'created_at']}
+                  keys={[
+                    "ekskul",
+                    "status",
+                    "keterangan",
+                    "tanggal",
+                    "created_at",
+                  ]}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
                 />

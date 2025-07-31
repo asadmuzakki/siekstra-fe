@@ -86,7 +86,7 @@ const GeneralTable: React.FC<TableType> = ({
                       ? row.ekskul?.nama_ekskul || "-"
                       : key === "created_at"
                       ? formatToHourMinute(row.created_at)
-                      : row[key] || 0}
+                      : row[key] || '-'}
                   </td>
                 ))}
 

@@ -7,7 +7,7 @@ import type { AbsenTutorModelType } from "../Models/ekskul.model";
 import LoadingSpinner from "./LoadingSpinner";
 
 type AttendanceFormProps = {
-  tutor_id: string;
+  tutor_id?: string;
   update: boolean;
   success?: (val: boolean) => void;
   error?: (val: boolean) => void;
@@ -24,7 +24,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
   handleClose,
 }) => {
   const { state, stateHandle } = useGlobalContext();
-  const { data: data_absensi } = Get.useGetAbsensiByTutor(id_absen ?? "");
+  const { data: data_absensi, isLoading: isLoading_absensi } = Get.useGetAbsensiByTutor(id_absen ?? "");
   const { data } = Get.useGetEkskul();
   const {
     onSubmit,
@@ -133,6 +133,9 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-md p-4 h-fit"
       >
+
+        
+    
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -142,8 +145,8 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
               handleSubmitAbsensi();
             }
           }}
-          className="bg-white rounded-lg shadow-xl"
-        >
+          className={`bg-white rounded-lg shadow-xl ${isLoading_absensi ? "h-70" : ""}`}
+         >
           <div className="flex items-center justify-between p-4 border-b">
             <h2 className="text-lg font-medium text-gray-700">
               {update ? "Edit Absensi" : "Tambah Absensi"}
@@ -159,6 +162,13 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
               ×
             </button>
           </div>
+          {isLoading_absensi ? (
+              <div className=" flex items-center justify-center h-full bg-white rounded-b-lg">
+            <div className="text-lg text-gray-600">Loading...</div>
+          </div>
+          ):(
+
+          <div>
 
           <div className="p-4 space-y-4">
             <div className="grid grid-cols-4 gap-3">
@@ -291,6 +301,9 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
               {isLoading && <LoadingSpinner />}
             </button>
           </div>
+          </div>
+          )}
+
         </form>
       </div>
     </div>

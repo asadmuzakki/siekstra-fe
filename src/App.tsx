@@ -31,18 +31,38 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Login />} />
       {/* admin */}
-      <Route path="/dashboard-admin" element={<ProtectedRoute allowedRoles={["admin"]}>
-        <DashboardAdmin />
-      </ProtectedRoute>} />
-      <Route path="/data-siswa" element={<ProtectedRoute allowedRoles={["admin"]}>
-        <DataSiswa />
-      </ProtectedRoute>} />
-      <Route path="/data-wali-murid" element={<ProtectedRoute allowedRoles={["admin"]}>
-        <DataWaliMurid />
-      </ProtectedRoute>} />
-      <Route path="/data-tutor" element={<ProtectedRoute allowedRoles={["admin"]}>
-        <DataTutor />
-      </ProtectedRoute>} />
+      <Route
+        path="/dashboard-admin"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <DashboardAdmin />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/data-siswa"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <DataSiswa />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/data-wali-murid"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <DataWaliMurid />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/data-tutor"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <DataTutor />
+          </ProtectedRoute>
+        }
+      />
       {/* admin */}
 
       {/* Orang Tua */}
@@ -72,12 +92,14 @@ const App = () => {
         element={<UpdateAbsensiKegiatan />}
       />
 
-      <Route path="/tutor-siswa" element={
-        <ProtectedRoute allowedRoles={['tutor']}>
-
-          <Siswa />
-        </ProtectedRoute>
-      } />
+      <Route
+        path="/tutor-siswa"
+        element={
+          <ProtectedRoute allowedRoles={["tutor"]}>
+            <Siswa />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/tutor-siswa/riwayat/:id"
         element={
