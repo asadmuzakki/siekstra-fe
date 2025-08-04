@@ -105,3 +105,37 @@ export const useDeleteDataTutorById = () => {
     errorDelete: mutation.isError,
   };
 };
+
+const deleteDataAbsensiTutorById = async (id: string, token: string) => {
+  const response = await axiosInstance.delete(`/api/admin/absensi-tutor/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useDeleteDataAbsensiTutorById = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const { stateHandle } = useGlobalContext();
+  const token = cookies.authToken;
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationKey: ["delete_data_absensi_tutor_by_id"],
+    mutationFn: (id: string) => deleteDataAbsensiTutorById(id, token),
+    onSuccess: () => {
+      stateHandle("delete", true);
+      queryClient.invalidateQueries({ queryKey: ["get_data_absensi_tutor"] });
+    },
+    onError: (err) => {
+      console.log(err);
+      stateHandle("delete", true);
+    },
+  });
+  return {
+    onDelete: mutation.mutate,
+    isLoadingDelete: mutation.isPending,
+    successDelete: mutation.isSuccess,
+    errorDelete: mutation.isError,
+  };
+};
