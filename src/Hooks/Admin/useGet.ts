@@ -97,3 +97,27 @@ export const useGetDataTutorAdmin = () => {
     error,
   };
 };
+
+const getDataTutorById = async (id: string, token: string) => {
+  const response = await axiosInstance.get(`/api/admin/getTutors/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useGetDataTutorById = (id: string) => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_data_tutor_by_id"],
+    queryFn: () => getDataTutorById(id, token),
+  });
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};

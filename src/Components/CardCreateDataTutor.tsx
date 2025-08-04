@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useCreateDataTutor } from "../Hooks/Admin/usePost";
 import { useUpdateDataTutor } from "../Hooks/Admin/usePatch";
 import LoadingSpinner from "./LoadingSpinner";
+import { useGetDataTutorById } from "../Hooks/Admin/useGet";
 
 type Props = {
    setShow: (val: boolean) => void;
@@ -45,6 +46,8 @@ const CardCreateDataTutor: React.FC<Props> = ({
       isError_update,
    } = useUpdateDataTutor(idTutor || "");
 
+   const {data:data_tutor_by_id} = useGetDataTutorById(idTutor ?? '')
+
    const handleFormSubmit = (data: { name: string; email: string; password: string; password_confirmation: string }) => {
       onSubmit({ ...data, password_confirmation: passwordConfirmation });
       console.log({ ...data, password_confirmation: passwordConfirmation });
@@ -72,7 +75,9 @@ const CardCreateDataTutor: React.FC<Props> = ({
          setErrorUpdate(true);
          setShow(false);
       }
-   }, [isEdit, idTutor, name, email, success, error, isSuccess_update, isError_update, setSuccessCreate, setErrorCreate, setSuccessUpdate, setErrorUpdate, setShow, setValue]);
+      console.log(data_tutor_by_id);
+      
+   }, [isEdit, idTutor, name, email, success, error, isSuccess_update, isError_update, setSuccessCreate, setErrorCreate, setSuccessUpdate, setErrorUpdate, setShow, setValue, data_tutor_by_id]);
 
    const handleFormUpdate = (data: { name: string; email: string; password: string; password_confirmation: string }) => {
       console.log("Data yang dikirim untuk update:", { ...data, password_confirmation: passwordConfirmation });

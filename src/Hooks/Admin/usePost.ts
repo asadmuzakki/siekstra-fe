@@ -93,7 +93,9 @@ export const useCreateDataWaliMurid = () => {
       stateHandle("post", true);
       query.invalidateQueries({ queryKey: ["get_data_wali_murid_admin"] });
     },
-    onError: () => {
+    onError: (err) => {
+      console.log(err);
+      
       stateHandle("post", true);
     },
   });
