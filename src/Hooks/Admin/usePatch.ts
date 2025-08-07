@@ -166,3 +166,74 @@ export function useUpdateDataTutor(id: string) {
     isError_update: mutation.isError,
   };
 }
+
+async function updateDataEkskul(
+  id: string,
+  data: {
+    namaEkskul: string;
+    namaTutor: string;
+    jumlahSiswa: number;
+    status: string;
+    tanggal: string;
+  },
+  token: string
+) {
+  const response = await axiosInstance.patch(`/api/admin/update-ekskul/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+export function useUpdateDataEkskul(id: string) {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { stateHandle } = useGlobalContext();
+
+  const queryClient = useQueryClient();
+
+  const {
+    setValue,
+    handleSubmit: handleSubmit_update,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(
+      z.object({
+        namaEkskul: z.string().min(1, "Nama Ekstrakurikuler Tidak Boleh Kosong"),
+        namaTutor: z.string().min(1, "Nama Tutor Tidak Boleh Kosong"),
+        jumlahSiswa: z.number().min(1, "Jumlah Siswa Harus Lebih dari 0"),
+        status: z.string().min(1, "Status Tidak Boleh Kosong"),
+        tanggal: z.string().min(1, "Tanggal Tidak Boleh Kosong"),
+      })
+    ),
+  });
+
+  const mutation = useMutation({
+    mutationKey: ["update_data_ekskul", id],
+    mutationFn: (data: {
+      namaEkskul: string;
+      namaTutor: string;
+      jumlahSiswa: number;
+      status: string;
+      tanggal: string;
+    }) => updateDataEkskul(id, data, token),
+    onSuccess: () => {
+      stateHandle("update", true);
+      queryClient.invalidateQueries({ queryKey: ["get_data_ekskul_admin"] });
+    },
+    onError: () => {
+      stateHandle("update", true);
+    },
+  });
+
+  return {
+    setValue,
+    errors,
+    handleSubmit_update,
+    onSubmit_update: mutation.mutate,
+    isLoading_update: mutation.isPending,
+    isSuccess_update: mutation.isSuccess,
+    isError_update: mutation.isError,
+  };
+}

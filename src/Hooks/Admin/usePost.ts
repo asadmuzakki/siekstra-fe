@@ -162,17 +162,17 @@ export const useCreateDataTutor = () => {
   };
 };
 
-const createDataAbsensiTutor = async (
+const createDataEkskul = async (
   data: {
-    tutor_id: number;
-    ekskul_id: number;
+    namaEkskul: string;
+    namaTutor: string;
+    jumlahSiswa: number;
+    status: string;
     tanggal: string;
-    status: "Hadir" | "Alpha" | "Izin" | "Sakit";
-    keterangan?: string;
   },
   token: string
 ) => {
-  const response = await axiosInstance.post("/api/admin/absensi-tutor", data, {
+  const response = await axiosInstance.post("/api/admin/add-ekskul", data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -180,7 +180,7 @@ const createDataAbsensiTutor = async (
   return response.data;
 };
 
-export const useCreateDataAbsensiTutor = () => {
+export const useCreateDataEkskul = () => {
   const [cookies] = useCookies(["authToken"]);
   const { stateHandle } = useGlobalContext();
   const token = cookies.authToken;
@@ -191,32 +191,31 @@ export const useCreateDataAbsensiTutor = () => {
     formState: { errors },
     reset,
   } = useForm<{
-    tutor_id: number;
-    ekskul_id: number;
+    namaEkskul: string;
+    namaTutor: string;
+    jumlahSiswa: number;
+    status: string;
     tanggal: string;
-    status: "Hadir" | "Alpha" | "Izin" | "Sakit";
-    keterangan?: string;
   }>();
-
   const mutation = useMutation({
-    mutationKey: ["create_data_absensi_tutor"],
+    mutationKey: ["create_data_ekskul"],
     mutationFn: (data: {
-      tutor_id: number;
-      ekskul_id: number;
+      namaEkskul: string;
+      namaTutor: string;
+      jumlahSiswa: number;
+      status: string;
       tanggal: string;
-      status: "Hadir" | "Alpha" | "Izin" | "Sakit";
-      keterangan?: string;
-    }) => createDataAbsensiTutor(data, token),
+    }) => createDataEkskul(data, token),
     onSuccess: () => {
       reset();
       stateHandle("post", true);
-      query.invalidateQueries({ queryKey: ["get_data_absensi_tutor"] });
+      query.invalidateQueries({ queryKey: ["get_data_ekskul_admin"] });
     },
-    onError: () => {
+    onError: (err) => {
+      console.log(err);
       stateHandle("post", true);
     },
   });
-
   return {
     register,
     handleSubmit,
@@ -227,4 +226,3 @@ export const useCreateDataAbsensiTutor = () => {
     error: mutation.isError,
   };
 };
-

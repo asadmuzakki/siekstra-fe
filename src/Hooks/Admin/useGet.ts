@@ -99,7 +99,7 @@ export const useGetDataTutorAdmin = () => {
 };
 
 const getDataTutorById = async (id: string, token: string) => {
-  const response = await axiosInstance.get(`/api/admin/getTutor/${id}`, {
+  const response = await axiosInstance.get(`/api/admin/getTutors/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -113,30 +113,6 @@ export const useGetDataTutorById = (id: string) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get_data_tutor_by_id"],
     queryFn: () => getDataTutorById(id, token),
-  });
-  return {
-    data,
-    isLoading,
-    isError,
-    error,
-  };
-};
-
-const getDataAbsensiTutor = async (token: string) => {
-  const response = await axiosInstance.get("/api/admin/absensi-tutor", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
-};
-
-export const useGetDataAbsensiTutor = () => {
-  const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken;
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get_data_absensi_tutor"],
-    queryFn: () => getDataAbsensiTutor(token),
   });
   return {
     data,
@@ -170,3 +146,26 @@ export const useGetDataEkskulAdmin = () => {
   };
 };
 
+const getDataEkskulById = async (id: string, token: string) => {
+  const response = await axiosInstance.get(`/api/admin/ekskul/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useGetDataEkskulById = (id: string) => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_data_ekskul_by_id", id],
+    queryFn: () => getDataEkskulById(id, token),
+  });
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};

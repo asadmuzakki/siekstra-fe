@@ -106,8 +106,8 @@ export const useDeleteDataTutorById = () => {
   };
 };
 
-const deleteDataAbsensiTutorById = async (id: string, token: string) => {
-  const response = await axiosInstance.delete(`/api/admin/absensi-tutor/${id}`, {
+const deleteDataEkskulById = async (id: string, token: string) => {
+  const response = await axiosInstance.delete(`/api/admin/ekskul/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -115,17 +115,17 @@ const deleteDataAbsensiTutorById = async (id: string, token: string) => {
   return response.data;
 };
 
-export const useDeleteDataAbsensiTutorById = () => {
+export const useDeleteDataEkskulById = () => {
   const [cookies] = useCookies(["authToken"]);
   const { stateHandle } = useGlobalContext();
   const token = cookies.authToken;
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationKey: ["delete_data_absensi_tutor_by_id"],
-    mutationFn: (id: string) => deleteDataAbsensiTutorById(id, token),
+    mutationKey: ["delete_data_ekskul_by_id"],
+    mutationFn: (id: string) => deleteDataEkskulById(id, token),
     onSuccess: () => {
       stateHandle("delete", true);
-      queryClient.invalidateQueries({ queryKey: ["get_data_absensi_tutor"] });
+      queryClient.invalidateQueries({ queryKey: ["get_data_ekskul_admin"] });
     },
     onError: (err) => {
       console.log(err);

@@ -25,7 +25,7 @@ import ProtectedRoute from "./Auth/ProtectedRoute";
 import UpdatePenilaianTutor from "./Pages/tutor/UpdatePenilaianTutor";
 import DataWaliMurid from "./Pages/admin/DataWaliMurid";
 import DataTutor from "./Pages/admin/DataTutor";
-import DataAbsensiTutor from "./Pages/admin/DataAbsensiTutor";
+import DataEkskul from "./Pages/admin/DataEkskul";
 
 const App = () => {
   return (
@@ -65,10 +65,10 @@ const App = () => {
         }
       />
       <Route
-        path="/absensi"
+        path="/admin-ekstrakurikuler"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <DataAbsensiTutor />
+            <DataEkskul />
           </ProtectedRoute>
         }
       />
