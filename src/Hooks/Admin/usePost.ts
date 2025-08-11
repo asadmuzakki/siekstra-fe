@@ -226,3 +226,69 @@ export const useCreateDataEkskul = () => {
     error: mutation.isError,
   };
 };
+
+const createDataAbsensiTutor = async (
+  data: {
+    tutor_id: number;
+    ekskul_id: number;
+    tanggal: string;
+    status: "Hadir" | "Alpha" | "Izin" | "Sakit";
+    keterangan?: string;
+  },
+  token: string
+) => {
+  const response = await axiosInstance.post("/api/admin/absensi-tutor", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useCreateDataAbsensiTutor = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const { stateHandle } = useGlobalContext();
+  const token = cookies.authToken;
+  const query = useQueryClient();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<{
+    tutor_id: number;
+    ekskul_id: number;
+    tanggal: string;
+    status: "Hadir" | "Alpha" | "Izin" | "Sakit";
+    keterangan?: string;
+  }>();
+
+  const mutation = useMutation({
+    mutationKey: ["create_data_absensi_tutor"],
+    mutationFn: (data: {
+      tutor_id: number;
+      ekskul_id: number;
+      tanggal: string;
+      status: "Hadir" | "Alpha" | "Izin" | "Sakit";
+      keterangan?: string;
+    }) => createDataAbsensiTutor(data, token),
+    onSuccess: () => {
+      reset();
+      stateHandle("post", true);
+      query.invalidateQueries({ queryKey: ["get_data_absensi_tutor"] });
+    },
+    onError: () => {
+      stateHandle("post", true);
+    },
+  });
+
+  return {
+    register,
+    handleSubmit,
+    errors,
+    onSubmit: mutation.mutate,
+    isLoading: mutation.isPending,
+    success: mutation.isSuccess,
+    error: mutation.isError,
+  };
+};

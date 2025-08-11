@@ -26,6 +26,7 @@ import UpdatePenilaianTutor from "./Pages/tutor/UpdatePenilaianTutor";
 import DataWaliMurid from "./Pages/admin/DataWaliMurid";
 import DataTutor from "./Pages/admin/DataTutor";
 import DataEkskul from "./Pages/admin/DataEkskul";
+import DataAbsensiTutor from "./Pages/admin/DataAbsensiTutor";
 
 const App = () => {
   return (
@@ -69,6 +70,14 @@ const App = () => {
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <DataEkskul />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/absensi"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <DataAbsensiTutor />
           </ProtectedRoute>
         }
       />

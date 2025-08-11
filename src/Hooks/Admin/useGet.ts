@@ -169,3 +169,28 @@ export const useGetDataEkskulById = (id: string) => {
     error,
   };
 };
+
+const getDataAbsensiTutor = async (token: string) => {
+  const response = await axiosInstance.get("/api/admin/absensi-tutor", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useGetDataAbsensiTutor = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_data_absensi_tutor"],
+    queryFn: () => getDataAbsensiTutor(token),
+  });
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+
