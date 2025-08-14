@@ -99,7 +99,7 @@ export const useGetDataTutorAdmin = () => {
 };
 
 const getDataTutorById = async (id: string, token: string) => {
-  const response = await axiosInstance.get(`/api/admin/getTutors/${id}`, {
+  const response = await axiosInstance.get(`/api/admin/getTutor/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -111,7 +111,7 @@ export const useGetDataTutorById = (id: string) => {
   const [cookies] = useCookies(["authToken"]);
   const token = cookies.authToken
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get_data_tutor_by_id"],
+    queryKey: ["get_data_tutor_by_id", id],
     queryFn: () => getDataTutorById(id, token),
   });
   return {
@@ -193,4 +193,31 @@ export const useGetDataAbsensiTutor = () => {
     error,
   };
 };
+
+const getDataWaliById = async (id: string, token: string) => {
+  const response = await axiosInstance.get(`/api/admin/getWaliMurid/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useGetDataWaliById = (id: string) => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_data_wali_by_id", id],
+    queryFn: () => getDataWaliById(id, token),
+  });
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+
+
+
 

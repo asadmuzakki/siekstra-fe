@@ -39,6 +39,8 @@ const CardCreateDataTutor: React.FC<Props> = ({
       isLoading,
    } = useCreateDataTutor();
 
+   
+
    const {
       setValue,
       onSubmit_update,
@@ -120,7 +122,7 @@ const CardCreateDataTutor: React.FC<Props> = ({
                            Nama
                         </label>
                         <input
-                           value={name}
+                           defaultValue={data_tutor_by_id?.user?.name}
                            {...register("name")}
                            onChange={(e) => setName(e.target.value)}
                            type="text"
@@ -138,7 +140,7 @@ const CardCreateDataTutor: React.FC<Props> = ({
                            Email
                         </label>
                         <input
-                           value={email}
+                            defaultValue={data_tutor_by_id?.user?.email}
                            {...register("email")}
                            onChange={(e) => setEmail(e.target.value)}
                            type="email"

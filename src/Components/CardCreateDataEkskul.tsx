@@ -93,6 +93,8 @@ const CardCreateDataEkskul: React.FC<Props> = ({
       setErrorUpdate(true);
       setShow(false);
     }
+    console.log(data);
+    
   }, [success, error, data, isSuccess_update, isError_update]);
 
   return (
@@ -128,7 +130,7 @@ const CardCreateDataEkskul: React.FC<Props> = ({
                   Nama Ekstrakurikuler
                 </label>
                 <input
-                  value={namaEkskul}
+                 defaultValue={data?.data?.nama_ekskul}
                   {...(!isEdit && register("namaEkskul"))}
                   onChange={(e) => setNamaEkskul(e.target.value)}
                   type="text"
@@ -146,7 +148,7 @@ const CardCreateDataEkskul: React.FC<Props> = ({
                   Nama Tutor
                 </label>
                 <input
-                  value={namaTutor}
+               defaultValue={data?.data?.tutor?.name}
                   {...(!isEdit && register("namaTutor"))}
                   onChange={(e) => setNamaTutor(e.target.value)}
                   type="text"
@@ -182,7 +184,7 @@ const CardCreateDataEkskul: React.FC<Props> = ({
                   Status
                 </label>
                 <select
-                  value={status}
+                       defaultValue={data?.data?.status === "aktif" ? "Aktif" : data?.data?.status === "nonaktif" ? "Tidak Aktif" : ""}
                   {...(!isEdit && register("status"))}
                   onChange={(e) => setStatus(e.target.value)}
                   className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

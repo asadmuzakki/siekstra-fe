@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useCreateDataWaliMurid } from "../Hooks/Admin/usePost";
 import { useUpdateDataWaliMurid } from "../Hooks/Admin/usePatch";
 import LoadingSpinner from "./LoadingSpinner";
+import { useGetDataWaliById } from "../Hooks/Admin/useGet";
 
 type Props = {
    setShow: (val: boolean) => void;
@@ -45,6 +46,8 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
       isError_update,
    } = useUpdateDataWaliMurid(idSiswa || "");
 
+   const {data: dataWali} = useGetDataWaliById(idSiswa || "");
+
    const handleFormSubmit = (data: { name: string; email: string; password: string; password_confirmation: string }) => {
       onSubmit({ ...data, password_confirmation: passwordConfirmation });
       console.log({ ...data, password_confirmation: passwordConfirmation });
@@ -74,6 +77,7 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
          setErrorUpdate(true);
          setShow(false);
       }
+      
    }, [isEdit, idSiswa, name, email, password, passwordConfirmation, success, error, isSuccess_update, isError_update, setSuccessCreate, setErrorCreate, setSuccessUpdate, setErrorUpdate, setShow, setValue]);
 
    const handleFormUpdate = (data: {
@@ -122,7 +126,7 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
                            Nama
                         </label>
                         <input
-                           value={name}
+                                 defaultValue={dataWali?.user?.name}
                            {...register("name")}
                            onChange={(e) => setName(e.target.value)}
                            type="text"
@@ -140,7 +144,7 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
                            Email
                         </label>
                         <input
-                           value={email}
+                           defaultValue={dataWali?.user?.email}
                            {...register("email")}
                            onChange={(e) => setEmail(e.target.value)}
                            type="email"

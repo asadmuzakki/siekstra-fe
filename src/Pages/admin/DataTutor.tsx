@@ -134,6 +134,7 @@ const DataTutor = () => {
                            <button
                               onClick={() => {
                                  setShowPopup(true)
+                                 setIdTutor('')
                                  setIsEdit(false)
                               }}
                               className="px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400"
