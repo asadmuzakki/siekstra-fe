@@ -17,7 +17,7 @@ const login = async (data: LoginModelsType) => {
 };
 export const useLogin = () => {
   const { stateHandle } = useGlobalContext();
-  const [, setCookie, ] = useCookies(["authToken", 'role', 'user_id']);
+  const [, setCookie] = useCookies(["authToken", "role", "user_id"]);
   const {
     register,
     reset,
@@ -37,8 +37,8 @@ export const useLogin = () => {
         secure: true,
         sameSite: "strict",
       });
-      setCookie('role', data.role[0])
-      setCookie('user_id', data.user_id)
+      setCookie("role", data.role[0]);
+      setCookie("user_id", data.user_id);
       stateHandle("showPopup", true);
       reset();
     },
@@ -97,3 +97,23 @@ export const useRegistration = () => {
     error: mutation.isError,
   };
 };
+
+export const useLogout = () => {
+  const { stateHandle } = useGlobalContext();
+  const [, , removeCookie] = useCookies(["authToken", "role", "user_id"]);
+
+  const logout = () => {
+    removeCookie("authToken", { path: "/" });
+    removeCookie("role", { path: "/" });
+    removeCookie("user_id", { path: "/" });
+
+    // trigger global state
+    stateHandle("showPopup", true);
+  };
+
+  return {
+    logout,
+    succes_message: "Logout berhasil!",
+  };
+};
+

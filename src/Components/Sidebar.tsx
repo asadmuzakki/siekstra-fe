@@ -15,14 +15,14 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebar }) => {
   const isActive = (itemPath: string) => path.includes(itemPath);
 
   useEffect(() => {
-    if (sidebar === "ADMIN") {
+    if (sidebar === "admin") {
       setMenuItem(Types.admin);
       
     }
-    if (sidebar === "WALI_MURID") {
+    if (sidebar === "wali_murid") {
       setMenuItem(Types.waliMurid);
     }
-    if (sidebar === "TUTOR") {
+    if (sidebar === "tutor") {
       setMenuItem(Types.tutor);
     }
   });

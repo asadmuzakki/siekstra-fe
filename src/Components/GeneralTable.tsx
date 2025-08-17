@@ -3,13 +3,14 @@ import { CiTrash } from "react-icons/ci";
 import { formatToHourMinute } from "../Utils/formatTime";
 
 type TableType = {
-  label: string[]; // tanpa kolom 'No'
-  keys: string[]; // tanpa 'id'
+  label: string[];
+  keys: string[];
   data: any[];
   fromComponent?: string;
   action?: boolean;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
+  startNumber?: number; // <--- tambahan baru
 };
 
 const GeneralTable: React.FC<TableType> = ({
@@ -20,6 +21,7 @@ const GeneralTable: React.FC<TableType> = ({
   onEdit,
   onDelete,
   fromComponent,
+  startNumber = 0,
 }) => {
   return (
     <div className="overflow-x-auto mt-4">
@@ -48,7 +50,7 @@ const GeneralTable: React.FC<TableType> = ({
           {data.map((row, rowIndex) => (
             <tr key={row.id || rowIndex} className="hover:bg-gray-50">
               {/* Kolom Nomor */}
-              <td className="px-4 py-3 text-center">{rowIndex + 1}</td>
+              <td className="px-4 py-3 text-center">{(startNumber || 0) + rowIndex + 1}</td>
               {fromComponent === "GeneralComponent" &&
                 keys.map((key, index) => (
                   <td key={index} className="px-4 py-3 text-center truncate">

@@ -5,7 +5,7 @@ const EkstraKurikuler = () => {
   return (
     <div className="flex h-screen overflow-hidden">
       <div onClick={(e) => e.stopPropagation()}>
-        <Sidebar sidebar="WALI_MURID" />
+        <Sidebar sidebar="wali_murid" />
       </div>
       <div className="flex-1 flex flex-col w-full overflow-hidden relative bg-blue-50">
         <div onClick={(e) => e.stopPropagation()}>

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Button from "../../Components/Button";
+// import Button from "../../Components/Button";
 
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
@@ -15,7 +15,7 @@ const Siswa = () => {
   return (
     <div className="flex h-screen overflow-hidden">
       <div onClick={(e) => e.stopPropagation()}>
-        <Sidebar sidebar="TUTOR" />
+        <Sidebar sidebar="tutor" />
       </div>
       <div className="flex-1 flex flex-col w-full overflow-hidden relative bg-blue-50">
         <div onClick={(e) => e.stopPropagation()}>
@@ -33,32 +33,29 @@ const Siswa = () => {
                   Siswa
                 </p>
               </div>
-              <div className="p-5 bg-white shadow-md rounded-md">
-                <div className="flex justify-start items-center w-full py-5 text-gray-600 ">
-                  Daftar Ekstrakurikuler
-                </div>
-                <div>
-                  <Button buttonLabel="Tambah" />
+              <div className="p-5 bg-white shadow-md rounded-md ">
+                <div className="flex justify-start items-center w-full  text-gray-600 text-lg  pb-2 ">
+                  DAFTAR EKSTRAKURIKULER
                 </div>
 
                 <div className="overflow-x-auto mt-4">
                   <table className="min-w-full bg-white overflow-hidden">
-                    <thead className="text-gray-600 text-sm uppercase text-left">
-                      <tr>
-                        <th className="px-4 py-3 border-b border-gray-500 text-center">
+                    <thead className="text-gray-600 text-sm uppercase text-left border-b bordert border-gray-500">
+                      <tr className ="">
+                        <th className="px-4 py-3 text-center">
                           No
                         </th>
 
-                        <th className="px-4 py-3 border-b border-gray-500 text-center truncate">
+                        <th className="px-4 py-3 text-center truncate">
                           Ekstrakurikuler
                         </th>
 
-                        <th className="px-4 py-3 border-b border-gray-500 text-center truncate">
+                        <th className="px-4 py-3 text-center truncate">
                           Aksi
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="text-sm text-gray-700">
+                    <tbody className="text-sm text-gray-700 ">
                       {Array.isArray(data?.data) &&
                         data.data.map((row, rowIndex) => (
                           <tr key={rowIndex} className="hover:bg-gray-50">

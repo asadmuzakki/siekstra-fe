@@ -15,7 +15,7 @@ const Kegiatan = () => {
   return (
     <div className="flex h-screen overflow-hidden">
       <div onClick={(e) => e.stopPropagation()}>
-        <Sidebar sidebar="TUTOR" />
+        <Sidebar sidebar="tutor" />
       </div>
       <div className="flex-1 flex flex-col w-full overflow-hidden relative bg-blue-50">
         <div onClick={(e) => e.stopPropagation()}>
@@ -34,13 +34,9 @@ const Kegiatan = () => {
                 </p>
               </div>
               <div className="p-5 bg-white shadow-md rounded-md">
-                <div className="flex justify-start items-center w-full py-5 text-gray-600 ">
-                  Daftar Ekstrakurikuler
+                <div className="flex justify-start items-center w-full text-lg  pb-2 text-gray-600 ">
+                  DAFTAR EKSTRAKURIKULER
                 </div>
-                <div>
-                  <Button buttonLabel="Tambah" />
-                </div>
-
                 <div className="overflow-x-auto mt-4">
                   <table className="min-w-full bg-white overflow-hidden">
                     <thead className="text-gray-600 text-sm uppercase text-left">

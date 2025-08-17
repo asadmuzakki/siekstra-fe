@@ -56,8 +56,8 @@ export const admin: SidebarMenu[] = [
   },
   {
     icon: <GrScorecard />,
-    label: "Rekaptulasi",
-    path: "/rekaptulasi",
+    label: "Rekapitulasi",
+    path: "/rekapitulasi",
   },
   {
     icon: <MdInsertChartOutlined />,

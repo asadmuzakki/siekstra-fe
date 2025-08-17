@@ -5,6 +5,7 @@ import DashboardWaliMurid from "./Pages/WaliMurid/Dashboard";
 import EkstraKurikuler from "./Pages/WaliMurid/Ekstrakurikuler";
 import DashboardAdmin from "./Pages/admin/DashboardAdmin";
 import DataSiswa from "./Pages/admin/DataSiswa";
+import DataRekapitulasi from "./Pages/admin/DataRekapitulasi.";
 
 import Kegiatan from "./Pages/tutor/Kegiatan";
 
@@ -27,6 +28,9 @@ import DataWaliMurid from "./Pages/admin/DataWaliMurid";
 import DataTutor from "./Pages/admin/DataTutor";
 import DataEkskul from "./Pages/admin/DataEkskul";
 import DataAbsensiTutor from "./Pages/admin/DataAbsensiTutor";
+import Profile from "./Pages/profile/profile";
+import DetailRekapPenilaian from "./Pages/admin/DetailRekapPenilaian";
+import DetailRekapAbsensi from "./Pages/admin/DetailRekapAbsensi";
 
 const App = () => {
   return (
@@ -81,6 +85,33 @@ const App = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/rekapitulasi"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <DataRekapitulasi />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/rekapitulasi/penilaian"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <DetailRekapPenilaian />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/rekapitulasi/absensi"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <DetailRekapAbsensi />
+          </ProtectedRoute>
+        }
+      />
+
       {/* admin */}
 
       {/* Orang Tua */}
@@ -148,13 +179,45 @@ const App = () => {
         element={<DetailPenilaianTutor />}
       />
 
-      <Route path="/tutor-absensi" element={<TutorPresensi />} />
+      <Route
+        path="/tutor-absensi"
+        element={
+          <ProtectedRoute allowedRoles={["tutor"]}>
+            <TutorPresensi />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Tutor */}
 
       {/* Test */}
 
       {/* Test */}
+
+      <Route
+        path="/profile/admin"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile/tutor"
+        element={
+          <ProtectedRoute allowedRoles={["tutor"]}>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile/wali"
+        element={
+          <ProtectedRoute allowedRoles={["wali_murid"]}>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 };

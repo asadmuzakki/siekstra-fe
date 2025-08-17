@@ -218,6 +218,90 @@ export const useGetDataWaliById = (id: string) => {
   };
 };
 
+const getRekapPenilaian = async (
+  token: string,
+  tahun?: string,
+  sort_by?: string,
+  sort_order?: string
+) => {
+  const params: Record<string, string> = {};
+  if (tahun) params.tahun = tahun;
+  if (sort_by) params.sort_by = sort_by;
+  if (sort_order) params.sort_order = sort_order;
+
+  const response = await axiosInstance.get("/api/admin/nilaiByDetail", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params,
+  });
+
+  return response.data;
+};
+
+export const useGetRekapPenilaian = (
+  tahun?: string,
+  sort_by?: string,
+  sort_order?: string
+) => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["rekap_penilaian", tahun, sort_by, sort_order],
+    queryFn: () => getRekapPenilaian(token, tahun, sort_by, sort_order),
+  });
+
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+
+const getRekapAbsensi = async (
+  token: string,
+  tahun?: string,
+  sort_by?: string,
+  sort_order?: string
+) => {
+  const params: Record<string, string> = {};
+  if (tahun) params.tahun = tahun;
+  if (sort_by) params.sort_by = sort_by;
+  if (sort_order) params.sort_order = sort_order;
+
+  const response = await axiosInstance.get("/api/admin/absensiByDetail", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params,
+  });
+
+  return response.data;
+};
+
+export const useGetRekapAbsensi = (
+  tahun?: string,
+  sort_by?: string,
+  sort_order?: string
+) => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["rekap_absensi", tahun, sort_by, sort_order],
+    queryFn: () => getRekapAbsensi(token, tahun, sort_by, sort_order),
+  });
+
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+
 
 
 

@@ -42,7 +42,7 @@ const DataEkskul = () => {
   return (
     <div className="flex h-screen overflow-hidden">
       <div onClick={(e) => e.stopPropagation()}>
-        <Sidebar sidebar="ADMIN" />
+        <Sidebar sidebar="admin" />
       </div>
       <div className="flex-1 flex flex-col w-full overflow-hidden relative bg-blue-50">
         <div onClick={(e) => e.stopPropagation()}>

@@ -120,7 +120,7 @@ const TutorPresensi = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar sidebar="TUTOR" />
+      <Sidebar sidebar="tutor" />
 
       <div className="flex-1 flex flex-col w-full overflow-hidden relative bg-blue-50">
         <Header />
@@ -156,8 +156,8 @@ const TutorPresensi = () => {
               </div>
 
               <div className="p-5 bg-white shadow-md rounded-md">
-                <div className="flex justify-start items-center w-full py-5 text-gray-600">
-                  Riwayat Presensi
+                <div className="flex justify-start items-center w-full text-lg  pb-2 text-gray-600">
+                  RIWAYAT PRESENSI
                 </div>
                 <div className="w-full flex justify-end items-center">
                   <button
