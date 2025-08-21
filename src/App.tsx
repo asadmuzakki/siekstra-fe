@@ -28,9 +28,12 @@ import DataWaliMurid from "./Pages/admin/DataWaliMurid";
 import DataTutor from "./Pages/admin/DataTutor";
 import DataEkskul from "./Pages/admin/DataEkskul";
 import DataAbsensiTutor from "./Pages/admin/DataAbsensiTutor";
-import Profile from "./Pages/profile/profile";
+import Profile from "./Pages/profile/Profile";
 import DetailRekapPenilaian from "./Pages/admin/DetailRekapPenilaian";
 import DetailRekapAbsensi from "./Pages/admin/DetailRekapAbsensi";
+import Presensi from "./Pages/WaliMurid/Presensi";
+import Nilai from "./Pages/WaliMurid/Nilai";
+import KegiatanSiswa from "./Pages/WaliMurid/Kegiatan";
 
 const App = () => {
   return (
@@ -115,8 +118,50 @@ const App = () => {
       {/* admin */}
 
       {/* Orang Tua */}
-      <Route path="/dashboard-anak" element={<DashboardWaliMurid />} />
-      <Route path="/ekstrakurikuler" element={<EkstraKurikuler />} />
+      <Route
+        path="/dashboard-anak"
+        element={
+          <ProtectedRoute allowedRoles={["wali_murid"]}>
+            <DashboardWaliMurid />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ekstrakurikuler"
+        element={
+          <ProtectedRoute allowedRoles={["wali_murid"]}>
+            <EkstraKurikuler />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/presensi/:id"
+        element={
+          <ProtectedRoute allowedRoles={["wali_murid"]}>
+            <Presensi />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/nilai/:id"
+        element={
+          <ProtectedRoute allowedRoles={["wali_murid"]}>
+            <Nilai />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/wali-kegiatan/:id"
+        element={
+          <ProtectedRoute allowedRoles={["wali_murid"]}>
+            <KegiatanSiswa />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path="/login" element={<Login />} />
       <Route path="/registration" element={<Registration />} />
       {/* Orang Tua */}

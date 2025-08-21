@@ -171,18 +171,40 @@ async function updateDataEkskul(
   id: string,
   data: {
     namaEkskul: string;
-    namaTutor: string;
-    jumlahSiswa: number;
+    deskripsi: string;
+    jadwal: string;
+    tempat: string;
+    tutorId: string;
     status: string;
-    tanggal: string;
+    kelasMin: number;
+    kelasMax: number;
+    foto?: File;
   },
   token: string
 ) {
-  const response = await axiosInstance.patch(`/api/admin/update-ekskul/${id}`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const formData = new FormData();
+  formData.append("nama_ekskul", data.namaEkskul);
+  formData.append("deskripsi", data.deskripsi);
+  formData.append("jadwal", data.jadwal);
+  formData.append("tempat", data.tempat);
+  formData.append("tutor_id", data.tutorId);
+  formData.append("status", data.status);
+  formData.append("kelas_min", String(data.kelasMin));
+  formData.append("kelas_max", String(data.kelasMax));
+  if (data.foto) {
+    formData.append("foto", data.foto);
+  }
+
+  const response = await axiosInstance.patch(
+    `/api/admin/update-ekskul/${id}`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
   return response.data;
 }
 
@@ -197,27 +219,11 @@ export function useUpdateDataEkskul(id: string) {
     setValue,
     handleSubmit: handleSubmit_update,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(
-      z.object({
-        namaEkskul: z.string().min(1, "Nama Ekstrakurikuler Tidak Boleh Kosong"),
-        namaTutor: z.string().min(1, "Nama Tutor Tidak Boleh Kosong"),
-        jumlahSiswa: z.number().min(1, "Jumlah Siswa Harus Lebih dari 0"),
-        status: z.string().min(1, "Status Tidak Boleh Kosong"),
-        tanggal: z.string().min(1, "Tanggal Tidak Boleh Kosong"),
-      })
-    ),
-  });
+  } = useForm();
 
   const mutation = useMutation({
     mutationKey: ["update_data_ekskul", id],
-    mutationFn: (data: {
-      namaEkskul: string;
-      namaTutor: string;
-      jumlahSiswa: number;
-      status: string;
-      tanggal: string;
-    }) => updateDataEkskul(id, data, token),
+    mutationFn: (data: any) => updateDataEkskul(id, data, token),
     onSuccess: () => {
       stateHandle("update", true);
       queryClient.invalidateQueries({ queryKey: ["get_data_ekskul_admin"] });
@@ -237,3 +243,4 @@ export function useUpdateDataEkskul(id: string) {
     isError_update: mutation.isError,
   };
 }
+

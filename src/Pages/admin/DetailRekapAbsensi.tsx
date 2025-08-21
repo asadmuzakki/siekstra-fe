@@ -3,10 +3,12 @@ import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
 import GeneralTable from "../../Components/GeneralTable";
 import { useGetRekapAbsensi } from "../../Hooks/Admin/useGet";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const DetailRekapAbsensi = () => {
-  const label = ["Tanggal", "Ekskul", "Siswa", "Kelas", "Status", "Keterangan"];
-  const keys = ["tanggal", "ekskul", "siswa", "kelas", "status", "ket"];
+  const label = ["Siswa", "Ekskul", "Kelas", "Status", "Keterangan", "Tanggal"];
+  const keys = ["siswa", "ekskul", "kelas", "status", "ket", "tanggal"];
 
   // filter & sort state
   const [tahunFilter, setTahunFilter] = useState("");
@@ -52,6 +54,33 @@ const DetailRekapAbsensi = () => {
     setPage(1);
   };
 
+  // handler export excel
+  const exportToExcel = () => {
+    const exportData = mappedData.map((row: any, index: number) => ({
+      No: index + 1,
+      Siswa: row.siswa,
+      Ekskul: row.ekskul,
+      Kelas: row.kelas,
+      Status: row.status,
+      Keterangan: row.ket,
+      Tanggal: row.tanggal,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Absensi");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const fileData = new Blob([excelBuffer], {
+      type: "application/octet-stream",
+    });
+    saveAs(fileData, `rekap_absensi_${tahunFilter || "all"}.xlsx`);
+  };
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar sidebar="admin" />
@@ -63,7 +92,7 @@ const DetailRekapAbsensi = () => {
             Detail Rekap Absensi
           </h1>
 
-          {/* Filter Tahun */}
+          {/* Filter Tahun + Export */}
           <div className="flex gap-4 mb-4">
             <select
               value={tahunFilter}
@@ -78,6 +107,15 @@ const DetailRekapAbsensi = () => {
               <option value="2024">2024</option>
               <option value="2023">2023</option>
             </select>
+
+            {/* Tombol Export */}
+            <button
+              onClick={exportToExcel}
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              disabled={mappedData.length === 0}
+            >
+              Export Excel
+            </button>
           </div>
 
           {/* Tombol Sort */}

@@ -1,8 +1,23 @@
+import { useNavigate } from "react-router-dom";
 import Button from "../../Components/Button";
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
+import { useEffect } from "react";
+import { useGetDataAnak } from "../../Hooks/WaliMurid/useGet";
 
 const DashboardWaliMurid = () => {
+  const navigate = useNavigate();
+
+  const { data, isLoading, isError, error } = useGetDataAnak();
+  
+
+  useEffect(() => {
+    console.log(data);
+    if (data?.data && data.data.length > 0) {
+      console.log("Nama anak pertama:", data.data[0].nama);
+    }
+  }, [data]);
+
   return (
     <div className="flex h-screen overflow-hidden">
       <div onClick={(e) => e.stopPropagation()}>
@@ -49,29 +64,64 @@ const DashboardWaliMurid = () => {
                     </tr>
                   </thead>
                   <tbody className="text-sm text-gray-700">
-                    {/* Contoh baris data */}
-                    <tr className="hover:bg-gray-50">
-                      <td className="px-4 py-3  text-center truncate">1</td>
-                      <td className="px-4 py-3  text-center truncate">
-                        123456
-                      </td>
-                      <td className="px-4 py-3  text-center truncate">
-                        Ahmad Yusuf
-                      </td>
-                      <td className="px-4 py-3  text-center truncate">9A</td>
-                      <td className="px-4 py-3  text-center truncate">
-                        Futsal
-                      </td>
-                      <td className="px-4 py-3  text-center truncate space-x-2">
-                        <button className="px-3 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600 cursor-pointer">
-                          Presensi
-                        </button>
-                        <button className="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 cursor-pointer">
-                          Nilai
-                        </button>
-                      </td>
-                    </tr>
-                    {/* Tambahkan baris lainnya sesuai data */}
+                    {data?.data && data.data.length > 0 ? (
+                      data.data.map((anak: any, index: number) => (
+                        <tr key={anak.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-center truncate">
+                            {index + 1}
+                          </td>
+                          <td className="px-4 py-3 text-center truncate">
+                            {anak.nis}
+                          </td>
+                          <td className="px-4 py-3 text-center truncate">
+                            {anak.nama}
+                          </td>
+                          <td className="px-4 py-3 text-center truncate">
+                            {anak.kelas}
+                          </td>
+                          <td className="px-4 py-3 text-center truncate">
+                            {anak.pendaftarans && anak.pendaftarans.length > 0
+                              ? anak.pendaftarans
+                                  .map((p: any) => p.ekskul?.nama_ekskul)
+                                  .join(", ")
+                              : "-"}
+                          </td>
+                          <td className="px-4 py-3 text-center truncate space-x-2">
+                            <button
+                              onClick={() => navigate(`/presensi/${anak.id}`)}
+                              className="px-3 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600 cursor-pointer"
+                            >
+                              Presensi
+                            </button>
+                            <button
+                              onClick={() => navigate(`/nilai/${anak.id}`)}
+                              className="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 cursor-pointer"
+                            >
+                              Nilai
+                            </button>
+                            <button
+                              onClick={() => navigate(`/wali-kegiatan/${anak.id}`)}
+                              className="px-3 py-1 bg-orange-400 text-white rounded text-xs hover:bg-orange-500 cursor-pointer"
+                            >
+                              Kegiatan
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan={6}
+                          className="text-center text-gray-500 py-4"
+                        >
+                          {isLoading
+                            ? "Loading..."
+                            : isError
+                            ? `Gagal memuat data: ${error?.message ?? "Unknown error"}`
+                            : "Belum ada data anak"}
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>

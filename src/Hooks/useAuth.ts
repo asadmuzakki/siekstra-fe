@@ -98,22 +98,48 @@ export const useRegistration = () => {
   };
 };
 
+const logoutRequest = async (token: string) => {
+  const res = await axiosInstance.post(
+    "/api/logout",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
 export const useLogout = () => {
   const { stateHandle } = useGlobalContext();
-  const [, , removeCookie] = useCookies(["authToken", "role", "user_id"]);
+  const [cookies, , removeCookie] = useCookies(["authToken", "role", "user_id"]);
 
-  const logout = () => {
-    removeCookie("authToken", { path: "/" });
-    removeCookie("role", { path: "/" });
-    removeCookie("user_id", { path: "/" });
+  const mutation = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: () => logoutRequest(cookies.authToken),
+    onSuccess: () => {
+      // hapus cookies
+      removeCookie("authToken", { path: "/" });
+      removeCookie("role", { path: "/" });
+      removeCookie("user_id", { path: "/" });
 
-    // trigger global state
-    stateHandle("showPopup", true);
-  };
+      // munculkan popup sukses
+      stateHandle("showPopup", true);
+    },
+    onError: () => {
+      // popup gagal
+      stateHandle("showPopup", true);
+    },
+  });
 
   return {
-    logout,
+    logout: mutation.mutate,
+    isLoading: mutation.isPending,
+    success: mutation.isSuccess,
+    error: mutation.isError,
     succes_message: "Logout berhasil!",
+    error_message: "Logout gagal!",
   };
 };
 

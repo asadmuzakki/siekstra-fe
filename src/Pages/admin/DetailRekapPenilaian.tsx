@@ -3,26 +3,20 @@ import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
 import GeneralTable from "../../Components/GeneralTable";
 import { useGetRekapPenilaian } from "../../Hooks/Admin/useGet";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const DetailRekapPenilaian = () => {
   const label = [
-    "Tanggal",
+    "Nama",
     "Ekskul",
-    "Siswa",
     "Kelas",
     "Nilai Akhir",
     "Indeks",
     "Keterangan",
+    "Tanggal",
   ];
-  const keys = [
-    "tanggal",
-    "ekskul",
-    "siswa",
-    "kelas",
-    "nilai",
-    "indeks",
-    "ket",
-  ];
+  const keys = ["nama", "ekskul", "kelas", "nilai", "indeks", "ket", "tanggal"];
 
   // filter & sort state
   const [tahunFilter, setTahunFilter] = useState("");
@@ -41,13 +35,13 @@ const DetailRekapPenilaian = () => {
   // mapping data API ke format table
   const mappedData =
     data?.data?.map((item: any) => ({
-      tanggal: item.tanggal,
+      nama: item.nama_siswa,
       ekskul: item.nama_ekskul ?? "-",
-      siswa: item.nama_siswa,
       kelas: item.kelas,
       nilai: item.nilai_akhir,
       indeks: item.index_nilai,
       ket: item.keterangan ?? "-",
+      tanggal: item.tanggal,
     })) || [];
 
   // pagination
@@ -62,11 +56,45 @@ const DetailRekapPenilaian = () => {
   // sort handler
   const requestSort = (key: string) => {
     let direction: "asc" | "desc" = "asc";
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "asc"
+    ) {
       direction = "desc";
     }
     setSortConfig({ key, direction });
     setPage(1);
+  };
+ 
+
+  const exportToExcel = () => {
+    const exportData = mappedData.map((row: any, index: number) => ({
+      No: index + 1,
+      Nama: row.nama,
+      Ekskul: row.ekskul,
+      Kelas: row.kelas,
+      "Nilai Akhir": row.nilai,
+      Indeks: row.indeks,
+      Keterangan: row.ket,
+      Tanggal: row.tanggal,
+    }));
+
+    // konversi ke worksheet
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Penilaian");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const fileData = new Blob([excelBuffer], {
+      type: "application/octet-stream",
+    });
+    saveAs(fileData, `rekap_penilaian_${tahunFilter || "all"}.xlsx`);
   };
 
   return (
@@ -95,6 +123,15 @@ const DetailRekapPenilaian = () => {
               <option value="2024">2024</option>
               <option value="2023">2023</option>
             </select>
+
+            {/* Tombol Export */}
+            <button
+              onClick={exportToExcel}
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              disabled={mappedData.length === 0}
+            >
+              Export Excel
+            </button>
           </div>
 
           {/* Tombol Sort */}

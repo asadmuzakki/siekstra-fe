@@ -24,7 +24,7 @@ const DataRekapitulasi = () => {
   // Mapping data penilaian
   const penilaianData =
     penilaianRes?.data?.map((item: any) => ({
-      siswa: item.nama_siswa,
+      nama: item.nama_siswa,
       ekskul: item.nama_ekskul ?? "-",
       kelas: item.kelas,
       nilai: item.nilai_akhir,
@@ -35,7 +35,7 @@ const DataRekapitulasi = () => {
 
   // definisi tabel penilaian
   const penilaianLabel = [
-    "Siswa",
+    "Nama",
     "Ekskul",
     "Kelas",
     "Nilai",
@@ -44,7 +44,7 @@ const DataRekapitulasi = () => {
     "Tanggal",
   ];
   const penilaianKeys = [
-    "siswa",
+    "nama",
     "ekskul",
     "kelas",
     "nilai",
@@ -56,7 +56,7 @@ const DataRekapitulasi = () => {
   // Mapping data absensi
   const absensiData =
     absensiRes?.data?.map((item: any) => ({
-      siswa: item.nama_siswa,
+      nama: item.nama_siswa,
       ekskul: item.nama_ekskul ?? "-",
       kelas: item.kelas ?? "-",
       status: item.status,
@@ -66,14 +66,14 @@ const DataRekapitulasi = () => {
 
   // definisi tabel absensi
   const absensiLabel = [
-    "Siswa",
+    "Nama",
     "Ekskul",
     "Kelas",
     "Status",
     "Keterangan",
     "Tanggal",
   ];
-  const absensiKeys = ["siswa", "ekskul", "kelas", "status", "ket", "tanggal"];
+  const absensiKeys = ["nama", "ekskul", "kelas", "status", "ket", "tanggal"];
 
   return (
     <div className="flex h-screen overflow-hidden">

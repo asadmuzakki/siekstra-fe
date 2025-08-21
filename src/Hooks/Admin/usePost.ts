@@ -27,7 +27,7 @@ export const useCreateDataSiswa = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
   } = useForm<DataSiswaModelType>({
     resolver: zodResolver(DataSiswaModel),
   });
@@ -35,13 +35,12 @@ export const useCreateDataSiswa = () => {
     mutationKey: ["create_data_siswa"],
     mutationFn: (data: DataSiswaModelType) => createDataSiswa(data, token),
     onSuccess: () => {
-      reset()
+      reset();
       stateHandle("post", true);
       query.invalidateQueries({ queryKey: ["get_data_siswa_admin"] });
     },
     onError: () => {
       stateHandle("post", true);
-
     },
   });
   return {
@@ -52,12 +51,16 @@ export const useCreateDataSiswa = () => {
     isLoading: mutation.isPending,
     success: mutation.isSuccess,
     error: mutation.isError,
-   
   };
 };
 
 const createDataWaliMurid = async (
-  data: { name: string; email: string; password: string; password_confirmation: string },
+  data: {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+  },
   token: string
 ) => {
   const response = await axiosInstance.post("/api/admin/add-wali-murid", data, {
@@ -86,8 +89,12 @@ export const useCreateDataWaliMurid = () => {
   }>();
   const mutation = useMutation({
     mutationKey: ["create_data_wali_murid"],
-    mutationFn: (data: { name: string; email: string; password: string; password_confirmation: string }) =>
-      createDataWaliMurid(data, token),
+    mutationFn: (data: {
+      name: string;
+      email: string;
+      password: string;
+      password_confirmation: string;
+    }) => createDataWaliMurid(data, token),
     onSuccess: () => {
       reset();
       stateHandle("post", true);
@@ -95,7 +102,7 @@ export const useCreateDataWaliMurid = () => {
     },
     onError: (err) => {
       console.log(err);
-      
+
       stateHandle("post", true);
     },
   });
@@ -140,8 +147,12 @@ export const useCreateDataTutor = () => {
   }>();
   const mutation = useMutation({
     mutationKey: ["create_data_tutor"],
-    mutationFn: (data: { name: string; email: string; password: string; password_confirmation: string }) =>
-      createDataTutor(data, token),
+    mutationFn: (data: {
+      name: string;
+      email: string;
+      password: string;
+      password_confirmation: string;
+    }) => createDataTutor(data, token),
     onSuccess: () => {
       reset();
       stateHandle("post", true);
@@ -165,16 +176,39 @@ export const useCreateDataTutor = () => {
 const createDataEkskul = async (
   data: {
     namaEkskul: string;
-    namaTutor: string;
-    jumlahSiswa: number;
+    deskripsi: string;
+    jadwal: string;
+    tempat: string;
+    tutorId: number; // ✅ ubah ke number
     status: string;
-    tanggal: string;
+    kelasMin: number;
+    kelasMax: number;
+    foto?: File | null; // ✅ file tunggal
   },
   token: string
 ) => {
-  const response = await axiosInstance.post("/api/admin/add-ekskul", data, {
+  const formData = new FormData();
+  formData.append("nama_ekskul", data.namaEkskul);
+  formData.append("deskripsi", data.deskripsi);
+  formData.append("jadwal", data.jadwal);
+  formData.append("tempat", data.tempat);
+  formData.append("tutor_id", String(data.tutorId));
+  formData.append("status", data.status);
+  formData.append("kelas_min", String(data.kelasMin));
+  formData.append("kelas_max", String(data.kelasMax));
+
+  if (data.foto) {
+    formData.append("foto", data.foto); // ✅ kirim File langsung
+  }
+
+  // debug log
+  console.log("📦 Payload Ekskul (FormData):");
+  formData.forEach((val, key) => console.log(key, val));
+
+  const response = await axiosInstance.post("/api/admin/ekskul", formData, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
     },
   });
   return response.data;
@@ -185,6 +219,7 @@ export const useCreateDataEkskul = () => {
   const { stateHandle } = useGlobalContext();
   const token = cookies.authToken;
   const query = useQueryClient();
+
   const {
     register,
     handleSubmit,
@@ -192,19 +227,28 @@ export const useCreateDataEkskul = () => {
     reset,
   } = useForm<{
     namaEkskul: string;
-    namaTutor: string;
-    jumlahSiswa: number;
+    deskripsi: string;
+    jadwal: string;
+    tempat: string;
+    tutorId: number;
     status: string;
-    tanggal: string;
+    kelasMin: number;
+    kelasMax: number;
+    // ⚠️ foto dihapus dari register
   }>();
+
   const mutation = useMutation({
     mutationKey: ["create_data_ekskul"],
     mutationFn: (data: {
       namaEkskul: string;
-      namaTutor: string;
-      jumlahSiswa: number;
+      deskripsi: string;
+      jadwal: string;
+      tempat: string;
+      tutorId: number;
       status: string;
-      tanggal: string;
+      kelasMin: number;
+      kelasMax: number;
+      foto?: File | null;
     }) => createDataEkskul(data, token),
     onSuccess: () => {
       reset();
@@ -212,10 +256,11 @@ export const useCreateDataEkskul = () => {
       query.invalidateQueries({ queryKey: ["get_data_ekskul_admin"] });
     },
     onError: (err) => {
-      console.log(err);
+      console.error("❌ Gagal create ekskul:", err);
       stateHandle("post", true);
     },
   });
+
   return {
     register,
     handleSubmit,

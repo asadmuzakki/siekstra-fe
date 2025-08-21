@@ -294,3 +294,32 @@ export const useGetNilaiSiswaTutorById = (id: string) => {
     error,
   };
 };
+
+
+const getProfile = async (token: string) => {
+  const response = await axiosInstance.get(`/api/profile`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const useGetProfile = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_profile"],
+    queryFn: () => getProfile(token),
+    enabled: !!token,
+  });
+
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+

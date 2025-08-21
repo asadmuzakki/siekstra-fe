@@ -1,9 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
-
-
-
+import { useGetProfile } from "../Hooks/useGet";
 
 type PopupMenuProps = {
   onLogout: () => void;
@@ -13,10 +10,15 @@ type PopupMenuProps = {
 const PopupMenu: React.FC<PopupMenuProps> = ({ onLogout, onProfile }) => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
+  const { data} = useGetProfile();
+
+  useEffect(() => {
+  if (data) {
+    console.log("user data : ", data?.user.name)
+  }
+}, [data]);
 
 
-  // Tutup popup ketika klik di luar area
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -35,7 +37,7 @@ const PopupMenu: React.FC<PopupMenuProps> = ({ onLogout, onProfile }) => {
         className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg shadow text-gray-700 transition"
       >
         <FaRegUser className="text-lg" />
-        <span>Akun</span>
+        <span>{data?.user.name}</span>
       </button>
 
       {/* Popup content */}
