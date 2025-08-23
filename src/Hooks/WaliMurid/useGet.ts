@@ -112,3 +112,26 @@ export const useGetEkskulForWali = () => {
     enabled: !!token, // hanya jalan kalau token ada
   });
 };
+
+const getEkskul = async (token: string) => {
+  const response = await axiosInstance.get(`/api/wali_murid/getEkskul`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data; // langsung return body
+};
+
+
+export const useGetEkskul = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+
+  return useQuery({
+    queryKey: ["ekskul"], // cache key
+    queryFn: () => getEkskul(token),
+    enabled: !!token, // hanya jalan kalau token ada
+  });
+};
+
+

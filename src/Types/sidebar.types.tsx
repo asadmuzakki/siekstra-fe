@@ -1,16 +1,26 @@
 import { FaChild, FaUsers } from "react-icons/fa6";
 import { RiStackLine } from "react-icons/ri";
 import { AiOutlineHome } from "react-icons/ai";
-import { MdAccessTime, MdInsertChartOutlined, MdOutlineDateRange } from "react-icons/md";
+import {
+  MdAccessTime,
+  MdInsertChartOutlined,
+  MdOutlineDateRange,
+} from "react-icons/md";
 import { PiStudent } from "react-icons/pi";
 import { GiTeacher } from "react-icons/gi";
 import { GrScorecard } from "react-icons/gr";
+import { FaHome } from "react-icons/fa";
 export type SidebarMenu = {
   icon: React.ReactNode;
   label: string;
   path: string;
 };
 export const waliMurid: SidebarMenu[] = [
+  {
+    icon: <FaHome />,
+    label: "Dashboard",
+    path: "/dashboard-ekskul",
+  },
   {
     icon: <FaChild />,
     label: "Anak",

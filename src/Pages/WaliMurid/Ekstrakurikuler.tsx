@@ -30,14 +30,10 @@ const EkstraKurikuler = () => {
               <div className="flex justify-start items-center w-full py-5 text-gray-600 text-lg font-semibold">
                 Daftar Ekstrakurikuler
               </div>
-
-              {/* Kondisi loading / error */}
               {isLoading ? (
                 <p>Loading...</p>
               ) : isError ? (
-                <p className="text-red-500">
-                  Gagal memuat: {error?.message}
-                </p>
+                <p className="text-red-500">Gagal memuat: {error?.message}</p>
               ) : data?.data && data.data.length > 0 ? (
                 <div>
                   {data.data.map((anak: any, idx: number) => (

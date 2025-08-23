@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 type SidebarProps = {
   sidebar: string;
 };
+
 const Sidebar: React.FC<SidebarProps> = ({ sidebar }) => {
   const path = window.location.pathname;
   const { state } = useGlobalContext();

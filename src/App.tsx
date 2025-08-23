@@ -34,6 +34,7 @@ import DetailRekapAbsensi from "./Pages/admin/DetailRekapAbsensi";
 import Presensi from "./Pages/WaliMurid/Presensi";
 import Nilai from "./Pages/WaliMurid/Nilai";
 import KegiatanSiswa from "./Pages/WaliMurid/Kegiatan";
+import DashboardEkskul from "./Pages/WaliMurid/DashboardEkskul";
 
 const App = () => {
   return (
@@ -158,6 +159,15 @@ const App = () => {
         element={
           <ProtectedRoute allowedRoles={["wali_murid"]}>
             <KegiatanSiswa />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/dashboard-ekskul"
+        element={
+          <ProtectedRoute allowedRoles={["wali_murid"]}>
+            <DashboardEkskul />
           </ProtectedRoute>
         }
       />

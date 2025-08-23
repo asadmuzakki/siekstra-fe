@@ -66,11 +66,15 @@ async function updateDataWaliMurid(
   data: DataWaliMuridModelType,
   token: string
 ) {
-  const response = await axiosInstance.patch(`/api/admin/update-wali-murid/${id}`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axiosInstance.patch(
+    `/api/admin/update-wali-murid/${id}`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 }
 
@@ -90,10 +94,13 @@ export function useUpdateDataWaliMurid(id: string) {
   });
   const mutation = useMutation({
     mutationKey: ["update_data_wali_murid", id],
-    mutationFn: (data: DataWaliMuridModelType) => updateDataWaliMurid(id, data, token),
+    mutationFn: (data: DataWaliMuridModelType) =>
+      updateDataWaliMurid(id, data, token),
     onSuccess: () => {
       stateHandle("update", true);
-      queryClient.invalidateQueries({ queryKey: ["get_data_wali_murid_admin"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get_data_wali_murid_admin"],
+      });
     },
     onError: () => {
       stateHandle("update", true);
@@ -112,14 +119,23 @@ export function useUpdateDataWaliMurid(id: string) {
 
 async function updateDataTutor(
   id: string,
-  data: { name: string; email: string; password?: string; password_confirmation?: string },
+  data: {
+    name: string;
+    email: string;
+    password?: string;
+    password_confirmation?: string;
+  },
   token: string
 ) {
-  const response = await axiosInstance.patch(`/api/admin/update-tutor/${id}`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axiosInstance.patch(
+    `/api/admin/update-tutor/${id}`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 }
 
@@ -146,8 +162,12 @@ export function useUpdateDataTutor(id: string) {
   });
   const mutation = useMutation({
     mutationKey: ["update_data_tutor", id],
-    mutationFn: (data: { name: string; email: string; password?: string; password_confirmation?: string }) =>
-      updateDataTutor(id, data, token),
+    mutationFn: (data: {
+      name: string;
+      email: string;
+      password?: string;
+      password_confirmation?: string;
+    }) => updateDataTutor(id, data, token),
     onSuccess: () => {
       stateHandle("update", true);
       queryClient.invalidateQueries({ queryKey: ["get_data_tutor_admin"] });
@@ -174,11 +194,11 @@ async function updateDataEkskul(
     deskripsi: string;
     jadwal: string;
     tempat: string;
-    tutorId: string;
+    tutorId: number; // ✅ ubah ke number
     status: string;
     kelasMin: number;
     kelasMax: number;
-    foto?: File;
+    foto?: File | null; // ✅ optional file tunggal
   },
   token: string
 ) {
@@ -187,16 +207,21 @@ async function updateDataEkskul(
   formData.append("deskripsi", data.deskripsi);
   formData.append("jadwal", data.jadwal);
   formData.append("tempat", data.tempat);
-  formData.append("tutor_id", data.tutorId);
+  formData.append("tutor_id", String(data.tutorId));
   formData.append("status", data.status);
   formData.append("kelas_min", String(data.kelasMin));
   formData.append("kelas_max", String(data.kelasMax));
+
   if (data.foto) {
     formData.append("foto", data.foto);
   }
 
-  const response = await axiosInstance.patch(
-    `/api/admin/update-ekskul/${id}`,
+  // ✅ debug payload
+  console.log("📦 Payload Update Ekskul (FormData):");
+  formData.forEach((val, key) => console.log(key, val));
+
+  const response = await axiosInstance.post(
+    `/api/admin/ekskul/${id}?_method=PUT`, // Gunakan metode POST dengan override _method
     formData,
     {
       headers: {
@@ -212,23 +237,43 @@ export function useUpdateDataEkskul(id: string) {
   const [cookies] = useCookies(["authToken"]);
   const token = cookies.authToken;
   const { stateHandle } = useGlobalContext();
-
   const queryClient = useQueryClient();
 
   const {
     setValue,
     handleSubmit: handleSubmit_update,
     formState: { errors },
-  } = useForm();
+  } = useForm<{
+    namaEkskul: string;
+    deskripsi: string;
+    jadwal: string;
+    tempat: string;
+    tutorId: number;
+    status: string;
+    kelasMin: number;
+    kelasMax: number;
+    foto?: File | null;
+  }>();
 
   const mutation = useMutation({
     mutationKey: ["update_data_ekskul", id],
-    mutationFn: (data: any) => updateDataEkskul(id, data, token),
+    mutationFn: (data: {
+      namaEkskul: string;
+      deskripsi: string;
+      jadwal: string;
+      tempat: string;
+      tutorId: number;
+      status: string;
+      kelasMin: number;
+      kelasMax: number;
+      foto?: File | null;
+    }) => updateDataEkskul(id, data, token),
     onSuccess: () => {
       stateHandle("update", true);
       queryClient.invalidateQueries({ queryKey: ["get_data_ekskul_admin"] });
     },
-    onError: () => {
+    onError: (err) => {
+      console.error("❌ Gagal update ekskul:", err);
       stateHandle("update", true);
     },
   });
@@ -243,4 +288,3 @@ export function useUpdateDataEkskul(id: string) {
     isError_update: mutation.isError,
   };
 }
-
