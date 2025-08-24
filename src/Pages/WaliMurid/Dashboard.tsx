@@ -13,9 +13,7 @@ const DashboardWaliMurid = () => {
 
   useEffect(() => {
     console.log(data);
-    if (data?.data && data.data.length > 0) {
-      console.log("Nama anak pertama:", data.data[0].nama);
-    }
+    
   }, [data]);
 
   return (
