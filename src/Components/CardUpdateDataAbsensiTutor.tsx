@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
-import { useCreateDataAbsensiTutor } from "../Hooks/Admin/usePost";
-import { useGetDataTutorAdmin } from "../Hooks/Admin/useGet";
+import { useUpdateDataAbsensiTutor } from "../Hooks/Admin/usePatch";
+import {
+  useGetDataAbsensiTutor,
+  useGetDataTutorAdmin,
+} from "../Hooks/Admin/useGet";
 
 type Props = {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  setSuccessCreate: React.Dispatch<React.SetStateAction<boolean>>;
-  setErrorCreate: React.Dispatch<React.SetStateAction<boolean>>;
+  setSuccessUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  setErrorUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  idAbsensiTutor: string;
 };
 
-const CardCreateDataAbsensiTutor = ({
+const CardUpdateDataAbsensiTutor = ({
   setShow,
-  setSuccessCreate,
-  setErrorCreate,
+  setSuccessUpdate,
+  setErrorUpdate,
+  idAbsensiTutor,
 }: Props) => {
   const [tutorId, setTutorId] = useState<number | null>(null);
   const [ekskulId, setEkskulId] = useState<number | null>(null);
@@ -21,8 +26,27 @@ const CardCreateDataAbsensiTutor = ({
   );
   const [keterangan, setKeterangan] = useState("");
 
-  const { data: dataTutor } = useGetDataTutorAdmin();
-  const { onSubmit, success, error, isLoading } = useCreateDataAbsensiTutor();
+  const { data: dataTutor } = useGetDataTutorAdmin(); // tutor sudah punya ekskul di response
+  const { data: absensiData } = useGetDataAbsensiTutor();
+  const { onSubmit, success, error, isLoading } = useUpdateDataAbsensiTutor(
+    Number(idAbsensiTutor)
+  );
+
+  // Prefill data absensi
+  useEffect(() => {
+    if (absensiData) {
+      const item = absensiData.data.find(
+        (a: any) => a.id === Number(idAbsensiTutor)
+      );
+      if (item) {
+        setTutorId(item.tutor_id);
+        setEkskulId(item.ekskul_id);
+        setTanggal(item.tanggal);
+        setStatus(item.status);
+        setKeterangan(item.keterangan || "");
+      }
+    }
+  }, [absensiData, idAbsensiTutor]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,32 +61,31 @@ const CardCreateDataAbsensiTutor = ({
     });
   };
 
-  // ambil ekskul sesuai tutor yang dipilih
-  const ekskuls =
-    dataTutor?.data.find((t: any) => t.id === tutorId)?.ekskuls || [];
-
   useEffect(() => {
     if (success) {
-      setSuccessCreate(true);
+      setSuccessUpdate(true);
       setShow(false);
     }
     if (error) {
-      setErrorCreate(true);
+      setErrorUpdate(true);
       setShow(false);
     }
   }, [success, error]);
 
+  // Ambil tutor yang dipilih untuk filter ekskul
+  const selectedTutor = dataTutor?.data.find((t: any) => t.id === tutorId);
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">Tambah Data Absensi Tutor</h2>
+        <h2 className="text-xl font-sembold mb-4 text-gray-700">Edit Data Absensi Tutor</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Tutor */}
           <select
             value={tutorId ?? ""}
             onChange={(e) => {
               setTutorId(Number(e.target.value));
-              setEkskulId(null); // reset ekskul kalau tutor berubah
+              setEkskulId(null); // reset ekskul saat ganti tutor
             }}
             className="w-full border rounded px-3 py-2"
             required
@@ -75,7 +98,7 @@ const CardCreateDataAbsensiTutor = ({
             ))}
           </select>
 
-          {/* Ekskul (filtered by tutor) */}
+          {/* Ekskul */}
           <select
             value={ekskulId ?? ""}
             onChange={(e) => setEkskulId(Number(e.target.value))}
@@ -84,9 +107,9 @@ const CardCreateDataAbsensiTutor = ({
             disabled={!tutorId}
           >
             <option value="">Pilih Ekskul</option>
-            {ekskuls.map((ek: any) => (
-              <option key={ek.id} value={ek.id}>
-                {ek.nama_ekskul}
+            {selectedTutor?.ekskuls?.map((ekskul: any) => (
+              <option key={ekskul.id} value={ekskul.id}>
+                {ekskul.nama_ekskul}
               </option>
             ))}
           </select>
@@ -133,7 +156,7 @@ const CardCreateDataAbsensiTutor = ({
               disabled={isLoading}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
             >
-              {isLoading ? "Menyimpan..." : "Simpan"}
+              {isLoading ? "Menyimpan..." : "Update"}
             </button>
           </div>
         </form>
@@ -142,5 +165,4 @@ const CardCreateDataAbsensiTutor = ({
   );
 };
 
-export default CardCreateDataAbsensiTutor;
- 
+export default CardUpdateDataAbsensiTutor;

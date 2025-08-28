@@ -1,6 +1,7 @@
 import { FaChild, FaUsers } from "react-icons/fa6";
 import { RiStackLine } from "react-icons/ri";
 import { AiOutlineHome } from "react-icons/ai";
+import { FaHistory } from "react-icons/fa";
 import {
   MdAccessTime,
   MdInsertChartOutlined,
@@ -74,6 +75,12 @@ export const admin: SidebarMenu[] = [
     label: "Grafik Pendaftaran",
     path: "/grafik-pendaftaran",
   },
+  {
+    icon: <FaHistory />,
+    label: "Riwayat Pendaftaran",
+    path: "/riwayat-pendaftaran",
+  }
+
 ];
 
 export const tutor: SidebarMenu[] = [

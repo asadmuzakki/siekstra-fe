@@ -31,6 +31,8 @@ import DataAbsensiTutor from "./Pages/admin/DataAbsensiTutor";
 import Profile from "./Pages/profile/Profile";
 import DetailRekapPenilaian from "./Pages/admin/DetailRekapPenilaian";
 import DetailRekapAbsensi from "./Pages/admin/DetailRekapAbsensi";
+import RiwayatPendaftaran from "./Pages/admin/RiwayatPendaftaran";
+
 import Presensi from "./Pages/WaliMurid/Presensi";
 import Nilai from "./Pages/WaliMurid/Nilai";
 import KegiatanSiswa from "./Pages/WaliMurid/Kegiatan";
@@ -116,6 +118,15 @@ const App = () => {
         }
       />
 
+      <Route
+        path="/riwayat-pendaftaran"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <RiwayatPendaftaran />
+          </ProtectedRoute>
+        }
+      />
+      
       {/* admin */}
 
       {/* Orang Tua */}

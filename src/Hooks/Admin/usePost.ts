@@ -336,5 +336,7 @@ export const useCreateDataAbsensiTutor = () => {
     isLoading: mutation.isPending,
     success: mutation.isSuccess,
     error: mutation.isError,
+    reset, // <-- tambahin ini
   };
 };
+

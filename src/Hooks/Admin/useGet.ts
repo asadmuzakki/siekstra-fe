@@ -302,6 +302,124 @@ export const useGetRekapAbsensi = (
   };
 };
 
+const getRiwayatPendaftaran = async (token: string) => {
+  const response = await axiosInstance.get("/api/admin/pendaftaran", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+export const useGetRiwayatPendaftaran = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_riwayat_pendaftaran"],
+    queryFn: () => getRiwayatPendaftaran(token),
+  });
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+
+const getDataDashboard = async (token:string) => {
+  const response = await axiosInstance.get('/api/admin/dashboard', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  })
+  return response.data;
+}
+
+export const useGetDataDashboard = () => {
+  const [cookies] = useCookies(['authToken']);
+  const token = cookies.authToken;
+  const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['get_data_dashboard'],
+    queryFn: () => getDataDashboard(token)
+  })
+  return {
+    data,
+    isLoading,
+    isError,
+    error
+  }
+}
+
+const getDataGrafikPendaftaran = async (token:string) => {
+  const response = await axiosInstance.get('/api/admin/dashboard/grafik-pendaftaran', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  })
+  return response.data;
+}
+
+export const useGetDataGrafikPendaftaran = () => {
+  const [cookies] = useCookies(['authToken']);
+  const token = cookies.authToken;
+  const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['get_data_grafik_pendaftaran'],
+    queryFn: () => getDataGrafikPendaftaran(token)
+  })
+  return {
+    data,
+    isLoading,
+    isError,
+    error
+  }
+}
+
+const getDataGrafikKegiatan = async (
+  token: string,
+  { tahun, kategori, tingkat }: { tahun?: number; kategori?: string; tingkat?: string }
+) => {
+  const response = await axiosInstance.get("/api/admin/dashboard/grafik-kegiatan", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      tahun,
+      kategori,
+      tingkat,
+    },
+  });
+  return response.data;
+};
+
+
+export const useGetDataGrafikKegiatan = ({
+  tahun,
+  kategori,
+  tingkat,
+}: {
+  tahun?: number;
+  kategori?: string;
+  tingkat?: string;
+}) => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_data_grafik_kegiatan", tahun, kategori, tingkat], // supaya refetch kalau filter berubah
+    queryFn: () => getDataGrafikKegiatan(token, { tahun, kategori, tingkat }),
+    enabled: !!token, // hanya jalan kalau token ada
+  });
+
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+
+
+
 
 
 

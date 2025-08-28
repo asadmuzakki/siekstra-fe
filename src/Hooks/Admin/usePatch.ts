@@ -288,3 +288,157 @@ export function useUpdateDataEkskul(id: string) {
     isError_update: mutation.isError,
   };
 }
+
+const patchPendaftaran = async ({
+  id,
+  payload,
+  token,
+}: {
+  id: number;
+  payload: any;
+  token: string;
+}) => {
+  const response = await axiosInstance.patch(
+    `/api/admin/pendaftaran/${id}`,
+    payload, // body request
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+// Hook React Query
+export const usePatchPendaftaran = () => {
+  return useMutation({
+    mutationFn: patchPendaftaran,
+  });
+};
+
+async function updatePendaftaran(
+  id: number,
+  data: { siswa_id: number; ekskul_id: number },
+  token: string
+) {
+  // 🔎 cek payload sebelum request
+  console.log("📦 Payload PATCH pendaftaran:", {
+    id,
+    ...data,
+  });
+
+  const response = await axiosInstance.patch(
+    `/api/admin/pendaftaran/${id}`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+}
+
+export function useUpdatePendaftaran(id: number) {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { stateHandle } = useGlobalContext();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationKey: ["update_pendaftaran", id],
+    mutationFn: (data: { siswa_id: number; ekskul_id: number }) =>
+      updatePendaftaran(id, data, token),
+    onSuccess: () => {
+      stateHandle("update", true);
+      queryClient.invalidateQueries({ queryKey: ["get_riwayat_pendaftaran"] });
+    },
+    onError: (err) => {
+      console.error("❌ Gagal update pendaftaran:", err);
+      stateHandle("update", true);
+    },
+  });
+
+  return {
+    onSubmit_update: mutation.mutate,
+    isLoading_update: mutation.isPending,
+    isSuccess_update: mutation.isSuccess,
+    isError_update: mutation.isError,
+  };
+}
+
+const updateDataAbsensiTutor = async (
+  id: number,
+  data: {
+    tutor_id: number;
+    ekskul_id: number;
+    tanggal: string;
+    status: "Hadir" | "Alpha" | "Izin" | "Sakit";
+    keterangan?: string;
+  },
+  token: string
+) => {
+  const response = await axiosInstance.put(
+    `/api/admin/absensi-tutor/${id}`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+// hook
+export const useUpdateDataAbsensiTutor = (id: number) => {
+  const [cookies] = useCookies(["authToken"]);
+  const { stateHandle } = useGlobalContext();
+  const token = cookies.authToken;
+  const query = useQueryClient();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<{
+    tutor_id: number;
+    ekskul_id: number;
+    tanggal: string;
+    status: "Hadir" | "Alpha" | "Izin" | "Sakit";
+    keterangan?: string;
+  }>();
+
+  const mutation = useMutation({
+    mutationKey: ["update_data_absensi_tutor", id],
+    mutationFn: (data: {
+      tutor_id: number;
+      ekskul_id: number;
+      tanggal: string;
+      status: "Hadir" | "Alpha" | "Izin" | "Sakit";
+      keterangan?: string;
+    }) => updateDataAbsensiTutor(id, data, token),
+    onSuccess: () => {
+      reset();
+      stateHandle("update", true);
+      query.invalidateQueries({ queryKey: ["get_data_absensi_tutor"] });
+    },
+    onError: () => {
+      stateHandle("update", true);
+    },
+  });
+
+  return {
+    register,
+    handleSubmit,
+    errors,
+    onSubmit: mutation.mutate,
+    isLoading: mutation.isPending,
+    success: mutation.isSuccess,
+    error: mutation.isError,
+    reset, // <-- tambahin ini
+  };
+};

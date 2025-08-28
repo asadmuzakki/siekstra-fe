@@ -11,6 +11,7 @@ type TableType = {
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
   startNumber?: number; // <--- tambahan baru
+  renderCell?: (row: any, key: string) => React.ReactNode;
 };
 
 const GeneralTable: React.FC<TableType> = ({
@@ -50,7 +51,9 @@ const GeneralTable: React.FC<TableType> = ({
           {data.map((row, rowIndex) => (
             <tr key={row.id || rowIndex} className="hover:bg-gray-50">
               {/* Kolom Nomor */}
-              <td className="px-4 py-3 text-center">{(startNumber || 0) + rowIndex + 1}</td>
+              <td className="px-4 py-3 text-center">
+                {(startNumber || 0) + rowIndex + 1}
+              </td>
               {fromComponent === "GeneralComponent" &&
                 keys.map((key, index) => (
                   <td key={index} className="px-4 py-3 text-center truncate">
@@ -88,19 +91,41 @@ const GeneralTable: React.FC<TableType> = ({
                       ? row.ekskul?.nama_ekskul || "-"
                       : key === "created_at"
                       ? formatToHourMinute(row.created_at)
-                      : row[key] || '-'}
+                      : row[key] || "-"}
+                  </td>
+                ))}
+              {fromComponent === "RiwayatPendaftaran" &&
+                keys.map((key, index) => (
+                  <td key={index} className="px-4 py-3 text-center truncate">
+                    {key === "ekskul"
+                      ? row.ekskul?.nama_ekskul || "-"
+                      : key === "siswa"
+                      ? row.siswa?.nama || "-"
+                      : key === "tanggal_pendaftaran"
+                      ? row.tanggal_pendaftaran || "-"
+                      : row[key] || "-"}
                   </td>
                 ))}
 
               {/* Kolom Aksi */}
               {action && (
                 <td className=" text-center space-x-2 truncate">
-                  <button
-                    onClick={() => onEdit?.(row.id)}
-                    className="bg-blue-100  text-blue-700 p-2 rounded cursor-pointer"
-                  >
-                    <FiEdit className="text-lg" />
-                  </button>
+                  {fromComponent === "RiwayatPendaftaran" ? (
+                    <button
+                      onClick={() => onEdit?.(row)}
+                      className="bg-blue-100  text-blue-700 p-2 rounded cursor-pointer"
+                    >
+                      <FiEdit className="text-lg" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => onEdit?.(row.id)}
+                      className="bg-blue-100  text-blue-700 p-2 rounded cursor-pointer"
+                    >
+                      <FiEdit className="text-lg" />
+                    </button>
+                  )}
+                  
                   {fromComponent !== "DetailPenilaianTutor" && (
                     <button
                       onClick={() => onDelete?.(row.id)}

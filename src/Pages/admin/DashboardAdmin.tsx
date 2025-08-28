@@ -1,8 +1,48 @@
 import ExtracurricularBarChart from "../../Components/ExtracurricularBarChart";
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
+import { useEffect } from "react";
+import { useGetDataDashboard } from "../../Hooks/Admin/useGet";
+import { useState } from "react";
 
 const DashboardAdmin = () => {
+  const { data, isLoading, isError, error } = useGetDataDashboard();
+
+  useEffect(() => {
+    if (isError) {
+      console.error("Error fetching dashboard data:", error);
+    } else if (!isLoading && data) {
+      console.log("Dashboard data:", data);
+    }
+  }, [isLoading, isError, data, error]);
+
+  const stats = [
+    {
+      label: "Total Ekskul",
+      value: data?.data?.total_ekskul ?? 0,
+      subtitle: "Ekskul aktif",
+    },
+    {
+      label: "Total Siswa",
+      value: data?.data?.total_siswa ?? 0,
+      subtitle: "Siswa terdaftar",
+    },
+    {
+      label: "Total Tutor",
+      value: data?.data?.total_tutor ?? 0,
+      subtitle: "Tutor aktif",
+    },
+    {
+      label: "Kehadiran Minggu Ini",
+      value: data?.data?.kehadiran_minggu_ini ?? 0,
+      subtitle: "Jumlah kehadiran",
+    },
+  ];
+
+  const [kategori, setKategori] = useState("");
+  const [tingkat, setTingkat] = useState("");
+  const [tahun, setTahun] = useState(new Date().getFullYear());
+
   return (
     <div className="flex h-screen overflow-hidden">
       <div onClick={(e) => e.stopPropagation()}>
@@ -21,16 +61,19 @@ const DashboardAdmin = () => {
             </div>
 
             <div className="w-full grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-              {[1, 2, 3, 4].map(() => (
-                <div className="bg-white rounded-md shadow-md p-4 ">
+              {stats.map((item, idx) => (
+                <div key={idx} className="bg-white rounded-md shadow-md p-4">
                   <p className="text-base text-blue-600 font-medium">
-                    Total Siswa
+                    {item.label}
                   </p>
-                  <p className="text-2xl font-bold text-gray-800 mt-1">127</p>
-                  <p className="text-sm text-gray-500 mt-1">Siswa terdaftar</p>
+                  <p className="text-2xl font-bold text-gray-800 mt-1">
+                    {item.value}
+                  </p>
+                  <p className="text-sm text-gray-500 mt-1">{item.subtitle}</p>
                 </div>
               ))}
             </div>
+
             <div className="p-5 bg-white shadow-md rounded-md mb-10">
               <div className="flex justify-between items-center w-full mb-10">
                 <p className="text-blue-500 font-semibold">
@@ -48,7 +91,7 @@ const DashboardAdmin = () => {
                 </select>
               </div>
 
-              <ExtracurricularBarChart />
+              <ExtracurricularBarChart type="pendaftaran" />
             </div>
             <div className="p-5 bg-white shadow-md rounded-md mb-10">
               <div className="flex justify-between items-center w-full mb-10">
@@ -57,24 +100,36 @@ const DashboardAdmin = () => {
                 </p>
                 <div className="flex items-center gap-3">
                   {/* Dropdown Jenis Lomba */}
-                  <select className="border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    <option value="">Pilih Jenis Lomba</option>
-                    <option value="matematika">Matematika</option>
-                    <option value="sains">Sains</option>
-                    <option value="olahraga">Olahraga</option>
-                    <option value="musik">Musik</option>
+                  <select
+                    value={kategori}
+                    onChange={(e) => setKategori(e.target.value)}
+                    className="border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
+                    <option value="">Kategori Lomba</option>
+                    <option value="lomba">Lomba</option>
+                    <option value="non-lomba">Non-lomba</option>
+                    <option value="lainnya">Lainnya</option>
                   </select>
 
                   {/* Dropdown Tingkat Lomba */}
-                  <select className="border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                  <select
+                    value={tingkat}
+                    onChange={(e) => setTingkat(e.target.value)}
+                    className="border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
                     <option value="">Pilih Tingkat</option>
-                    <option value="kabupaten">Kabupaten</option>
+                    <option value="sekolah">Sekolah</option>
+                    <option value="kota">Kota</option>
                     <option value="provinsi">Provinsi</option>
                     <option value="nasional">Nasional</option>
-                    <option value="internasional">Internasional</option>
                   </select>
 
-                    <select className="border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                  {/* Dropdown Tahun */}
+                  <select
+                    value={tahun}
+                    onChange={(e) => setTahun(Number(e.target.value))}
+                    className="border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
                     {Array.from({ length: 5 }, (_, i) => {
                       const year = new Date().getFullYear() - i;
                       return (
@@ -87,7 +142,12 @@ const DashboardAdmin = () => {
                 </div>
               </div>
 
-              <ExtracurricularBarChart />
+              <ExtracurricularBarChart
+                type="kegiatan"
+                kategori={kategori}
+                tingkat={tingkat}
+                tahun={tahun}
+              />
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ type PopupType = {
   stateName?: string;
   stateConcition?:boolean
   reload?:boolean
+  children?: React.ReactNode;
 };
 const Popup: React.FC<PopupType> = ({
   label,
