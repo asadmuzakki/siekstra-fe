@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useCreateDataAbsensiTutor } from "../Hooks/Admin/usePost";
 import { useGetDataTutorAdmin } from "../Hooks/Admin/useGet";

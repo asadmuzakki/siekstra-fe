@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";

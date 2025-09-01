@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FiEdit } from "react-icons/fi";
 import { CiTrash } from "react-icons/ci";
 import { formatToHourMinute } from "../Utils/formatTime";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 
 import Header from "../../Components/Header";
@@ -67,7 +68,7 @@ const KegiatanEkskul = () => {
         }))
       );
     }
-  }, [data_siswa, ekskul_name]);
+  }, [data_siswa, ekskul_name, setValue]);
 
   const handleStatusChange = (
     siswaId: number,

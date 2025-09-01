@@ -95,7 +95,7 @@ const CardCreateDataSiswa: React.FC<props> = ({
       setErrorUpdate(true);
       setShow(false);
     }
-  }, [success, error, data, isSuccess_update, isError_update]);
+  }, [success, error, data, isSuccess_update, isError_update, isEdit, setSuccessCreate, setShow, setErrorCreate, setSuccessUpdate, setErrorUpdate]);
   return (
     <>
       {setShow && (

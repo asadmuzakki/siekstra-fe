@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import GeneralTable from "../../Components/GeneralTable";
 import Header from "../../Components/Header";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 
 import Header from "../../Components/Header";
@@ -6,7 +7,7 @@ import Sidebar from "../../Components/Sidebar";
 import type { FormModelType } from "../../Models/ekskul.model";
 
 
-import { data, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import * as Get from "../../Hooks/useGet";
 import * as Patch from "../../Hooks/usePatch";
 import LoadingSpinner from "../../Components/LoadingSpinner";
@@ -99,7 +100,7 @@ const UpdateAbsensiEkskul = () => {
         })
       );
     }
-  }, [data, setValue, dataAbsensi, data_siswa]);
+  }, [setValue, dataAbsensi, data_siswa]);
 
   const handleStatusChange = (
     siswaId: number,

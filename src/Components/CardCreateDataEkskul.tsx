@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AiOutlineClose } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { useCreateDataEkskul } from "../Hooks/Admin/usePost";
@@ -118,7 +119,7 @@ const CardCreateDataEkskul: React.FC<Props> = ({
       setErrorUpdate(true);
       setShow(false);
     }
-  }, [success, error, data, isSuccess_update, isError_update]);
+  }, [success, error, data, isSuccess_update, isError_update, isEdit, setSuccessCreate, setShow, setErrorCreate, setSuccessUpdate, setErrorUpdate]);
 
   return (
     <>

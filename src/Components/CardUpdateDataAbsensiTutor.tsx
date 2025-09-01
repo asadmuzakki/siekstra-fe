@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useUpdateDataAbsensiTutor } from "../Hooks/Admin/usePatch";
 import {
@@ -70,7 +71,7 @@ const CardUpdateDataAbsensiTutor = ({
       setErrorUpdate(true);
       setShow(false);
     }
-  }, [success, error]);
+  }, [success, error, setSuccessUpdate, setShow, setErrorUpdate]);
 
   // Ambil tutor yang dipilih untuk filter ekskul
   const selectedTutor = dataTutor?.data.find((t: any) => t.id === tutorId);
