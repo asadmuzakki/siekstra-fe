@@ -13,11 +13,11 @@ const Presensi = () => {
 
   const [tahun, setTahun] = useState<string>(currentYear.toString());
 
-  const { data, isLoading, isError, error } = useGetAbsensiBySiswa(id!, tahun);
+  const { data, isLoading, isError } = useGetAbsensiBySiswa(id!, tahun);
 
   useEffect(() => {
     console.log(data);
-  });
+  }, [data]);
   const label = [
     "Agenda",
     "Ekstrakurikuler",

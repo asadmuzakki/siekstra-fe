@@ -69,7 +69,7 @@ const AbsensiEkskul = () => {
         }))
       );
     }
-  }, [ ekskul_name, data_siswa]);
+  }, [ ekskul_name, data_siswa, setValue]);
 
   const handleStatusChange = (
     siswaId: number,

@@ -50,7 +50,7 @@ const CardCreateDataAbsensiTutor = ({
       setErrorCreate(true);
       setShow(false);
     }
-  }, [success, error]);
+  }, [success, error, setErrorCreate, setSuccessCreate, setShow]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
