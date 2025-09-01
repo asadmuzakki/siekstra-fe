@@ -120,12 +120,12 @@ export function useUpdateDataWaliMurid(id: string) {
 
 async function updateDataTutor(
   id: string,
-  data: {
+  data: Partial<{
     name: string;
     email: string;
-    password?: string;
-    password_confirmation?: string;
-  },
+    password: string;
+    password_confirmation: string;
+  }>,
   token: string
 ) {
   const response = await axiosInstance.patch(
@@ -147,37 +147,42 @@ export function useUpdateDataTutor(id: string) {
 
   const queryClient = useQueryClient();
 
+  const schema = z.object({
+    name: z.string().optional(),
+    email: z.string().email("Email Tidak Valid").optional(),
+    password: z.string().optional(),
+    password_confirmation: z.string().optional(),
+  });
+
   const {
+    register,
     setValue,
     handleSubmit: handleSubmit_update,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(
-      z.object({
-        name: z.string().min(1, "Nama Tidak Boleh Kosong"),
-        email: z.string().email("Email Tidak Valid"),
-        password: z.string().optional(),
-        password_confirmation: z.string().optional(),
-      })
-    ),
+    resolver: zodResolver(schema),
   });
+
   const mutation = useMutation({
     mutationKey: ["update_data_tutor", id],
-    mutationFn: (data: {
-      name: string;
-      email: string;
-      password?: string;
-      password_confirmation?: string;
-    }) => updateDataTutor(id, data, token),
+    mutationFn: (formData: z.infer<typeof schema>) => {
+      // filter hanya field yang ada value-nya
+      const filteredData = Object.fromEntries(
+        Object.entries(formData).filter(([_, v]) => v !== undefined && v !== "")
+      );
+      return updateDataTutor(id, filteredData, token);
+    },
     onSuccess: () => {
       stateHandle("update", true);
       queryClient.invalidateQueries({ queryKey: ["get_data_tutor_admin"] });
     },
     onError: () => {
-      stateHandle("update", true);
+      stateHandle("update", false);
     },
   });
+
   return {
+    register,
     setValue,
     errors,
     handleSubmit_update,

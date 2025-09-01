@@ -70,7 +70,7 @@ const AbsensiEkskul = () => {
         }))
       );
     }
-  }, [ ekskul_name, data_siswa, setValue]);
+  }, [ekskul_name, data_siswa, setValue]);
 
   const handleStatusChange = (
     siswaId: number,
@@ -143,6 +143,23 @@ const AbsensiEkskul = () => {
     />
   );
 
+  const handleSetAllHadir = () => {
+    // Update UI state semua siswa jadi hadir
+    setEntries((prevEntries) =>
+      prevEntries.map((entry) => ({
+        ...entry,
+        hadir: true,
+        sakit: false,
+        izin: false,
+        alpa: false,
+      }))
+    );
+
+    fields.forEach((field: any, index: number) => {
+      setValue(`absensis.${index}.status`, "Hadir");
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-screen overflow-hidden">
@@ -211,6 +228,7 @@ const AbsensiEkskul = () => {
                         {ekskul_name?.data?.nama_ekskul || "Ekstrakurikuler"}
                       </div>
                     </div>
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Tanggal :
@@ -224,7 +242,7 @@ const AbsensiEkskul = () => {
                   </div>
 
                   {/* Agenda */}
-                  <div className="mb-8">
+                  <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Agenda :
                     </label>
@@ -234,6 +252,15 @@ const AbsensiEkskul = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Masukkan Agenda..."
                     />
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={handleSetAllHadir}
+                      className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                    >
+                      Tandai Semua Hadir
+                    </button>
                   </div>
 
                   {/* Table */}
