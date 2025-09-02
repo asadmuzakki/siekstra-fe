@@ -155,7 +155,7 @@ const AbsensiEkskul = () => {
       }))
     );
 
-    fields.forEach((field: any, index: number) => {
+    fields.forEach((_field: any, index: number) => {
       setValue(`absensis.${index}.status`, "Hadir");
     });
   };
