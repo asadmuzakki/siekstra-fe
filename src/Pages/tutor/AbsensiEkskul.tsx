@@ -143,20 +143,27 @@ const AbsensiEkskul = () => {
     />
   );
 
-  const handleSetAllHadir = () => {
-    // Update UI state semua siswa jadi hadir
+  const [selectedStatus, setSelectedStatus] = useState<
+    "Hadir" | "Sakit" | "Izin" | "Alpha" | null
+  >(null);
+
+  const handleSetAllStatus = (status: "Hadir" | "Sakit" | "Izin" | "Alpha") => {
+    setSelectedStatus(status);
+
+    // Update UI state
     setEntries((prevEntries) =>
       prevEntries.map((entry) => ({
         ...entry,
-        hadir: true,
-        sakit: false,
-        izin: false,
-        alpa: false,
+        hadir: status === "Hadir",
+        sakit: status === "Sakit",
+        izin: status === "Izin",
+        alpa: status === "Alpha",
       }))
     );
 
+    // Update form state
     fields.forEach((field: any, index: number) => {
-      setValue(`absensis.${index}.status`, "Hadir");
+      setValue(`absensis.${index}.status`, status);
     });
   };
 
@@ -181,7 +188,7 @@ const AbsensiEkskul = () => {
   return (
     <div className="flex h-screen overflow-hidden">
       <div onClick={(e) => e.stopPropagation()}>
-        <Sidebar sidebar="TUTOR" />
+        <Sidebar sidebar="tutor" />
       </div>
       <div className="flex-1 flex flex-col w-full overflow-hidden relative bg-blue-50">
         <div onClick={(e) => e.stopPropagation()}>
@@ -253,14 +260,54 @@ const AbsensiEkskul = () => {
                       placeholder="Masukkan Agenda..."
                     />
                   </div>
-                  <div>
-                    <button
-                      type="button"
-                      onClick={handleSetAllHadir}
-                      className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
-                    >
-                      Tandai Semua Hadir
-                    </button>
+                  <div className="flex flex-wrap gap-4 mb-4 pl-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedStatus === "Hadir"}
+                        onChange={() => handleSetAllStatus("Hadir")}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-green-600 font-medium">
+                        Hadir
+                      </span>
+                    </label>
+
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedStatus === "Sakit"}
+                        onChange={() => handleSetAllStatus("Sakit")}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-blue-600 font-medium">
+                        Sakit
+                      </span>
+                    </label>
+
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedStatus === "Izin"}
+                        onChange={() => handleSetAllStatus("Izin")}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-yellow-600 font-medium">
+                        Izin
+                      </span>
+                    </label>
+
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedStatus === "Alpha"}
+                        onChange={() => handleSetAllStatus("Alpha")}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-red-600 font-medium">
+                        Alpa
+                      </span>
+                    </label>
                   </div>
 
                   {/* Table */}

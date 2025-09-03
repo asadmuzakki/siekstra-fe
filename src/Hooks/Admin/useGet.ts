@@ -109,7 +109,7 @@ const getDataTutorById = async (id: string, token: string) => {
 
 export const useGetDataTutorById = (id: string) => {
   const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken
+  const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get_data_tutor_by_id", id],
     queryFn: () => getDataTutorById(id, token),
@@ -170,22 +170,28 @@ export const useGetDataEkskulById = (id: string) => {
   };
 };
 
-const getDataAbsensiTutor = async (token: string) => {
+const getDataAbsensiTutor = async (token: string, tahun?: string) => {
   const response = await axiosInstance.get("/api/admin/absensi-tutor", {
     headers: {
       Authorization: `Bearer ${token}`,
+    },
+    params: {
+      ...(tahun ? { tahun } : {}), // hanya kirim tahun kalau ada
     },
   });
   return response.data;
 };
 
-export const useGetDataAbsensiTutor = () => {
+export const useGetDataAbsensiTutor = (tahun?: string) => {
   const [cookies] = useCookies(["authToken"]);
   const token = cookies.authToken;
+
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get_data_absensi_tutor"],
-    queryFn: () => getDataAbsensiTutor(token),
+    queryKey: ["get_data_absensi_tutor", tahun],
+    queryFn: () => getDataAbsensiTutor(token, tahun),
+    enabled: !!token, // hanya jalan kalau token ada
   });
+
   return {
     data,
     isLoading,
@@ -205,7 +211,7 @@ const getDataWaliById = async (id: string, token: string) => {
 
 export const useGetDataWaliById = (id: string) => {
   const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken
+  const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get_data_wali_by_id", id],
     queryFn: () => getDataWaliById(id, token),
@@ -309,7 +315,7 @@ const getRiwayatPendaftaran = async (token: string) => {
     },
   });
   return response.data;
-}
+};
 
 export const useGetRiwayatPendaftaran = () => {
   const [cookies] = useCookies(["authToken"]);
@@ -326,71 +332,80 @@ export const useGetRiwayatPendaftaran = () => {
   };
 };
 
-const getDataDashboard = async (token:string) => {
-  const response = await axiosInstance.get('/api/admin/dashboard', {
+const getDataDashboard = async (token: string) => {
+  const response = await axiosInstance.get("/api/admin/dashboard", {
     headers: {
       Authorization: `Bearer ${token}`,
-    }
-  })
-  return response.data;
-}
-
-export const useGetDataDashboard = () => {
-  const [cookies] = useCookies(['authToken']);
-  const token = cookies.authToken;
-  const {data, isLoading, isError, error} = useQuery({
-    queryKey: ['get_data_dashboard'],
-    queryFn: () => getDataDashboard(token)
-  })
-  return {
-    data,
-    isLoading,
-    isError,
-    error
-  }
-}
-
-const getDataGrafikPendaftaran = async (token:string) => {
-  const response = await axiosInstance.get('/api/admin/dashboard/grafik-pendaftaran', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    }
-  })
-  return response.data;
-}
-
-export const useGetDataGrafikPendaftaran = () => {
-  const [cookies] = useCookies(['authToken']);
-  const token = cookies.authToken;
-  const {data, isLoading, isError, error} = useQuery({
-    queryKey: ['get_data_grafik_pendaftaran'],
-    queryFn: () => getDataGrafikPendaftaran(token)
-  })
-  return {
-    data,
-    isLoading,
-    isError,
-    error
-  }
-}
-
-const getDataGrafikKegiatan = async (
-  token: string,
-  { tahun, kategori, tingkat }: { tahun?: number; kategori?: string; tingkat?: string }
-) => {
-  const response = await axiosInstance.get("/api/admin/dashboard/grafik-kegiatan", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    params: {
-      tahun,
-      kategori,
-      tingkat,
     },
   });
   return response.data;
 };
 
+export const useGetDataDashboard = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_data_dashboard"],
+    queryFn: () => getDataDashboard(token),
+  });
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+
+const getDataGrafikPendaftaran = async (token: string) => {
+  const response = await axiosInstance.get(
+    "/api/admin/dashboard/grafik-pendaftaran",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const useGetDataGrafikPendaftaran = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_data_grafik_pendaftaran"],
+    queryFn: () => getDataGrafikPendaftaran(token),
+  });
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+
+const getDataGrafikKegiatan = async (
+  token: string,
+  {
+    tahun,
+    kategori,
+    tingkat,
+  }: { tahun?: number; kategori?: string; tingkat?: string }
+) => {
+  const response = await axiosInstance.get(
+    "/api/admin/dashboard/grafik-kegiatan",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        tahun,
+        kategori,
+        tingkat,
+      },
+    }
+  );
+  return response.data;
+};
 
 export const useGetDataGrafikKegiatan = ({
   tahun,
@@ -417,9 +432,3 @@ export const useGetDataGrafikKegiatan = ({
     error,
   };
 };
-
-
-
-
-
-
