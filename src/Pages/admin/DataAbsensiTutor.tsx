@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import GeneralTable from "../../Components/GeneralTable";
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";

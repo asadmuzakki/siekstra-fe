@@ -162,7 +162,7 @@ const AbsensiEkskul = () => {
     );
 
     // Update form state
-    fields.forEach((field: any, index: number) => {
+    fields.forEach((_field: any, index: number) => {
       setValue(`absensis.${index}.status`, status);
     });
   };
