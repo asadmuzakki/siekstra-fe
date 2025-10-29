@@ -32,6 +32,7 @@ import Profile from "./Pages/profile/Profile";
 import DetailRekapPenilaian from "./Pages/admin/DetailRekapPenilaian";
 import DetailRekapAbsensi from "./Pages/admin/DetailRekapAbsensi";
 import RiwayatPendaftaran from "./Pages/admin/RiwayatPendaftaran";
+import GrafikPage from "./Pages/admin/GrafikPendaftaran";
 
 import Presensi from "./Pages/WaliMurid/Presensi";
 import Nilai from "./Pages/WaliMurid/Nilai";
@@ -117,6 +118,16 @@ const App = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/grafik-pendaftaran"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <GrafikPage />
+          </ProtectedRoute>
+        }
+      />
+
 
       <Route
         path="/riwayat-pendaftaran"
