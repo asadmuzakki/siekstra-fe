@@ -356,25 +356,40 @@ export const useGetDataDashboard = () => {
   };
 };
 
-const getDataGrafikPendaftaran = async (token: string) => {
+const getDataGrafikPendaftaran = async (
+  token: string,
+  {
+    tahun,
+  }: { tahun?: number; }
+) => {
   const response = await axiosInstance.get(
     "/api/admin/dashboard/grafik-pendaftaran",
     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      params: {
+        tahun,
+      },
     }
   );
   return response.data;
 };
 
-export const useGetDataGrafikPendaftaran = () => {
+export const useGetDataGrafikPendaftaran = ({
+  tahun,
+}: {
+  tahun?: number;
+}) => {
   const [cookies] = useCookies(["authToken"]);
   const token = cookies.authToken;
+
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get_data_grafik_pendaftaran"],
-    queryFn: () => getDataGrafikPendaftaran(token),
+    queryKey: ["get_data_grafik_pendaftaran", tahun],
+    queryFn: () => getDataGrafikPendaftaran(token, { tahun}),
+    enabled: !!token, // hanya dijalankan jika token tersedia
   });
+
   return {
     data,
     isLoading,
@@ -382,6 +397,7 @@ export const useGetDataGrafikPendaftaran = () => {
     error,
   };
 };
+
 
 const getDataGrafikKegiatan = async (
   token: string,
