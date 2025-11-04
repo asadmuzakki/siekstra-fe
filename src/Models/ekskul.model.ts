@@ -52,10 +52,11 @@ const NilaiModel = z.object({
   kehadiran: z.string(),
   keaktifan: z.string(),
   praktik: z.string(),
+  keterangan: z.string(),
 });
 export const NilaiEkskulModel = z.object({
   ekskul_id: z.number(),
-  tanggal: z.string().min(1, 'Tanggal Tidak Boleh Kosong'),
+  tanggal: z.string().min(1, "Tanggal Tidak Boleh Kosong"),
   penilaians: z.array(NilaiModel),
 });
 

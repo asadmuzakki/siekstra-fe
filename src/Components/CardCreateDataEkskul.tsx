@@ -78,6 +78,15 @@ const CardCreateDataEkskul: React.FC<Props> = ({
     });
   };
 
+  const max = 6;
+
+  const arr = Array.from(
+    { length: max - kelasMin },
+    (_, i) => kelasMin + 1 + i
+  );
+  const arrMin = Array.from({ length: kelasMax - 1 }, (_, i) => i + 1);
+  console.log(data);
+
   // isi data saat edit
   useEffect(() => {
     if (data && isEdit) {
@@ -87,8 +96,8 @@ const CardCreateDataEkskul: React.FC<Props> = ({
       setTempat(data.data.tempat || "");
       setTutorId(Number(data.data.tutor_id) || 0);
       setStatus(data.data.status || "");
-      setKelasMin(data.data.kelas_min || 1);
-      setKelasMax(data.data.kelas_max || 6);
+      setKelasMin(data?.data?.kelas_min);
+      setKelasMax(data?.data?.kelas_max);
     }
 
     if (!isEdit) {
@@ -119,7 +128,20 @@ const CardCreateDataEkskul: React.FC<Props> = ({
       setErrorUpdate(true);
       setShow(false);
     }
-  }, [success, error, data, isSuccess_update, isError_update, isEdit, setSuccessCreate, setShow, setErrorCreate, setSuccessUpdate, setErrorUpdate]);
+  }, [
+    success,
+    error,
+    data,
+    isSuccess_update,
+    isError_update,
+    isEdit,
+    setSuccessCreate,
+    setShow,
+    setErrorCreate,
+    setSuccessUpdate,
+    setErrorUpdate,
+    data,
+  ]);
 
   return (
     <>
@@ -135,7 +157,9 @@ const CardCreateDataEkskul: React.FC<Props> = ({
             </button>
 
             <h2 className="text-xl font-semibold text-gray-700 mb-4">
-              {isEdit ? "Edit Data Ekstrakurikuler" : "Create Data Ekstrakurikuler"}
+              {isEdit
+                ? "Edit Data Ekstrakurikuler"
+                : "Create Data Ekstrakurikuler"}
             </h2>
 
             <form
@@ -236,32 +260,45 @@ const CardCreateDataEkskul: React.FC<Props> = ({
               </div>
 
               {/* Kelas Min & Max */}
-              <div className="flex gap-4">
-                <div className="w-1/2">
-                  <label className="block text-sm font-medium text-gray-600">
-                    Kelas Min
-                  </label>
-                  <input
-                    value={kelasMin}
-                    onChange={(e) => setKelasMin(Number(e.target.value))}
-                    type="number"
-                    min={1}
-                    className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+              {data && (
+                <div className="flex gap-4">
+                  <div className="w-1/2">
+                    <label className="block text-sm font-medium text-gray-600">
+                      Kelas Min
+                    </label>
+                    <select
+                      defaultValue={data?.data?.kelas_min}
+                      onChange={(e) => setKelasMin(Number(e.target.value))}
+                      className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Minimal kelas</option>
+                      {arrMin.map((num) => (
+                        <option key={num} value={num}>
+                          {num}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="w-1/2">
+                    <label className="block text-sm font-medium text-gray-600">
+                      Kelas Max
+                    </label>
+                    <select
+                      defaultValue={data?.data?.kelas_max}
+                      onChange={(e) => setKelasMax(Number(e.target.value))}
+                      className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Maksimal kelas</option>
+                      {arr.map((num) => (
+                        <option key={num} value={num}>
+                          {num}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-                <div className="w-1/2">
-                  <label className="block text-sm font-medium text-gray-600">
-                    Kelas Max
-                  </label>
-                  <input
-                    value={kelasMax}
-                    onChange={(e) => setKelasMax(Number(e.target.value))}
-                    type="number"
-                    min={1}
-                    className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
+              )}
 
               {/* Upload Foto */}
               <div>

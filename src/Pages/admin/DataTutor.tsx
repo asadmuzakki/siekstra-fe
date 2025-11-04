@@ -39,7 +39,7 @@ const DataTutor = () => {
 
    useEffect(() => {
       console.log(data);
-   }, [data]);
+   }, [data, successUpdate, errorUpdate]);
 
    const idTutorString = idTutor || undefined;
 

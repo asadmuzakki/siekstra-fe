@@ -159,7 +159,7 @@ const App = () => {
       />
 
       <Route
-        path="/presensi/:id"
+        path="/dashboard-anak/presensi/:id"
         element={
           <ProtectedRoute allowedRoles={["wali_murid"]}>
             <Presensi />
@@ -168,7 +168,7 @@ const App = () => {
       />
 
       <Route
-        path="/nilai/:id"
+        path="/dashboard-anak/nilai/:id"
         element={
           <ProtectedRoute allowedRoles={["wali_murid"]}>
             <Nilai />
@@ -177,7 +177,7 @@ const App = () => {
       />
 
       <Route
-        path="/wali-kegiatan/:id"
+        path="/dashboard-anak/wali-kegiatan/:id"
         element={
           <ProtectedRoute allowedRoles={["wali_murid"]}>
             <KegiatanSiswa />

@@ -8,16 +8,23 @@ import { useUpdatePendaftaran } from "../../Hooks/Admin/usePatch";
 import GeneralTable from "../../Components/GeneralTable";
 import EditPendaftaranPopUp from "../../Components/EditPendaftaranPopup";
 import Popup from "../../Components/Popup";
+import { useGlobalContext } from "../../Context/Context";
+import { useDeleteRiwayatPendaftaran } from "../../Hooks/Admin/useDelete";
 
 const RiwayatPendaftaran = () => {
+  const { stateHandle, state } = useGlobalContext();
   const { data, isLoading, isError, error } = useGetRiwayatPendaftaran();
   const { data: dataEkskul } = useGetDataEkskulAdmin();
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [newEkskulId, setNewEkskulId] = useState<number | null>(null);
-  const [showPopup, setShowPopup] = useState(false);
 
+  const { onDelete } = useDeleteRiwayatPendaftaran();
+
+  function handleDelete(id: string) {
+    onDelete(id);
+  }
   // header tabel
   const labels = [
     "Nama Ekskul",
@@ -51,10 +58,11 @@ const RiwayatPendaftaran = () => {
       {
         onSuccess: () => {
           console.log("✅ Pindah berhasil");
-          setShowPopup(true); // tampilkan popup sukses
+          stateHandle("update", true);
           handleClose(); // tutup modal pindah
         },
         onError: (err) => {
+          stateHandle("update", true);
           console.error("❌ Pindah gagal:", err);
         },
       }
@@ -98,7 +106,7 @@ const RiwayatPendaftaran = () => {
                   fromComponent="RiwayatPendaftaran"
                   action
                   onEdit={(row) => handleEdit(row)}
-                  onDelete={(id) => console.log("Delete:", id)}
+                  onDelete={(id) => handleDelete(id)}
                 />
               </div>
             )}
@@ -187,9 +195,18 @@ const RiwayatPendaftaran = () => {
         label="Berhasil"
         message="Siswa berhasil dipindahkan ke ekskul baru."
         isSuccess={true}
-        stateConcition={showPopup}
+        stateConcition={state.update}
         stateName="update"
-        reload={true}
+        navigateTo=""
+      />
+      
+      <Popup
+        label="Berhasil"
+        message="Siswa berhasil dikeluarkan"
+        isSuccess={true}
+        stateConcition={state.delete}
+        stateName="delete"
+        navigateTo=""
       />
     </div>
   );

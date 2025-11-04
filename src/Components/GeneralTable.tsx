@@ -75,6 +75,8 @@ const GeneralTable: React.FC<TableType> = ({
                       ? row.siswa?.nama || "-"
                       : key === "kelas"
                       ? row.siswa?.kelas || "-"
+                      : key === "keterangan"
+                      ? row.keterangan || "-"
                       : row[key] || 0}
                   </td>
                 ))}
@@ -126,7 +128,7 @@ const GeneralTable: React.FC<TableType> = ({
                       <FiEdit className="text-lg" />
                     </button>
                   )}
-                  
+
                   {fromComponent !== "DetailPenilaianTutor" && (
                     <button
                       onClick={() => onDelete?.(row.id)}

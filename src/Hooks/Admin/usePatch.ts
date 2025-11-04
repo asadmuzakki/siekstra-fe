@@ -278,7 +278,7 @@ export function useUpdateDataEkskul(id: string) {
     }) => updateDataEkskul(id, data, token),
     onSuccess: () => {
       stateHandle("update", true);
-      queryClient.invalidateQueries({ queryKey: ["get_data_ekskul_admin"] });
+      queryClient.invalidateQueries({ queryKey: ["get_data_ekskul_by_id"] });
     },
     onError: (err) => {
       console.error("❌ Gagal update ekskul:", err);

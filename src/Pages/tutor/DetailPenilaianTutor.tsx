@@ -61,6 +61,7 @@ const DetailPenilaianTutor = () => {
                     "Praktik",
                     "Nilai Akhir",
                     "Index Nilai",
+                    "keterangan"
                   ]}
                   data={(data ? data?.data?.details : []) as any[]}
                   action={false}
@@ -72,6 +73,7 @@ const DetailPenilaianTutor = () => {
                     "praktik",
                     "nilai_akhir",
                     "index_nilai",
+                    "keterangan",
                   ]}
                 />
               </div>

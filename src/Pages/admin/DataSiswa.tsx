@@ -32,7 +32,7 @@ const DataSiswa = () => {
   };
   useEffect(() => {
     console.log(data);
-  }, [data]);
+  }, [data, successCreate,errorCreate, successUpdate, errorUpdate]);
 
   return (
     <div className="flex h-screen overflow-hidden">

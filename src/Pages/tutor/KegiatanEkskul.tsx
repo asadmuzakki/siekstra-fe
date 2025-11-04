@@ -52,7 +52,7 @@ const KegiatanEkskul = () => {
           hadir: false,
           sakit: false,
           izin: false,
-          alpa: true, // Default to Alpha
+          alpa: true, 
           keterangan: "",
         })
       );
@@ -172,10 +172,11 @@ const KegiatanEkskul = () => {
           <Popup
             label="Absen Kegiatan Berhasil"
             message={"Absen Kegiatan Berhasil"}
-            navigateTo=""
+            navigateTo={`/tutor-kegiatan/riwayat/${id}`}
             isSuccess={true}
             stateConcition={state.post}
             stateName="post"
+
           />
         )}
         {error && (

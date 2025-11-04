@@ -46,6 +46,7 @@ const CardCreateDataTutor: React.FC<Props> = ({
       onSubmit_update,
       isSuccess_update,
       isError_update,
+      isLoading_update,
    } = useUpdateDataTutor(idTutor || "");
 
    const {data:data_tutor_by_id} = useGetDataTutorById(idTutor ?? '')
@@ -196,6 +197,7 @@ const CardCreateDataTutor: React.FC<Props> = ({
                         >
                            <p>{isEdit ? "Update Data" : "Simpan Data"}</p>
                            {isLoading && <LoadingSpinner />}
+                           {isLoading_update && <LoadingSpinner />}
                         </button>
                      </div>
                   </form>

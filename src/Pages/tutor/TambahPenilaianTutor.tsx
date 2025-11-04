@@ -180,9 +180,12 @@ const TambahPenilaianTutor = () => {
                                   newVal[index] = e.target.value;
                                   setKehadiran(newVal);
                                 }}
+                                min={1}
+                                max={100}
                                 className="border rounded px-2 py-1 w-30  outline-none"
                                 type="number"
                               />
+                          
                             </td>
                             <td className="px-4 py-3 text-center">
                               <input
@@ -228,6 +231,7 @@ const TambahPenilaianTutor = () => {
                             </td>
                             <td className="px-4 py-3 text-center">
                               <input
+                                {...register(`penilaians.${index}.keterangan`)}
                                 className="border rounded px-2 py-1  outline-none"
                                 type="text"
                               />

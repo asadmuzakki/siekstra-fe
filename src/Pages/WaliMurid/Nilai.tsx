@@ -11,7 +11,7 @@ const Nilai = () => {
   const currentYear = new Date().getFullYear();
   const [tahun, setTahun] = useState<string>(currentYear.toString());
 
-  const { data, isLoading, isError, error } = useGetNilaiBySiswa(id!, tahun);
+  const { data, isLoading, isError } = useGetNilaiBySiswa(id!, tahun);
 
   useEffect(() => {
     console.log("Data nilai siswa:", data);
@@ -91,27 +91,29 @@ const Nilai = () => {
             </div>
 
             <div className="p-5 bg-white shadow-md rounded-md">
-              <div className="flex justify-start items-center w-full text-gray-600 text-lg mb-3">
-                Nilai {namaAnak}
-                
+              <div>
+                <div className="flex justify-start items-center w-full text-gray-600 text-lg mb-3">
+                  Nilai {namaAnak}
+                </div>
+                {/* Kondisi Loading / Error */}
+                {isLoading ? (
+                  <p>Loading...</p>
+                ) : isError ? (
+                  <p className="flex justify-start items-center w-full text-gray-600 text-lg mb-3">
+                    Tidak Ada Data
+                  </p>
+                ) : data?.data && data.data.length > 0 ? (
+                  <GeneralTable
+                    fromComponent="RiwayatAbsensi"
+                    label={label}
+                    keys={keys}
+                    data={flattenedData}
+                    action={false}
+                  />
+                ) : (
+                  <p className="text-gray-500">Belum ada data nilai</p>
+                )}
               </div>
-
-              {/* Kondisi Loading / Error */}
-              {isLoading ? (
-                <p>Loading...</p>
-              ) : isError ? (
-                <p className="text-red-500">Gagal memuat: {error?.message}</p>
-              ) : data?.data && data.data.length > 0 ? (
-                <GeneralTable
-                  fromComponent="RiwayatAbsensi"
-                  label={label}
-                  keys={keys}
-                  data={flattenedData}
-                  action={false}
-                />
-              ) : (
-                <p className="text-gray-500">Belum ada data nilai</p>
-              )}
             </div>
           </div>
         </div>

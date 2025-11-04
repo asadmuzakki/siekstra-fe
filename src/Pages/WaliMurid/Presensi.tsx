@@ -93,7 +93,9 @@ const Presensi = () => {
               {isLoading ? (
                 <p>Loading...</p>
               ) : isError ? (
-                <p className="text-red-500">Data tidak ditemukan </p>
+                <p className="flex justify-start items-center w-full text-gray-600 text-lg mb-3">
+                    Tidak Ada Data
+                  </p>
               ) : data?.data && data.data.length > 0 ? (
                 <GeneralTable
                   fromComponent="RiwayatAbsensi"

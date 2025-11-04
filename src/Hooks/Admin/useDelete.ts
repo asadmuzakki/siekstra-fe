@@ -39,11 +39,14 @@ export const useDeleteDataSiswaById = () => {
 };
 
 const deleteDataWaliMuridById = async (id: string, token: string) => {
-  const response = await axiosInstance.delete(`/api/admin/delete-wali-murid/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axiosInstance.delete(
+    `/api/admin/delete-wali-murid/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
@@ -57,7 +60,9 @@ export const useDeleteDataWaliMuridById = () => {
     mutationFn: (id: string) => deleteDataWaliMuridById(id, token),
     onSuccess: () => {
       stateHandle("delete", true);
-      queryClient.invalidateQueries({ queryKey: ["get_data_wali_murid_admin"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get_data_wali_murid_admin"],
+      });
     },
     onError: (err) => {
       console.log(err);
@@ -141,11 +146,14 @@ export const useDeleteDataEkskulById = () => {
 };
 
 const deleteDataAbsensiTutorById = async (id: string, token: string) => {
-  const response = await axiosInstance.delete(`/api/admin/absensi-tutor/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axiosInstance.delete(
+    `/api/admin/absensi-tutor/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
@@ -173,3 +181,37 @@ export const useDeleteDataAbsensiTutorById = () => {
     errorDelete: mutation.isError,
   };
 };
+
+async function deleteRiwayatPendaftaran(id: string, token: string) {
+  const response = await axiosInstance.delete(`/api/admin/pendaftaran/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+export function useDeleteRiwayatPendaftaran() {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { stateHandle } = useGlobalContext();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationKey: ["delete_riwayat_pendaftaran"],
+    mutationFn: (id: string) => deleteRiwayatPendaftaran(id, token),
+    onSuccess: () => {
+      stateHandle("delete", true);
+      queryClient.invalidateQueries({ queryKey: ["get_riwayat_pendaftaran"] });
+    },
+    onError: () => {
+      stateHandle("delete", true);
+    },
+  });
+
+  return {
+    onDelete: mutation.mutate,
+    isLoadingDelete: mutation.isPending,
+    successDelete: mutation.isSuccess,
+    errorDelete: mutation.isError,
+  };
+}

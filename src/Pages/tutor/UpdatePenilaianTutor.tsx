@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
 
-
 import { useParams } from "react-router-dom";
 import type { NilaiEkskulModelType } from "../../Models/ekskul.model";
 import {
@@ -19,13 +18,20 @@ import { useupdateNilaiSiswaByTutor } from "../../Hooks/usePatch";
 
 const UpdatePenilaianTutor = () => {
   const { id } = useParams();
-  const {ekskul_id} = useParams();
+  const { ekskul_id } = useParams();
   const { state } = useGlobalContext();
   // const navigate = useNavigate();
 
   const { data: data_nilai, isLoading } = useGetNilaiSiswaTutorById(String(id));
-  const { register, setValue, handleSubmit, onSubmit, success, error, isLoading:isLoading_update } =
-    useupdateNilaiSiswaByTutor(String(id));
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    onSubmit,
+    success,
+    error,
+    isLoading: isLoading_update,
+  } = useupdateNilaiSiswaByTutor(String(id));
 
   const [kehadiran, setKehadiran] = useState<string[]>([]);
   const [keaktifan, setKeaktifan] = useState<any[]>([]);
@@ -183,11 +189,11 @@ const UpdatePenilaianTutor = () => {
                                     {...register(
                                       `penilaians.${index}.kehadiran`
                                     )}
-                                      onChange={(e) => {
-                                  const newVal = [...kehadiran];
-                                  newVal[index] = e.target.value;
-                                  setKehadiran(newVal);
-                                }}
+                                    onChange={(e) => {
+                                      const newVal = [...kehadiran];
+                                      newVal[index] = e.target.value;
+                                      setKehadiran(newVal);
+                                    }}
                                     className="border rounded px-2 py-1 w-30   outline-none"
                                     type="number"
                                   />
@@ -198,11 +204,11 @@ const UpdatePenilaianTutor = () => {
                                     {...register(
                                       `penilaians.${index}.keaktifan`
                                     )}
-                                      onChange={(e) => {
-                                  const newVal = [...keaktifan];
-                                  newVal[index] = e.target.value;
-                                  setKeaktifan(newVal);
-                                }}
+                                    onChange={(e) => {
+                                      const newVal = [...keaktifan];
+                                      newVal[index] = e.target.value;
+                                      setKeaktifan(newVal);
+                                    }}
                                     className="border rounded px-2 py-1 w-30   outline-none"
                                     type="number"
                                   />
@@ -210,14 +216,12 @@ const UpdatePenilaianTutor = () => {
                                 <td className="px-4 py-3 text-center">
                                   <input
                                     defaultValue={item.praktik}
-                                    {...register(
-                                      `penilaians.${index}.praktik`
-                                    )}
-                                     onChange={(e) => {
-                                  const newVal = [...praktik];
-                                  newVal[index] = e.target.value;
-                                  setPraktik(newVal);
-                                }}
+                                    {...register(`penilaians.${index}.praktik`)}
+                                    onChange={(e) => {
+                                      const newVal = [...praktik];
+                                      newVal[index] = e.target.value;
+                                      setPraktik(newVal);
+                                    }}
                                     className="border rounded px-2 py-1 w-30   outline-none"
                                     type="number"
                                   />
@@ -242,6 +246,10 @@ const UpdatePenilaianTutor = () => {
                                 </td>
                                 <td className="px-4 py-3 text-center">
                                   <input
+                                    defaultValue={item.keterangan}
+                                    {...register(
+                                      `penilaians.${index}.keterangan`
+                                    )}
                                     className="border rounded px-2 py-1  outline-none"
                                     type="text"
                                   />
@@ -265,7 +273,7 @@ const UpdatePenilaianTutor = () => {
                       className="px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400"
                     >
                       <p>Submit</p>
-                      {isLoading_update&& <LoadingSpinner />}
+                      {isLoading_update && <LoadingSpinner />}
                     </button>
                   </div>
                 </div>

@@ -68,6 +68,8 @@ const EkstraKurikuler = () => {
                       (a: any) => a.nama === anak.siswa
                     );
 
+                     const adaTerdaftar = anak.ekskul.some((ekskul: any) => ekskul.is_registered);
+
                     return (
                       <div key={`${anak.siswa}-${idx}`} className="mb-10">
                         {/* Nama siswa */}
@@ -105,19 +107,14 @@ const EkstraKurikuler = () => {
                                   {ekskul.deskripsi}
                                 </p>
                                 <p className="text-xs text-gray-500 mb-2">
-                                  <span className="font-semibold">Jadwal:</span>{" "}
+                                  <span className="font-semibold">
+                                    Jadwal:{" "}
+                                  </span>
                                   {ekskul.jadwal} @ {ekskul.tempat}
                                 </p>
 
                                 {/* Tombol daftar / terdaftar */}
-                                {ekskul.is_registered ? (
-                                  <button
-                                    disabled
-                                    className="bg-gray-400 text-white px-10 py-1 rounded-full cursor-not-allowed"
-                                  >
-                                    Terdaftar
-                                  </button>
-                                ) : (
+                                {!adaTerdaftar && !ekskul.is_registered && (
                                   <button
                                     onClick={() =>
                                       siswa && handleDaftar(ekskul.id, siswa.id)
@@ -128,6 +125,15 @@ const EkstraKurikuler = () => {
                                     {isLoadingDaftar
                                       ? "Mendaftar..."
                                       : "Daftar"}
+                                  </button>
+                                )}
+
+                                {ekskul.is_registered && (
+                                  <button
+                                    disabled
+                                    className="bg-gray-400 text-white px-10 py-1 rounded-full cursor-not-allowed"
+                                  >
+                                    Terdaftar
                                   </button>
                                 )}
                               </div>

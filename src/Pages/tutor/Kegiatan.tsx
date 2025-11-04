@@ -43,11 +43,9 @@ const Kegiatan = () => {
                         <th className="px-4 py-3 border-b border-gray-500 text-center">
                           No
                         </th>
-
                         <th className="px-4 py-3 border-b border-gray-500 text-center truncate">
                           Ekstrakurikuler
                         </th>
-
                         <th className="px-4 py-3 border-b border-gray-500 text-center truncate">
                           Aksi
                         </th>

@@ -30,8 +30,8 @@ const RiwayatKegiatan = () => {
   //   alert(id);
   // };
   useEffect(() => {
-    // console.log(data);
-  });
+    console.log(data);
+  },[data]);
 
   const editAbsensi = (id_absensi: string) => {
     navigate(`/tutor-kegiatan/riwayat/update-absensi/${id_absensi}/${id}`);

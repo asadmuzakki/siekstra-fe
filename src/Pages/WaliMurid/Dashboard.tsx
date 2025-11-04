@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useNavigate } from "react-router-dom";
-import Button from "../../Components/Button";
+
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
 import { useEffect } from "react";
@@ -35,9 +35,6 @@ const DashboardWaliMurid = () => {
             </div>
             {/* Tabel */}
             <div className="p-5 bg-white shadow-md rounded-md">
-              <div>
-                <Button buttonLabel="Tambah" />
-              </div>
               <div className="overflow-x-auto mt-4">
                 <table className="min-w-full bg-white overflow-hidden ">
                   <thead className=" text-gray-600 text-sm uppercase text-left">
@@ -87,19 +84,19 @@ const DashboardWaliMurid = () => {
                           </td>
                           <td className="px-4 py-3 text-center truncate space-x-2">
                             <button
-                              onClick={() => navigate(`/presensi/${anak.id}`)}
+                              onClick={() => navigate(`presensi/${anak.id}`)}
                               className="px-3 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600 cursor-pointer"
                             >
                               Presensi
                             </button>
                             <button
-                              onClick={() => navigate(`/nilai/${anak.id}`)}
+                              onClick={() => navigate(`nilai/${anak.id}`)}
                               className="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 cursor-pointer"
                             >
                               Nilai
                             </button>
                             <button
-                              onClick={() => navigate(`/wali-kegiatan/${anak.id}`)}
+                              onClick={() => navigate(`wali-kegiatan/${anak.id}`)}
                               className="px-3 py-1 bg-orange-400 text-white rounded text-xs hover:bg-orange-500 cursor-pointer"
                             >
                               Kegiatan

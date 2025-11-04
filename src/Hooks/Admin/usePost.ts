@@ -39,8 +39,9 @@ export const useCreateDataSiswa = () => {
       stateHandle("post", true);
       query.invalidateQueries({ queryKey: ["get_data_siswa_admin"] });
     },
-    onError: () => {
+    onError: (err) => {
       stateHandle("post", true);
+      console.log(err);
     },
   });
   return {
