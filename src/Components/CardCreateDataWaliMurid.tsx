@@ -41,11 +41,10 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
   } = useCreateDataWaliMurid();
 
   const {
-    setValue,
     onSubmit_update,
     isSuccess_update,
     isError_update,
-
+    isLoading_update,
   } = useUpdateDataWaliMurid(idSiswa || "");
 
   const { data: dataWali } = useGetDataWaliById(idSiswa || "");
@@ -61,52 +60,36 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (dataWali?.user?.name) {
-      setName(dataWali.user.name);
-    }
-    if(dataWali?.user?.email){
-      setEmail(dataWali.user.email);
-    }
-    if(dataWali?.user?.password){
-      setPassword(dataWali.user.password);
-    }
-    if(dataWali?.user?.password_confirmation){
-      setPasswordConfirmation(dataWali.user.password_confirmation);
+    if (dataWali?.user) {
+      const { name, email, password, password_confirmation } = dataWali.user;
+      if (name) setName(name);
+      if (email) setEmail(email);
+      if (password) setPassword(password);
+      if (password_confirmation) setPasswordConfirmation(password_confirmation);
     }
     if (success) {
       setSuccessCreate(true);
       setShow(false);
-    }
-    if (error) {
+      return;
+    } else if (error) {
       setErrorCreate(true);
       setShow(false);
+      return;
     }
+
     if (isSuccess_update) {
       setSuccessUpdate(true);
       setShow(false);
-    }
-    if (isError_update) {
+      return;
+    } else if (isError_update) {
       setErrorUpdate(true);
       setShow(false);
+      return;
     }
-  }, [
-    isEdit,
-    idSiswa,
-    dataWali,
-    success,
-    error,
-    isSuccess_update,
-    isError_update,
-    setSuccessCreate,
-    setErrorCreate,
-    setSuccessUpdate,
-    setErrorUpdate,
-    setShow,
-    setValue,
-  ]);
+  }, [success, error, isSuccess_update, isError_update, setShow, dataWali]);
 
   const handleFormUpdate = (data: DataWaliMuridModelType) => {
-     onSubmit_update(data);
+    onSubmit_update(data);
     console.log(data);
   };
 
@@ -130,97 +113,175 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
             <h2 className="text-xl font-semibold text-gray-700 mb-4">
               {isEdit ? "Edit Data Wali Murid" : "Create Data Wali Murid"}
             </h2>
-            <form
-              onSubmit={handleSubmit(handleFormSubmit)}
-              className="space-y-4"
-            >
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Nama
-                </label>
-                <input
-                  defaultValue={dataWali?.user?.name}
-                  {...register("name")}
-                  onChange={(e) => setName(e.target.value)}
-                  type="text"
-                  className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
+            {!isEdit && (
+              <form
+                onSubmit={handleSubmit(handleFormSubmit)}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">
+                    Nama
+                  </label>
+                  <input
+                    defaultValue={dataWali?.user?.name}
+                    {...register("name")}
+                    onChange={(e) => setName(e.target.value)}
+                    type="text"
+                    className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Email
-                </label>
-                <input
-                  defaultValue={dataWali?.user?.email}
-                  {...register("email")}
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                  className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Password
-                </label>
-                <input
-                  value={password}
-                  {...register("password")}
-                  onChange={(e) => setPassword(e.target.value)}
-                  type="password"
-                  className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {errors.password && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">
+                    Email
+                  </label>
+                  <input
+                    defaultValue={dataWali?.user?.email}
+                    {...register("email")}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">
+                    Password
+                  </label>
+                  <input
+                    value={password}
+                    {...register("password")}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                    className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Konfirmasi Password
-                </label>
-                <input
-                  value={passwordConfirmation}
-                  {...register("password_confirmation")}
-                  onChange={(e) => setPasswordConfirmation(e.target.value)}
-                  type="password"
-                  className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">
+                    Konfirmasi Password
+                  </label>
+                  <input
+                    value={passwordConfirmation}
+                    {...register("password_confirmation")}
+                    onChange={(e) => setPasswordConfirmation(e.target.value)}
+                    type="password"
+                    className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-              <div className="w-full flex justify-center items-center mt-5">
-                <button
-                  onClick={() => {
-                    if (isEdit) {
-                      const dataSending = {
-                        name,
-                        email,
-                        password,
-                        password_confirmation: passwordConfirmation,
-                      };
-                      handleFormUpdate(dataSending);
-                    }
-                  }}
-                  type="submit"
-                  className="px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400"
-                >
-                  <p>{isEdit ? "Update Data" : "Simpan Data"}</p>
-                  {isLoading && <LoadingSpinner />}
-                </button>
-              </div>
-            </form>
+                <div className="w-full flex justify-center items-center mt-5">
+                  <button
+                    type="submit"
+                    className="px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400"
+                  >
+                    <p>{isEdit ? "Update Data" : "Simpan Data"}</p>
+                    {isLoading && <LoadingSpinner />}
+                  </button>
+                </div>
+              </form>
+            )}
+            {isEdit && (
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">
+                    Nama
+                  </label>
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    type="text"
+                    className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">
+                    Email
+                  </label>
+                  <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">
+                    Password
+                  </label>
+                  <input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                    className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">
+                    Konfirmasi Password
+                  </label>
+                  <input
+                    value={passwordConfirmation}
+                    onChange={(e) => setPasswordConfirmation(e.target.value)}
+                    type="password"
+                    className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="w-full flex justify-center items-center mt-5">
+                  <button
+                    onClick={() => {
+                      if (isEdit) {
+                        const dataSending = {
+                          name,
+                          email,
+                          password,
+                          password_confirmation: passwordConfirmation,
+                        };
+                        handleFormUpdate(dataSending);
+                      }
+                    }}
+                    type="button"
+                    disabled = {password === "" || passwordConfirmation === ""}
+                    className="px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400"
+                  >
+                    <p>{isEdit ? "Update Data" : "Simpan Data"}</p>
+                    {isLoading_update && <LoadingSpinner />}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}

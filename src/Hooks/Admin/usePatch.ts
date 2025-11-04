@@ -86,6 +86,7 @@ export function useUpdateDataWaliMurid(id: string) {
 
   const queryClient = useQueryClient();
 
+
   const {
     setValue,
     register,
@@ -104,7 +105,8 @@ export function useUpdateDataWaliMurid(id: string) {
         queryKey: ["get_data_wali_murid_admin"],
       });
     },
-    onError: () => {
+    onError: (err) => {
+      console.log(err)
       stateHandle("update", true);
     },
   });

@@ -99,8 +99,6 @@ export const useCreateDataWaliMurid = () => {
     onSuccess: () => {
       reset();
       stateHandle("post", true);
-      stateHandle("successCreate", true);
-      alert("Create Wali Murid Berhasil");
       query.invalidateQueries({ queryKey: ["get_data_wali_murid_admin"] });
     },
     onError: (err) => {
