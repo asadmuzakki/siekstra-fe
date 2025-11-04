@@ -32,6 +32,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     update: false,
     delete: false,
     showPopAbsen: false,
+    successCreate: false,
   });
   const stateHandle = (stateKey: string, value: any) => {
     setState((prevState) => ({

@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const DashboardAdmin = () => {
   const { data, isLoading, isError, error } = useGetDataDashboard();
-
+  const [year, setYear] = useState(new Date().getFullYear());
   useEffect(() => {
     if (isError) {
       console.error("Error fetching dashboard data:", error);
@@ -79,7 +79,7 @@ const DashboardAdmin = () => {
                 <p className="text-blue-500 font-semibold">
                   Grafik Pendaftaran Ekstrakurikuler
                 </p>
-                <select className="border border-gray-300 rounded-md px-7 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <select onChange={(e) => setYear(Number(e.target.value))} className="border border-gray-300 rounded-md px-7 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
                   {Array.from({ length: 5 }, (_, i) => {
                     const year = new Date().getFullYear() - i;
                     return (
@@ -91,7 +91,9 @@ const DashboardAdmin = () => {
                 </select>
               </div>
 
-              <ExtracurricularBarChart type="pendaftaran" />
+              <ExtracurricularBarChart type="pendaftaran"
+              tahun={year}
+              />
             </div>
             <div className="p-5 bg-white shadow-md rounded-md mb-10">
               <div className="flex justify-between items-center w-full mb-10">

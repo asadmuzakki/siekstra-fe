@@ -6,4 +6,6 @@ export interface State {
   update: boolean;
   delete: boolean;
   showPopAbsen:boolean
+    successCreate: boolean,
+
 }

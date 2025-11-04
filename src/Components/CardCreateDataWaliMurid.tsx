@@ -41,12 +41,13 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
 
    const {
       setValue,
+      register: register_update,
       onSubmit_update,
       isSuccess_update,
       isError_update,
    } = useUpdateDataWaliMurid(idSiswa || "");
 
-   const {data: dataWali} = useGetDataWaliById(idSiswa || "");
+   const { data: dataWali } = useGetDataWaliById(idSiswa || "");
 
    const handleFormSubmit = (data: { name: string; email: string; password: string; password_confirmation: string }) => {
       onSubmit({ ...data, password_confirmation: passwordConfirmation });
@@ -77,7 +78,7 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
          setErrorUpdate(true);
          setShow(false);
       }
-      
+
    }, [isEdit, idSiswa, name, email, password, passwordConfirmation, success, error, isSuccess_update, isError_update, setSuccessCreate, setErrorCreate, setSuccessUpdate, setErrorUpdate, setShow, setValue]);
 
    const handleFormUpdate = (data: {
@@ -86,7 +87,7 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
       password: string;
       password_confirmation: string;
    }) => {
-      onSubmit_update(data);
+      // onSubmit_update(data);
       console.log(data);
    };
 
@@ -114,9 +115,9 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
                      onSubmit={
                         isEdit
                            ? (e) => {
-                                e.preventDefault();
-                                handleFormUpdate({ name, email, password, password_confirmation: passwordConfirmation });
-                             }
+                              e.preventDefault();
+                              handleFormUpdate({ name, email, password, password_confirmation: passwordConfirmation });
+                           }
                            : handleSubmit(handleFormSubmit)
                      }
                      className="space-y-4"
@@ -126,7 +127,7 @@ const CardCreateDataWaliMurid: React.FC<Props> = ({
                            Nama
                         </label>
                         <input
-                                 defaultValue={dataWali?.user?.name}
+                           defaultValue={dataWali?.user?.name}
                            {...register("name")}
                            onChange={(e) => setName(e.target.value)}
                            type="text"

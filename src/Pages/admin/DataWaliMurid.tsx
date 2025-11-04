@@ -53,7 +53,7 @@ const DataWaliMurid = () => {
             {isLoadingDelete && (
                <div className="fixed inset-0 w-full h-screen bg-black opacity-50 z-50"></div>
             )}
-            {successCreate && (
+            {state.successCreate && (
                <Popup
                   label="Create Berhasil"
                   message="Create Berhasil"
@@ -122,7 +122,7 @@ const DataWaliMurid = () => {
                   <div className="flex-1 m-4 scrollbar-hide">
                      <div className="w-full flex justify-between mb-6">
                         <p className="text-2xl md:text-3xl text-gray-600 font-semibold">
-                           Data Wali Murid
+                          Data Wali Murid
                         </p>
 
                      </div>

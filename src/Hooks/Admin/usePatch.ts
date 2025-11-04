@@ -88,6 +88,7 @@ export function useUpdateDataWaliMurid(id: string) {
 
   const {
     setValue,
+    register,
     handleSubmit: handleSubmit_update,
     formState: { errors },
   } = useForm({
@@ -109,6 +110,7 @@ export function useUpdateDataWaliMurid(id: string) {
   });
   return {
     setValue,
+    register,
     errors,
     handleSubmit_update,
     onSubmit_update: mutation.mutate,
