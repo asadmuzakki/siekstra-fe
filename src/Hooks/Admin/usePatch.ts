@@ -6,6 +6,8 @@ import {
   type DataSiswaModelType,
   DataWaliMuridModel,
   type DataWaliMuridModelType,
+  DataKelasEkskulModel,
+  type DataKelasEkskulModelType
 } from "../../Models/AdminModels";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -452,3 +454,65 @@ export const useUpdateDataAbsensiTutor = (id: number) => {
     reset, // <-- tambahin ini
   };
 };
+
+// === API FUNCTION ===
+async function updateDataKelasEkskul(
+  id: string,
+  data: DataKelasEkskulModelType,
+  token: string
+) {
+  const response = await axiosInstance.patch(
+    `/api/admin/kelas-ekskul/${id}`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+}
+
+// === HOOK ===
+export function useUpdateDataKelasEkskul(id: string) {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+
+  const { stateHandle } = useGlobalContext();
+  const queryClient = useQueryClient();
+
+  const {
+    setValue,
+    handleSubmit: handleSubmit_update,
+    formState: { errors },
+  } = useForm<DataKelasEkskulModelType>({
+    resolver: zodResolver(DataKelasEkskulModel),
+  });
+
+  const mutation = useMutation({
+    mutationKey: ["update_data_kelas_ekskul", id],
+    mutationFn: (data: DataKelasEkskulModelType) =>
+      updateDataKelasEkskul(id, data, token),
+
+    onSuccess: () => {
+      stateHandle("update", true);
+      queryClient.invalidateQueries({
+        queryKey: ["get_data_kelas_ekskul_admin"],
+      });
+    },
+
+    onError: () => {
+      stateHandle("update", true);
+    },
+  });
+
+  return {
+    setValue,
+    errors,
+    handleSubmit_update,
+    onSubmit_update: mutation.mutate,
+    isLoading_update: mutation.isPending,
+    isSuccess_update: mutation.isSuccess,
+    isError_update: mutation.isError,
+  };
+}

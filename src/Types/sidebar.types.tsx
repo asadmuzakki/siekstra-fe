@@ -6,6 +6,7 @@ import {
   MdAccessTime,
   MdInsertChartOutlined,
   MdOutlineDateRange,
+  MdClass 
 } from "react-icons/md";
 import { PiStudent } from "react-icons/pi";
 import { GiTeacher } from "react-icons/gi";
@@ -59,6 +60,11 @@ export const admin: SidebarMenu[] = [
     icon: <GiTeacher />,
     label: "Data Tutor",
     path: "/data-tutor",
+  },
+  {
+    icon: <MdClass />,
+    label: "Data Kelas",
+    path: "/data-kelas",
   },
   {
     icon: <RiStackLine />,

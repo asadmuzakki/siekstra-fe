@@ -215,3 +215,47 @@ export function useDeleteRiwayatPendaftaran() {
     errorDelete: mutation.isError,
   };
 }
+
+const deleteKelasEkskulById = async (id: string, token: string) => {
+  const response = await axiosInstance.delete(
+    `/api/admin/kelas-ekskul/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+// === HOOK ===
+export const useDeleteKelasEkskulById = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { stateHandle } = useGlobalContext();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationKey: ["delete_kelas_ekskul_by_id"],
+    mutationFn: (id: string) => deleteKelasEkskulById(id, token),
+
+    onSuccess: () => {
+      stateHandle("delete", true);
+      queryClient.invalidateQueries({
+        queryKey: ["get_data_ekskul_admin"],
+      });
+    },
+
+    onError: (err) => {
+      console.log(err);
+      stateHandle("delete", true);
+    },
+  });
+
+  return {
+    onDelete: mutation.mutate,
+    isLoadingDelete: mutation.isPending,
+    successDelete: mutation.isSuccess,
+    errorDelete: mutation.isError,
+  };
+};

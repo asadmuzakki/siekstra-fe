@@ -38,6 +38,7 @@ import Presensi from "./Pages/WaliMurid/Presensi";
 import Nilai from "./Pages/WaliMurid/Nilai";
 import KegiatanSiswa from "./Pages/WaliMurid/Kegiatan";
 import DashboardEkskul from "./Pages/WaliMurid/DashboardEkskul";
+import DataKelasEkskul from "./Pages/admin/DataKelas";
 
 const App = () => {
   return (
@@ -89,6 +90,15 @@ const App = () => {
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <DataAbsensiTutor />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/data-kelas"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <DataKelasEkskul />
           </ProtectedRoute>
         }
       />

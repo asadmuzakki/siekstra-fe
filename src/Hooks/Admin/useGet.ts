@@ -448,3 +448,59 @@ export const useGetDataGrafikKegiatan = ({
     error,
   };
 };
+
+const getDataKelasEkskulAdmin = async (token: string) => {
+  const response = await axiosInstance.get("/api/admin/kelas-ekskul", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data; // otomatis mengembalikan { data: [...] }
+};
+
+export const useGetDataKelasEkskulAdmin = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_data_kelas_ekskul_admin"],
+    queryFn: () => getDataKelasEkskulAdmin(token),
+  });
+
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+
+// === API CALL ===
+const getKelasEkskulById = async (id: string, token: string) => {
+  const response = await axiosInstance.get(`/api/admin/kelas-ekskul/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+// === HOOK ===
+export const useGetKelasEkskulById = (id: string) => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get_kelas_ekskul_by_id", id],
+    queryFn: () => getKelasEkskulById(id, token),
+    enabled: !!id, // agar tidak fetch jika id masih kosong
+  });
+
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
+

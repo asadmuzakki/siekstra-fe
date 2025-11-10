@@ -21,3 +21,13 @@ export const DataWaliMuridModel = z.object({
 });
 
 export type DataWaliMuridModelType = z.infer<typeof DataWaliMuridModel>;
+
+export const DataKelasEkskulModel = z.object({
+  ekskul_id: z.number(),
+  nama_kelas: z.string(),
+  tahun_ajaran: z.string(),
+  periode: z.string(),
+  status: z.string(),
+});
+
+export type DataKelasEkskulModelType = z.infer<typeof DataKelasEkskulModel>;

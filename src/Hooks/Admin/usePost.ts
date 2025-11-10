@@ -3,6 +3,8 @@ import { axiosInstance } from "../../lib/axiosInstance";
 import {
   DataSiswaModel,
   type DataSiswaModelType,
+  DataKelasEkskulModel,
+  type DataKelasEkskulModelType
 } from "../../Models/AdminModels";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -338,6 +340,73 @@ export const useCreateDataAbsensiTutor = () => {
     success: mutation.isSuccess,
     error: mutation.isError,
     reset, // <-- tambahin ini
+  };
+};
+
+// === API FUNCTION ===
+const createDataKelasEkskul = async (
+  data: DataKelasEkskulModelType,
+  token: string
+) => {
+  const response = await axiosInstance.post(
+    "/api/admin/kelas-ekskul",
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+// === HOOK ===
+export const useCreateDataKelasEkskul = () => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+
+  const { stateHandle } = useGlobalContext();
+  const query = useQueryClient();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<DataKelasEkskulModelType>({
+    resolver: zodResolver(DataKelasEkskulModel),
+  });
+
+  const mutation = useMutation({
+    mutationKey: ["create_data_kelas_ekskul"],
+    mutationFn: (data: DataKelasEkskulModelType) =>
+      createDataKelasEkskul(data, token),
+
+    // ✅ SUCCESS
+    onSuccess: () => {
+      reset();
+      stateHandle("post", true);
+      query.invalidateQueries({
+        queryKey: ["get_data_kelas_ekskul_admin"],
+      });
+    },
+
+    // ❌ ERROR
+    onError: (err) => {
+      stateHandle("post", true);
+      console.log(err);
+    },
+  });
+
+  return {
+    register,
+    handleSubmit,
+    errors,
+
+    onSubmit: mutation.mutate,
+    isLoading: mutation.isPending,
+    success: mutation.isSuccess,
+    error: mutation.isError,
   };
 };
 
