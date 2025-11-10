@@ -4,7 +4,7 @@ import { axiosInstance } from "../lib/axiosInstance";
 
 import type {
   EkskulType,
-  RekapAbsensiType,
+
   SiswaType,
 } from "../Types/general.type";
 import { useCookies } from "react-cookie";
@@ -81,7 +81,7 @@ export const useGetEkskul = () => {
 const riwayatAbsensi = async (
   id: string,
   token: string
-): Promise<RekapAbsensiType> => {
+): Promise<any> => {
   const response = await axiosInstance.get(`api/tutor/riwayat-absensi/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const riwayatAbsensi = async (
 export const useRiwayatAbsensi = (id: string) => {
   const [cookies] = useCookies(["authToken"]);
   const token = cookies.authToken;
-  const { data, isLoading, isError, error } = useQuery<RekapAbsensiType>({
+  const { data, isLoading, isError, error } = useQuery<any>({
     queryKey: ["get_riwayat_absensi", id],
     queryFn: () => riwayatAbsensi(id, token),
   });

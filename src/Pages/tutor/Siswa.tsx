@@ -41,18 +41,14 @@ const Siswa = () => {
                 <div className="overflow-x-auto mt-4">
                   <table className="min-w-full bg-white overflow-hidden">
                     <thead className="text-gray-600 text-sm uppercase text-left border-b bordert border-gray-500">
-                      <tr className ="">
-                        <th className="px-4 py-3 text-center">
-                          No
-                        </th>
+                      <tr className="">
+                        <th className="px-4 py-3 text-center">No</th>
 
                         <th className="px-4 py-3 text-center truncate">
                           Ekstrakurikuler
                         </th>
 
-                        <th className="px-4 py-3 text-center truncate">
-                          Aksi
-                        </th>
+                        <th className="px-4 py-3 text-center truncate">Aksi</th>
                       </tr>
                     </thead>
                     <tbody className="text-sm text-gray-700 ">
@@ -74,14 +70,25 @@ const Siswa = () => {
                               <button
                                 onClick={() => {
                                   navigate(`riwayat/${row.id}`);
+                                  sessionStorage.setItem(
+                                    "nama_ekskul",
+                                    row.nama_ekskul
+                                  );
                                 }}
                                 className="bg-green-100 text-green-700 p-2 rounded cursor-pointer"
                               >
                                 Presensi
                               </button>
-                              <button onClick={()=>{
-                                navigate(`penilaian/${row.id}`)
-                              }} className="bg-blue-100 text-blue-700 p-2 rounded cursor-pointer">
+                              <button
+                                onClick={() => {
+                                  navigate(`penilaian/${row.id}`);
+                                  sessionStorage.setItem(
+                                    "nama_ekskul",
+                                    row.nama_ekskul
+                                  );
+                                }}
+                                className="bg-blue-100 text-blue-700 p-2 rounded cursor-pointer"
+                              >
                                 Nilai
                               </button>
                             </td>

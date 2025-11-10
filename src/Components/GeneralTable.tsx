@@ -49,7 +49,7 @@ const GeneralTable: React.FC<TableType> = ({
           </tr>
         </thead>
         <tbody className="text-sm text-gray-700">
-          {data.map((row, rowIndex) => (
+          {data?.map((row, rowIndex) => (
             <tr key={row.id || rowIndex} className="hover:bg-gray-50">
               {/* Kolom Nomor */}
               <td className="px-4 py-3 text-center">

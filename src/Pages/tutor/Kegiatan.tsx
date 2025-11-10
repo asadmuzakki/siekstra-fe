@@ -70,6 +70,7 @@ const Kegiatan = () => {
                               <button
                                 onClick={() => {
                                   navigate(`riwayat/${row.id}`);
+                                   sessionStorage.setItem("nama_ekskul", row.nama_ekskul)
                                 }}
                                 className="bg-green-100 text-green-700 p-2 rounded cursor-pointer"
                               >

@@ -7,6 +7,7 @@ import Popup from "../../Components/Popup";
 import { useDeleteDataWaliMuridById } from "../../Hooks/Admin/useDelete";
 import CardCreateDataWaliMurid from "../../Components/CardCreateDataWaliMurid";
 import { useGlobalContext } from "../../Context/Context";
+import { FiSearch } from "react-icons/fi";
 
 const DataWaliMurid = () => {
   const { state } = useGlobalContext();
@@ -20,6 +21,9 @@ const DataWaliMurid = () => {
   const [idWaliMurid, setIdWaliMurid] = useState<string | null>(null);
   const [successUpdate, setSuccessUpdate] = useState(false);
   const [errorUpdate, setErrorUpdate] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dataFiltered, setDataFiltered] = useState<any[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formattedData = data?.data.map((item: any) => ({
@@ -52,7 +56,20 @@ const DataWaliMurid = () => {
     setErrorUpdate,
   ]);
 
-  const idWaliMuridString = idWaliMurid || undefined; // Menyesuaikan tipe untuk idSiswa
+  const idWaliMuridString = idWaliMurid || undefined; 
+
+  
+  useEffect(() => {
+    if (searchQuery.trim() !== "") {
+      const hasilFilter = formattedData.filter((item: any) =>
+        String(item.name).toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(formattedData);
+    }
+  }, [searchQuery, data]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -164,16 +181,36 @@ const DataWaliMurid = () => {
                     idSiswa={idWaliMuridString}
                   />
                 )}
+                <div>
+                  <div className=" w-full flex justify-end">
+                    <div
+                      className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                      role="search"
+                      aria-label="Form pencarian"
+                    >
+                      <FiSearch className="text-gray-500" size={18} />
 
-                <GeneralTable
-                  fromComponent="GeneralComponent"
-                  label={["Nama", "Email", "Tanggal Dibuat", "Total Anak"]}
-                  data={formattedData || []}
-                  action={true}
-                  keys={["name", "email", "created_at", "anak_count"]}
-                  onDelete={handleDeleteDataWaliMurid}
-                  onEdit={handleEditDataWaliMurid}
-                />
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari..."
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                        }}
+                        className="flex-1 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+                  <GeneralTable
+                    fromComponent="GeneralComponent"
+                    label={["Nama", "Email", "Tanggal Dibuat", "Total Anak"]}
+                    data={dataFiltered || []}
+                    action={true}
+                    keys={["name", "email", "created_at", "anak_count"]}
+                    onDelete={handleDeleteDataWaliMurid}
+                    onEdit={handleEditDataWaliMurid}
+                  />
+                </div>
               </div>
             </div>
           </div>

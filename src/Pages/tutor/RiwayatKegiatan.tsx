@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../Components/Button";
 import GeneralTable from "../../Components/GeneralTable";
 import Header from "../../Components/Header";
@@ -10,6 +10,7 @@ import * as Delete from "../../Hooks/useDelete";
 import { useNavigate, useParams } from "react-router-dom";
 import Popup from "../../Components/Popup";
 import { useGlobalContext } from "../../Context/Context";
+import { FiSearch } from "react-icons/fi";
 
 const RiwayatKegiatan = () => {
   const { id } = useParams();
@@ -29,9 +30,21 @@ const RiwayatKegiatan = () => {
   // const editdelete = (id: string) => {
   //   alert(id);
   // };
+
+    const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
+      if (searchQuery.trim() !== "") {
+      const hasilFilter = data?.data?.filter((item: any) =>
+        String(item.nama_kegiatan).toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(data?.data);
+    }
     console.log(data);
-  },[data]);
+  }, [data, searchQuery]);
 
   const editAbsensi = (id_absensi: string) => {
     navigate(`/tutor-kegiatan/riwayat/update-absensi/${id_absensi}/${id}`);
@@ -87,7 +100,7 @@ const RiwayatKegiatan = () => {
               </div>
               <div className="p-5 bg-white shadow-md rounded-md">
                 <div className="flex justify-start items-center w-full py-5 text-gray-600 ">
-                  Riwayat Presensi
+                  Riwayat Presensi {sessionStorage.getItem("nama_ekskul")}
                 </div>
                 <div
                   onClick={() => {
@@ -97,31 +110,52 @@ const RiwayatKegiatan = () => {
                   <Button buttonLabel="Tambah" />
                 </div>
 
-                <GeneralTable
-                  fromComponent="RiwayatAbsensi"
-                  label={[
-                    "Nama Kegiatan",
-                    "Jumlah Siswa",
-                    "Hadir",
-                    "Sakit",
-                    "Izin",
-                    "Alpha",
-                    "Waktu",
-                  ]}
-                  data={(data ? data.data : []) as any[]}
-                  action={true}
-                  keys={[
-                    "nama_kegiatan",
-                    "jumlah_siswa",
-                    "hadir",
-                    "sakit",
-                    "izin",
-                    "alpha",
-                    "tanggal_kegiatan",
-                  ]}
-                  onEdit={editAbsensi}
-                  onDelete={deleteAbsensi}
-                />
+                <div className="mt-5">
+                   <div className=" w-full flex justify-end">
+                    <div
+                      className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                      role="search"
+                      aria-label="Form pencarian"
+                    >
+                      <FiSearch className="text-gray-500" size={18} />
+
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari..."
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                        }}
+                        className="flex-1 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+                  <GeneralTable
+                    fromComponent="RiwayatAbsensi"
+                    label={[
+                      "Nama Kegiatan",
+                      "Jumlah Siswa",
+                      "Hadir",
+                      "Sakit",
+                      "Izin",
+                      "Alpha",
+                      "Waktu",
+                    ]}
+                    data={dataFiltered || []}
+                    action={true}
+                    keys={[
+                      "nama_kegiatan",
+                      "jumlah_siswa",
+                      "hadir",
+                      "sakit",
+                      "izin",
+                      "alpha",
+                      "tanggal_kegiatan",
+                    ]}
+                    onEdit={editAbsensi}
+                    onDelete={deleteAbsensi}
+                  />
+                </div>
               </div>
             </div>
           </div>

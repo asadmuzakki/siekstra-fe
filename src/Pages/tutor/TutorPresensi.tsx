@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import GeneralTable from "../../Components/GeneralTable";
 import Header from "../../Components/Header";
@@ -9,9 +9,10 @@ import { useGlobalContext } from "../../Context/Context";
 import AttendanceForm from "../../Components/AttendenceForm";
 import Popup from "../../Components/Popup";
 import { useCookies } from "react-cookie";
+import { FiSearch } from "react-icons/fi";
 
 const TutorPresensi = () => {
-  const [cookie] = useCookies(['user_id'])
+  const [cookie] = useCookies(["user_id"]);
   const { stateHandle, state } = useGlobalContext();
   const [successPost, setSuccessPost] = useState(false);
   const [errorPost, setErrorPost] = useState(false);
@@ -20,6 +21,9 @@ const TutorPresensi = () => {
   const [selectedAbsensiId, setSelectedAbsensiId] = useState("");
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+
+  const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const {
     onDelete,
@@ -117,6 +121,19 @@ const TutorPresensi = () => {
       )}
     </>
   );
+  useEffect(() => {
+    if (searchQuery.trim() !== "") {
+      const hasilFilter = data?.data?.filter((item: any) =>
+        String(item.ekskul.nama_ekskul)
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(data?.data);
+    }
+  }, [data, searchQuery]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -129,7 +146,7 @@ const TutorPresensi = () => {
           <div className="fixed inset-0 w-full h-screen bg-black opacity-50 z-50" />
         )}
 
-        {(openCreate || openEdit)  && (
+        {(openCreate || openEdit) && (
           <AttendanceForm
             tutor_id={cookie.user_id}
             update={openCreate ? false : true}
@@ -169,28 +186,49 @@ const TutorPresensi = () => {
                     Tambah
                   </button>
                 </div>
+                <div className="mt-5">
+                  <div className=" w-full flex justify-end">
+                    <div
+                      className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                      role="search"
+                      aria-label="Form pencarian"
+                    >
+                      <FiSearch className="text-gray-500" size={18} />
 
-                <GeneralTable
-                  fromComponent="TutorPresensi"
-                  label={[
-                    "Nama Ektrakurikuler",
-                    "Status",
-                    "Keterangan",
-                    "waktu",
-                    "Jam",
-                  ]}
-                  data={data?.data || []}
-                  action={true}
-                  keys={[
-                    "ekskul",
-                    "status",
-                    "keterangan",
-                    "tanggal",
-                    "created_at",
-                  ]}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari..."
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                        }}
+                        className="flex-1 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+
+                  <GeneralTable
+                    fromComponent="TutorPresensi"
+                    label={[
+                      "Nama Ektrakurikuler",
+                      "Status",
+                      "Keterangan",
+                      "waktu",
+                      "Jam",
+                    ]}
+                    data={dataFiltered || []}
+                    action={true}
+                    keys={[
+                      "ekskul",
+                      "status",
+                      "keterangan",
+                      "tanggal",
+                      "created_at",
+                    ]}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
+                </div>
               </div>
             </div>
           </div>

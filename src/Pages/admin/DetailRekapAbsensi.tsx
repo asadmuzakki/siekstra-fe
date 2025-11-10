@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
 import GeneralTable from "../../Components/GeneralTable";
 import { useGetRekapAbsensi } from "../../Hooks/Admin/useGet";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { FiSearch } from "react-icons/fi";
 
 const DetailRekapAbsensi = () => {
   const label = ["Siswa", "Ekskul", "Kelas", "Status", "Keterangan", "Tanggal"];
@@ -48,7 +49,11 @@ const DetailRekapAbsensi = () => {
   // sort handler
   const requestSort = (key: string) => {
     let direction: "asc" | "desc" = "asc";
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "asc"
+    ) {
       direction = "desc";
     }
     setSortConfig({ key, direction });
@@ -81,6 +86,23 @@ const DetailRekapAbsensi = () => {
     });
     saveAs(fileData, `rekap_absensi_${tahunFilter || "all"}.xlsx`);
   };
+
+    const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(()=>{
+      if (searchQuery.trim() !== "") {
+      const hasilFilter = paginatedData.filter((item: any) =>
+        String(item.siswa).toLowerCase().includes(searchQuery.toLowerCase())||
+        String(item.ekskul).toLowerCase().includes(searchQuery.toLowerCase())||
+        String(item.kelas).toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(paginatedData);
+    }
+  }, [data, searchQuery])
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -152,14 +174,35 @@ const DetailRekapAbsensi = () => {
             ) : isError ? (
               <p className="text-red-500">Gagal memuat data</p>
             ) : (
-              <GeneralTable
-                label={label}
-                keys={keys}
-                data={paginatedData}
-                fromComponent="GeneralComponent"
-                action={false}
-                startNumber={(page - 1) * pageSize}
-              />
+              <div>
+                 <div className=" w-full flex justify-end">
+                    <div
+                      className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                      role="search"
+                      aria-label="Form pencarian"
+                    >
+                      <FiSearch className="text-gray-500" size={18} />
+
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari..."
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                        }}
+                        className="flex-1 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+                <GeneralTable
+                  label={label}
+                  keys={keys}
+                  data={dataFiltered}
+                  fromComponent="GeneralComponent"
+                  action={false}
+                  startNumber={(page - 1) * pageSize}
+                />
+              </div>
             )}
 
             {/* Pagination */}
