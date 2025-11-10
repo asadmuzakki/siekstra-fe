@@ -10,6 +10,8 @@ import { useDeleteDataSiswaById } from "../../Hooks/Admin/useDelete";
 import { FiSearch } from "react-icons/fi";
 
 const DataSiswa = () => {
+  const [periode, setPeriode] = useState("");
+
   const { data, isLoading } = useGetDataSiswaAdmin();
   const { onDelete, isLoadingDelete, errorDelete, successDelete } =
     useDeleteDataSiswaById();
@@ -24,6 +26,7 @@ const DataSiswa = () => {
 
   const [dataFiltered, setDataFiltered] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+
 
   const handleDeleteDataSiswa = (id: string) => {
     onDelete(id);

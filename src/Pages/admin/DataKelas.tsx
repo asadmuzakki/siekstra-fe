@@ -9,9 +9,13 @@ import CardCreateDataKelasEkskul from "../../Components/CardCreateDataKelas";
 import Popup from "../../Components/Popup";
 import { useGlobalContext } from "../../Context/Context";
 import { useDeleteKelasEkskulById } from "../../Hooks/Admin/useDelete";
+import { FiSearch } from "react-icons/fi";
 
 const DataKelasEkskul = () => {
-  const { data, isLoading } = useGetDataKelasEkskulAdmin();
+  const [periode, setPeriode] = useState("");
+  const { data, isLoading } = useGetDataKelasEkskulAdmin({
+    periode: periode || undefined,
+  });
   const { onDelete, isLoadingDelete, errorDelete, successDelete } =
     useDeleteKelasEkskulById();
 
@@ -27,6 +31,8 @@ const DataKelasEkskul = () => {
   const [idKelas, setIdKelas] = useState("");
 
   const [formattedData, setFormattedData] = useState<any[]>([]);
+  const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // format data untuk table
   useEffect(() => {
@@ -38,6 +44,32 @@ const DataKelasEkskul = () => {
       setFormattedData(temp);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (searchQuery.trim() !== "") {
+      const hasilFilter = formattedData?.filter(
+        (item: any) =>
+          String(item.nama_kelas)
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          String(item.nama_ekskul)
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(formattedData);
+    }
+    console.log(formattedData);
+  }, [
+    formattedData,
+    successCreate,
+    errorCreate,
+    successUpdate,
+    errorUpdate,
+    searchQuery,
+  ]);
 
   // delete
   const handleDeleteKelasEkskul = (id: string) => {
@@ -145,22 +177,51 @@ const DataKelasEkskul = () => {
                 <p className="text-2xl md:text-3xl text-gray-600 font-semibold">
                   Data Kelas Ekstrakurikuler
                 </p>
-
-                <button
-                  onClick={() => {
-                    setShowPopup(true);
-                    setIdKelas("");
-                    setIsEdit(false);
-                  }}
-                  className="px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                >
-                  Tambah
-                </button>
               </div>
 
               <div className="p-5 bg-white shadow-md rounded-md mb-10">
                 <div className="flex justify-between items-center py-3">
                   <p>Daftar Kelas Ekstrakurikuler</p>
+                </div>
+                <div className=" w-full flex justify-end mb-2 gap-2">
+                  <button
+                    onClick={() => {
+                      setShowPopup(true);
+                      setIdKelas("");
+                      setIsEdit(false);
+                    }}
+                    className="px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  >
+                    Tambah
+                  </button>
+                  <select
+                    value={periode}
+                    onChange={(e) => setPeriode(e.target.value)}
+                    className="border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
+                    <option value="">Periode</option>
+                    <option value="Ganjil">Ganjil</option>
+                    <option value="Genap">Genap</option>
+                  </select>
+                </div>
+                <div className=" w-full flex justify-end">
+                  <div
+                    className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                    role="search"
+                    aria-label="Form pencarian"
+                  >
+                    <FiSearch className="text-gray-500" size={18} />
+
+                    <input
+                      id="search-input"
+                      type="search"
+                      placeholder="Cari..."
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                      }}
+                      className="flex-1 text-sm outline-none bg-transparent"
+                    />
+                  </div>
                 </div>
 
                 {/* Card Create / Edit */}
@@ -186,7 +247,7 @@ const DataKelasEkskul = () => {
                     "Periode",
                     "Status",
                   ]}
-                  data={formattedData}
+                  data={dataFiltered || []}
                   action={true}
                   keys={[
                     "nama_kelas",
