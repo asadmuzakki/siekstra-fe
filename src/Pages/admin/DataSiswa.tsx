@@ -7,6 +7,7 @@ import CardCreateDataSiswa from "../../Components/CardCreateDataSiswa";
 import { useGlobalContext } from "../../Context/Context";
 import Popup from "../../Components/Popup";
 import { useDeleteDataSiswaById } from "../../Hooks/Admin/useDelete";
+import { FiSearch } from "react-icons/fi";
 
 const DataSiswa = () => {
   const { data, isLoading } = useGetDataSiswaAdmin();
@@ -21,6 +22,9 @@ const DataSiswa = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [idSiswa, setIdSiswa] = useState("");
 
+  const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const handleDeleteDataSiswa = (id: string) => {
     onDelete(id);
   };
@@ -31,8 +35,26 @@ const DataSiswa = () => {
     setShowPopup(true);
   };
   useEffect(() => {
+    if (searchQuery.trim() !== "") {
+      const hasilFilter = data?.data?.filter(
+        (item: any) =>
+          String(item.nama).toLowerCase().includes(searchQuery.toLowerCase()) ||
+          String(item.nis).toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(data?.data);
+    }
     console.log(data);
-  }, [data, successCreate,errorCreate, successUpdate, errorUpdate]);
+  }, [
+    data,
+    successCreate,
+    errorCreate,
+    successUpdate,
+    errorUpdate,
+    searchQuery,
+  ]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -148,32 +170,53 @@ const DataSiswa = () => {
                     />
                   </div>
                 )}
+                <div>
+                  <div className=" w-full flex justify-end">
+                    <div
+                      className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                      role="search"
+                      aria-label="Form pencarian"
+                    >
+                      <FiSearch className="text-gray-500" size={18} />
 
-                <GeneralTable
-                  fromComponent="GeneralComponent"
-                  label={[
-                    "NIS",
-                    "Nama",
-                    "Kelas",
-                    "Jenis Kelamin",
-                    "Wali Murid",
-                    "Email Ortu",
-                    "Ekstrakurikuler",
-                  ]}
-                  data={data?.data || []}
-                  action={true}
-                  keys={[
-                    "nis",
-                    "nama",
-                    "kelas",
-                    "jenis_kelamin",
-                    "nama_ortu",
-                    "email_ortu",
-                    "pendaftarans",
-                  ]}
-                  onDelete={handleDeleteDataSiswa}
-                  onEdit={handleEditDataSiswa}
-                />
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari..."
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                        }}
+                        className="flex-1 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+
+                  <GeneralTable
+                    fromComponent="GeneralComponent"
+                    label={[
+                      "NIS",
+                      "Nama",
+                      "Kelas",
+                      "Jenis Kelamin",
+                      "Wali Murid",
+                      "Email Ortu",
+                      "Ekstrakurikuler",
+                    ]}
+                    data={dataFiltered || []}
+                    action={true}
+                    keys={[
+                      "nis",
+                      "nama",
+                      "kelas",
+                      "jenis_kelamin",
+                      "nama_ortu",
+                      "email_ortu",
+                      "pendaftarans",
+                    ]}
+                    onDelete={handleDeleteDataSiswa}
+                    onEdit={handleEditDataSiswa}
+                  />
+                </div>
               </div>
             </div>
           </div>

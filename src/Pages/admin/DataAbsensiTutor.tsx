@@ -11,6 +11,7 @@ import CardUpdateDataAbsensiTutor from "../../Components/CardUpdateDataAbsensiTu
 import { useGlobalContext } from "../../Context/Context";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { FiSearch } from "react-icons/fi";
 
 const DataAbsensiTutor = () => {
   const { state } = useGlobalContext();
@@ -24,13 +25,14 @@ const DataAbsensiTutor = () => {
 
   useEffect(() => {
     console.log(data);
-  },[data]);
+  }, [data]);
 
   // State untuk popup form
   const [showPopup, setShowPopup] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [idAbsensiTutor, setIdAbsensiTutor] = useState<string | null>(null);
-
+  const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   // State untuk create / update / delete feedback
   const [successCreate, setSuccessCreate] = useState(false);
   const [errorCreate, setErrorCreate] = useState(false);
@@ -83,6 +85,18 @@ const DataAbsensiTutor = () => {
   };
 
   const idAbsensiTutorString = idAbsensiTutor ?? "";
+
+  useEffect(() => {
+    if (searchQuery.trim() !== "") {
+      const hasilFilter = formattedData.filter((item: any) =>
+        String(item.nama_tutor).toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(formattedData);
+    }
+  }, [searchQuery, data]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -173,7 +187,6 @@ const DataAbsensiTutor = () => {
                 <p className="text-2xl md:text-3xl text-gray-600 font-semibold">
                   Data Absensi Tutor
                 </p>
-                
               </div>
 
               <div className="flex items-center gap-2 pb-4">
@@ -229,28 +242,48 @@ const DataAbsensiTutor = () => {
                       setErrorCreate={setErrorCreate}
                     />
                   ))}
+                <div>
+                  <div className=" w-full flex justify-end">
+                    <div
+                      className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                      role="search"
+                      aria-label="Form pencarian"
+                    >
+                      <FiSearch className="text-gray-500" size={18} />
 
-                <GeneralTable
-                  fromComponent="GeneralComponent"
-                  label={[
-                    "Nama Tutor",
-                    "Nama Ekskul",
-                    "Status",
-                    "Keterangan",
-                    "Waktu",
-                  ]}
-                  data={formattedData || []}
-                  action={true}
-                  keys={[
-                    "nama_tutor",
-                    "nama_ekskul",
-                    "status",
-                    "keterangan",
-                    "waktu",
-                  ]}
-                  onDelete={handleDeleteDataAbsensiTutor}
-                  onEdit={handleEditDataAbsensiTutor}
-                />
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari..."
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                        }}
+                        className="flex-1 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+                  <GeneralTable
+                    fromComponent="GeneralComponent"
+                    label={[
+                      "Nama Tutor",
+                      "Nama Ekskul",
+                      "Status",
+                      "Keterangan",
+                      "Waktu",
+                    ]}
+                    data={dataFiltered || []}
+                    action={true}
+                    keys={[
+                      "nama_tutor",
+                      "nama_ekskul",
+                      "status",
+                      "keterangan",
+                      "waktu",
+                    ]}
+                    onDelete={handleDeleteDataAbsensiTutor}
+                    onEdit={handleEditDataAbsensiTutor}
+                  />
+                </div>
               </div>
             </div>
           </div>

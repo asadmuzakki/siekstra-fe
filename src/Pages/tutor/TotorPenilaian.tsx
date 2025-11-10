@@ -4,7 +4,7 @@ import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
 import { BiDetail } from "react-icons/bi";
 import * as Get from "../../Hooks/useGet";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiSearch } from "react-icons/fi";
 import { CiTrash } from "react-icons/ci";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDeleteNilaiSiswaBytutor } from "../../Hooks/useDelete";
@@ -43,8 +43,6 @@ const TutorPenilaian = () => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
   };
-
-  
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -118,65 +116,90 @@ const TutorPenilaian = () => {
               </div>
 
               <div className="p-5 bg-white shadow-md rounded-md">
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="border-b border-gray-300">
-                        <th className="text-center py-3 px-2 font-medium text-gray-700">
-                          No
-                        </th>
-                        <th className="text-center py-3 px-4 font-medium text-gray-700">
-                          Waktu
-                        </th>
-                        <th className="text-center py-3 px-4 font-medium text-gray-700">
-                          Aksi
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {currentItems.map((data: any, index: number) => (
-                        <tr
-                          key={data.id}
-                          className="border-b border-gray-200 hover:bg-gray-50"
-                        >
-                          <td className="py-3 px-4 text-center text-gray-600">
-                            {index + 1 + (currentPage - 1) * itemsPerPage}
-                          </td>
-                          <td className="py-3 px-4 text-center text-gray-600">
-                            {data?.tanggal}
-                          </td>
-                          <td className="text-center space-x-2 py-3 px-4">
-                            <button
-                              onClick={() => {
-                                navigate(
-                                  `/tutor-siswa/penilaian/detail/${data.id}`
-                                );
-                              }}
-                              className="bg-green-100 text-green-700 p-2 rounded"
-                            >
-                              <BiDetail className="text-lg" />
-                            </button>
-                            <button
-                              onClick={() => {
-                                navigate(
-                                  `/tutor-siswa/penilaian/update-penilaian/${data.id}/${id}`
-                                );
-                              }}
-                              className="bg-blue-100 text-blue-700 p-2 rounded"
-                            >
-                              <FiEdit className="text-lg" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteNilai(data.id)}
-                              className="bg-red-100 text-red-700 p-2 rounded"
-                            >
-                              <CiTrash className="text-lg" />
-                            </button>
-                          </td>
+                <div className="flex justify-start items-center w-full py-5 text-gray-600 ">
+                  Riwayat Penilaian {sessionStorage.getItem("nama_ekskul")}
+                </div>
+                <div>
+                  <div className=" w-full flex justify-end">
+                    <div
+                      className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                      role="search"
+                      aria-label="Form pencarian"
+                    >
+                      <FiSearch className="text-gray-500" size={18} />
+
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari..."
+                        onChange={() => {
+                          // setSearchQuery(e.target.value);
+                        }}
+                        className="flex-1 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-gray-300">
+                          <th className="text-center py-3 px-2 font-medium text-gray-700">
+                            No
+                          </th>
+                          <th className="text-center py-3 px-4 font-medium text-gray-700">
+                            Waktu
+                          </th>
+                          <th className="text-center py-3 px-4 font-medium text-gray-700">
+                            Aksi
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {currentItems.map((data: any, index: number) => (
+                          <tr
+                            key={data.id}
+                            className="border-b border-gray-200 hover:bg-gray-50"
+                          >
+                            <td className="py-3 px-4 text-center text-gray-600">
+                              {index + 1 + (currentPage - 1) * itemsPerPage}
+                            </td>
+                            <td className="py-3 px-4 text-center text-gray-600">
+                              {data?.tanggal}
+                            </td>
+                            <td className="text-center space-x-2 py-3 px-4">
+                              <button
+                                onClick={() => {
+                                  navigate(
+                                    `/tutor-siswa/penilaian/detail/${data.id}`
+                                  );
+                                }}
+                                className="bg-green-100 text-green-700 p-2 rounded"
+                              >
+                                <BiDetail className="text-lg" />
+                              </button>
+                              <button
+                                onClick={() => {
+                                  navigate(
+                                    `/tutor-siswa/penilaian/update-penilaian/${data.id}/${id}`
+                                  );
+                                }}
+                                className="bg-blue-100 text-blue-700 p-2 rounded"
+                              >
+                                <FiEdit className="text-lg" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteNilai(data.id)}
+                                className="bg-red-100 text-red-700 p-2 rounded"
+                              >
+                                <CiTrash className="text-lg" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
                 {/* Pagination */}

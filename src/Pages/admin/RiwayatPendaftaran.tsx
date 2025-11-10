@@ -10,6 +10,7 @@ import EditPendaftaranPopUp from "../../Components/EditPendaftaranPopup";
 import Popup from "../../Components/Popup";
 import { useGlobalContext } from "../../Context/Context";
 import { useDeleteRiwayatPendaftaran } from "../../Hooks/Admin/useDelete";
+import { FiSearch } from "react-icons/fi";
 
 const RiwayatPendaftaran = () => {
   const { stateHandle, state } = useGlobalContext();
@@ -69,6 +70,9 @@ const RiwayatPendaftaran = () => {
     );
   };
 
+    const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     if (isError) {
       console.error(error);
@@ -76,7 +80,17 @@ const RiwayatPendaftaran = () => {
     if (!isLoading && data) {
       console.log("Riwayat Pendaftaran:", data);
     }
-  }, [data, isError, error, isLoading]);
+      if (searchQuery.trim() !== "") {
+      const hasilFilter = data?.data?.filter((item: any) =>
+        String(item.ekskul.nama_ekskul).toLowerCase().includes(searchQuery.toLowerCase())||
+        String(item.siswa.nama).toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(data?.data);
+    }
+  }, [data, isError, error, isLoading, searchQuery]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -99,15 +113,37 @@ const RiwayatPendaftaran = () => {
               <p>Loading...</p>
             ) : (
               <div className="p-5 bg-white shadow-md rounded-md mb-10">
+                <div>
+                   <div className=" w-full flex justify-end">
+                    <div
+                      className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                      role="search"
+                      aria-label="Form pencarian"
+                    >
+                      <FiSearch className="text-gray-500" size={18} />
+
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari..."
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                        }}
+                        className="flex-1 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+
                 <GeneralTable
                   label={labels}
                   keys={keys}
-                  data={data?.data || []} // ⚡ langsung dari API
+                  data={dataFiltered || []} // ⚡ langsung dari API
                   fromComponent="RiwayatPendaftaran"
                   action
                   onEdit={(row) => handleEdit(row)}
                   onDelete={(id) => handleDelete(id)}
                 />
+                </div>
               </div>
             )}
           </div>

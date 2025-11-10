@@ -8,6 +8,7 @@ import CardCreateDataEkskul from "../../Components/CardCreateDataEkskul";
 import { useGlobalContext } from "../../Context/Context";
 import Popup from "../../Components/Popup";
 import { useDeleteDataEkskulById } from "../../Hooks/Admin/useDelete";
+import { FiSearch } from "react-icons/fi";
 
 const DataEkskul = () => {
   const { data, isLoading } = useGetDataEkskulAdmin();
@@ -21,7 +22,8 @@ const DataEkskul = () => {
   const [errorUpdate, setErrorUpdate] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [idEkskul, setIdEkskul] = useState("");
-
+  const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const handleDeleteDataEkskul = (id: string) => {
     onDelete(id);
   };
@@ -37,8 +39,18 @@ const DataEkskul = () => {
     created_at: new Date(item.created_at).toLocaleDateString("id-ID"),
   }));
   useEffect(() => {
+      if (searchQuery.trim() !== "") {
+      const hasilFilter = formattedData.filter((item: any) =>
+        String(item.nama_tutor).toLowerCase().includes(searchQuery.toLowerCase())||
+        String(item.nama_ekskul).toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(formattedData);
+    }
     console.log(data);
-  }, [data]);
+  }, [data, searchQuery]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -155,6 +167,26 @@ const DataEkskul = () => {
                     />
                   </div>
                 )}
+                <div>
+                   <div className=" w-full flex justify-end">
+                    <div
+                      className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                      role="search"
+                      aria-label="Form pencarian"
+                    >
+                      <FiSearch className="text-gray-500" size={18} />
+
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari..."
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                        }}
+                        className="flex-1 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
 
                 <GeneralTable
                   fromComponent="GeneralComponent"
@@ -165,7 +197,7 @@ const DataEkskul = () => {
                     "Status",
                     "Tanggal",
                   ]}
-                  data={formattedData || []}
+                  data={dataFiltered || []}
                   action={true}
                   keys={[
                     "nama_ekskul",
@@ -177,6 +209,7 @@ const DataEkskul = () => {
                   onDelete={handleDeleteDataEkskul}
                   onEdit={handleEditDataEkskul}
                 />
+                </div>
               </div>
             </div>
           </div>

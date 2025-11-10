@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../Components/Button";
 import GeneralTable from "../../Components/GeneralTable";
 import Header from "../../Components/Header";
@@ -10,6 +10,7 @@ import * as Delete from "../../Hooks/useDelete";
 import { useNavigate, useParams } from "react-router-dom";
 import Popup from "../../Components/Popup";
 import { useGlobalContext } from "../../Context/Context";
+import { FiSearch } from "react-icons/fi";
 
 const RiwayatAbsensiEkskul = () => {
   const { id } = useParams();
@@ -28,7 +29,21 @@ const RiwayatAbsensiEkskul = () => {
   // const editdelete = (id: string) => {
   //   alert(id);
   // };
+  const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
+    const dataResult = data?.data;
+    if (searchQuery.trim() !== "") {
+      const hasilFilter = dataResult?.filter((item: any) =>
+        String(item.agenda)
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter as []);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(dataResult as []);
+    }
     console.log(data);
   });
 
@@ -86,7 +101,7 @@ const RiwayatAbsensiEkskul = () => {
               </div>
               <div className="p-5 bg-white shadow-md rounded-md">
                 <div className="flex justify-start items-center w-full py-5 text-gray-600 ">
-                  Riwayat Presensi
+                  Riwayat Presensi {sessionStorage.getItem("nama_ekskul")}
                 </div>
                 <div
                   onClick={() => {
@@ -95,32 +110,53 @@ const RiwayatAbsensiEkskul = () => {
                 >
                   <Button buttonLabel="Tambah" />
                 </div>
+                <div>
+                  <div className=" w-full flex justify-end">
+                    <div
+                      className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
+                      role="search"
+                      aria-label="Form pencarian"
+                    >
+                      <FiSearch className="text-gray-500" size={18} />
 
-                <GeneralTable
-                  fromComponent="RiwayatAbsensi"
-                  label={[
-                    "Agenda",
-                    "Jumlah Siswa",
-                    "Hadir",
-                    "Sakit",
-                    "Izin",
-                    "Alpha",
-                    "Waktu",
-                  ]}
-                  data={(data ? data.data : []) as any[]}
-                  action={true}
-                  keys={[
-                    "agenda",
-                    "jumlah_siswa",
-                    "hadir",
-                    "sakit",
-                    "izin",
-                    "alpha",
-                    "tanggal",
-                  ]}
-                  onEdit={editAbsensi}
-                  onDelete={deleteAbsensi}
-                />
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="Cari..."
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                        }}
+                        className="flex-1 text-sm outline-none bg-transparent"
+                      />
+                    </div>
+                  </div>
+
+                  <GeneralTable
+                    fromComponent="RiwayatAbsensi"
+                    label={[
+                      "Agenda",
+                      "Jumlah Siswa",
+                      "Hadir",
+                      "Sakit",
+                      "Izin",
+                      "Alpha",
+                      "Waktu",
+                    ]}
+                    data={dataFiltered || []}
+                    action={true}
+                    keys={[
+                      "agenda",
+                      "jumlah_siswa",
+                      "hadir",
+                      "sakit",
+                      "izin",
+                      "alpha",
+                      "tanggal",
+                    ]}
+                    onEdit={editAbsensi}
+                    onDelete={deleteAbsensi}
+                  />
+                </div>
               </div>
             </div>
           </div>
