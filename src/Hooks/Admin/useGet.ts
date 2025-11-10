@@ -442,22 +442,42 @@ export const useGetDataGrafikKegiatan = ({
   };
 };
 
-const getDataKelasEkskulAdmin = async (token: string) => {
+// === API CALL ===
+const getDataKelasEkskulAdmin = async (
+  token: string,
+  {
+    periode,
+  }: {
+    periode?: string;
+  }
+) => {
   const response = await axiosInstance.get("/api/admin/kelas-ekskul", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    params: {
+      periode,
+    },
   });
-  return response.data; // otomatis mengembalikan { data: [...] }
+  return response.data;
 };
 
-export const useGetDataKelasEkskulAdmin = () => {
+// === HOOK ===
+export const useGetDataKelasEkskulAdmin = ({
+  periode,
+}: {
+  periode?: string;
+}) => {
   const [cookies] = useCookies(["authToken"]);
   const token = cookies.authToken;
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get_data_kelas_ekskul_admin"],
-    queryFn: () => getDataKelasEkskulAdmin(token),
+    queryKey: ["get_data_kelas_ekskul_admin", periode],
+    queryFn: () =>
+      getDataKelasEkskulAdmin(token, {
+        periode,
+      }),
+    enabled: !!token, // hanya berjalan jika token tersedia
   });
 
   return {
@@ -496,4 +516,3 @@ export const useGetKelasEkskulById = (id: string) => {
     error,
   };
 };
-
