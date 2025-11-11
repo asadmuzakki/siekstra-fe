@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
 import { BiDetail } from "react-icons/bi";
@@ -14,15 +14,20 @@ import { useGlobalContext } from "../../Context/Context";
 const TutorPenilaian = () => {
   const [entries, setEntries] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [periode, setPeriode] = useState("Ganjil");
+  const [tahun, setTahun] = useState(2025);
   const { id } = useParams();
   const navigate = useNavigate();
   const { state } = useGlobalContext();
-
+  const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const { data: data_nilai_siswa, isLoading: isLoading_data_nilai_siswa } =
     Get.useGetNilaiSiswaTutor(
       String(id),
       String(entries),
-      currentPage.toString()
+      currentPage.toString(),
+      periode,
+      String(tahun)
     );
 
   const {
@@ -43,6 +48,25 @@ const TutorPenilaian = () => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
   };
+  useEffect(() => {
+    if (searchQuery.trim() !== "") {
+      const hasilFilter = currentItems.filter(
+        (item: any) =>
+          String(item.kelas_ekskul?.nama_kelas)
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          String(item.nama_ekskul)
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+      );
+      setDataFiltered(hasilFilter);
+      console.log(dataFiltered);
+    } else {
+      setDataFiltered(currentItems);
+    }
+    console.log("Data nilai : ", data_nilai_siswa);
+    console.log(tahun);
+  }, [periode, data_nilai_siswa, searchQuery]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -88,14 +112,30 @@ const TutorPenilaian = () => {
                 <p className="text-2xl md:text-3xl text-gray-600 font-semibold">
                   Nilai Siswa
                 </p>
-                <button
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow transition duration-200"
-                  onClick={() => {
-                    navigate(`/tutor-siswa/penilaian/tambah-penilaian/${id}`);
-                  }}
+                <div className="flex items-center justify-center gap-3">
+                <select
+                  value={periode}
+                  onChange={(e) => setPeriode(e.target.value)}
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 >
-                  + Tambah
-                </button>
+                  <option value="">Periode</option>
+                  <option value="Ganjil">Ganjil</option>
+                  <option value="Genap">Genap</option>
+                </select>
+                <select
+                  value={tahun}
+                  onChange={(e) => setTahun(Number(e.target.value))}
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                  <option value="">Tahun</option>
+                  <option value="2021">2021</option>
+                  <option value="2022">2022</option>
+                  <option value="2023">2023</option>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                </select>
+                </div>
               </div>
               <div className="flex items-center gap-2 mb-4">
                 <label htmlFor="entries" className="text-gray-700 text-sm">
@@ -132,8 +172,8 @@ const TutorPenilaian = () => {
                         id="search-input"
                         type="search"
                         placeholder="Cari..."
-                        onChange={() => {
-                          // setSearchQuery(e.target.value);
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
                         }}
                         className="flex-1 text-sm outline-none bg-transparent"
                       />
@@ -148,15 +188,28 @@ const TutorPenilaian = () => {
                             No
                           </th>
                           <th className="text-center py-3 px-4 font-medium text-gray-700">
-                            Waktu
+                            Nama Kelas
+                          </th>
+                          <th className="text-center py-3 px-4 font-medium text-gray-700">
+                            Tahun Ajaran
+                          </th>
+                          <th className="text-center py-3 px-4 font-medium text-gray-700">
+                            Status
+                          </th>
+                          <th className="text-center py-3 px-4 font-medium text-gray-700">
+                            Periode
+                          </th>
+                          <th className="text-center py-3 px-4 font-medium text-gray-700">
+                            Tanggal
                           </th>
                           <th className="text-center py-3 px-4 font-medium text-gray-700">
                             Aksi
                           </th>
                         </tr>
                       </thead>
+
                       <tbody>
-                        {currentItems.map((data: any, index: number) => (
+                        {dataFiltered.map((data: any, index: number) => (
                           <tr
                             key={data.id}
                             className="border-b border-gray-200 hover:bg-gray-50"
@@ -164,9 +217,33 @@ const TutorPenilaian = () => {
                             <td className="py-3 px-4 text-center text-gray-600">
                               {index + 1 + (currentPage - 1) * itemsPerPage}
                             </td>
+
+                            {/* Nama kelas ekskul */}
                             <td className="py-3 px-4 text-center text-gray-600">
-                              {data?.tanggal}
+                              {data?.kelas_ekskul?.nama_kelas || "-"}
                             </td>
+
+                            {/* Tahun ajaran */}
+                            <td className="py-3 px-4 text-center text-gray-600">
+                              {data?.kelas_ekskul?.tahun_ajaran || "-"}
+                            </td>
+
+                            {/* Status */}
+                            <td className="py-3 px-4 text-center text-gray-600">
+                              {data?.kelas_ekskul?.status || "-"}
+                            </td>
+
+                            {/* Periode */}
+                            <td className="py-3 px-4 text-center text-gray-600">
+                              {data?.kelas_ekskul?.periode || "-"}
+                            </td>
+
+                            {/* Tanggal */}
+                            <td className="py-3 px-4 text-center text-gray-600">
+                              {data?.tanggal || "-"}
+                            </td>
+
+                            {/* Aksi */}
                             <td className="text-center space-x-2 py-3 px-4">
                               <button
                                 onClick={() => {
@@ -178,6 +255,7 @@ const TutorPenilaian = () => {
                               >
                                 <BiDetail className="text-lg" />
                               </button>
+
                               <button
                                 onClick={() => {
                                   navigate(
@@ -188,6 +266,7 @@ const TutorPenilaian = () => {
                               >
                                 <FiEdit className="text-lg" />
                               </button>
+
                               <button
                                 onClick={() => handleDeleteNilai(data.id)}
                                 className="bg-red-100 text-red-700 p-2 rounded"

@@ -31,7 +31,7 @@ const RiwayatKegiatan = () => {
   //   alert(id);
   // };
 
-    const [dataFiltered, setDataFiltered] = useState<any[]>([]);
+  const [dataFiltered, setDataFiltered] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
       if (searchQuery.trim() !== "") {

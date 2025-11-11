@@ -5,7 +5,7 @@ import Header from "../../Components/Header";
 import Sidebar from "../../Components/Sidebar";
 
 import { useParams } from "react-router-dom";
-import type { NilaiEkskulModelType } from "../../Models/ekskul.model";
+
 import {
   calculateIndexNilai,
   calculateNilai,
@@ -38,12 +38,16 @@ const UpdatePenilaianTutor = () => {
   const [praktik, setPraktik] = useState<string[]>([]);
   const [tanggal, setTanggal] = useState<string>();
 
-  const handleSubmitForm = (data: NilaiEkskulModelType) => {
+  const handleSubmitForm = (data: any) => {
     console.log(data);
-    onSubmit(data);
+    onSubmit({
+      kelas_ekskul_id: id,
+      ...data,
+    });
   };
   useEffect(() => {
     console.log(data_nilai?.data);
+    
     if (data_nilai?.data) {
       data_nilai?.data?.details?.forEach((item: any, index: number) => {
         setValue(`penilaians.${index}.siswa_id`, item.siswa.id);

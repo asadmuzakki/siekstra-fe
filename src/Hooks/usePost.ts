@@ -133,13 +133,13 @@ export const usePostAbsenTutor = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<AbsenTutorModelType>({
+  } = useForm<any>({
     resolver: zodResolver(AbsenTutorModel),
   });
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (data: AbsenTutorModelType) => postAbsenTutor(data, token),
+    mutationFn: (data: any) => postAbsenTutor(data, token),
     mutationKey: ["post_absen_tutor"],
     onSuccess: () => {
       reset();

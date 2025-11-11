@@ -387,7 +387,7 @@ const KegiatanEkskul = () => {
                   <div className="mt-8 flex justify-center">
                     <button
                       onClick={() => {
-                        setValue("ekskul_id", Number(id));
+                        setValue("kelas_ekskul_id", Number(id));
                       }}
                       type="submit"
                       className="px-6 cursor-pointer py-2 flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400"

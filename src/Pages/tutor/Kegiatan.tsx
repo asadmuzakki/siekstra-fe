@@ -69,7 +69,7 @@ const Kegiatan = () => {
                             <td className="text-center space-x-2">
                               <button
                                 onClick={() => {
-                                  navigate(`riwayat/${row.id}`);
+                                  navigate(`riwayat-kelas/${row.id}`);
                                    sessionStorage.setItem("nama_ekskul", row.nama_ekskul)
                                 }}
                                 className="bg-green-100 text-green-700 p-2 rounded cursor-pointer"

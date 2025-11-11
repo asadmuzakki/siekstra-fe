@@ -419,7 +419,7 @@ const UpdateAbsensiKegiatan = () => {
                   <div className="mt-8 flex justify-center">
                     <button
                       onClick={() => {
-                        setValue("ekskul_id", Number(ekskul_id));
+                        setValue("kelas_ekskul_id", Number(ekskul_id));
                         setValue("tanggal_kegiatan", tanggal);
                         setValue(
                           "kategori",

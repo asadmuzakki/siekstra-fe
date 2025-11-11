@@ -39,10 +39,15 @@ const DataEkskul = () => {
     created_at: new Date(item.created_at).toLocaleDateString("id-ID"),
   }));
   useEffect(() => {
-      if (searchQuery.trim() !== "") {
-      const hasilFilter = formattedData.filter((item: any) =>
-        String(item.nama_tutor).toLowerCase().includes(searchQuery.toLowerCase())||
-        String(item.nama_ekskul).toLowerCase().includes(searchQuery.toLowerCase())
+    if (searchQuery.trim() !== "") {
+      const hasilFilter = formattedData.filter(
+        (item: any) =>
+          String(item.nama_tutor)
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          String(item.nama_ekskul)
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
       );
       setDataFiltered(hasilFilter);
       console.log(dataFiltered);
@@ -168,7 +173,7 @@ const DataEkskul = () => {
                   </div>
                 )}
                 <div>
-                   <div className=" w-full flex justify-end">
+                  <div className=" w-full flex justify-end">
                     <div
                       className="flex items-center gap-2 w-80 border border-gray-300 rounded-lg px-3 py-2"
                       role="search"
@@ -188,27 +193,27 @@ const DataEkskul = () => {
                     </div>
                   </div>
 
-                <GeneralTable
-                  fromComponent="GeneralComponent"
-                  label={[
-                    "Nama Ekskul",
-                    "Nama Tutor",
-                    "Jumlah Siswa",
-                    "Status",
-                    "Tanggal",
-                  ]}
-                  data={dataFiltered || []}
-                  action={true}
-                  keys={[
-                    "nama_ekskul",
-                    "nama_tutor",
-                    "pendaftarans_count",
-                    "status",
-                    "created_at",
-                  ]}
-                  onDelete={handleDeleteDataEkskul}
-                  onEdit={handleEditDataEkskul}
-                />
+                  <GeneralTable
+                    fromComponent="GeneralComponent"
+                    label={[
+                      "Nama Ekskul",
+                      "Nama Tutor",
+                      "Jumlah Siswa",
+                      "Status",
+                      "Tanggal",
+                    ]}
+                    data={dataFiltered || []}
+                    action={true}
+                    keys={[
+                      "nama_ekskul",
+                      "nama_tutor",
+                      "pendaftarans_count",
+                      "status",
+                      "created_at",
+                    ]}
+                    onDelete={handleDeleteDataEkskul}
+                    onEdit={handleEditDataEkskul}
+                  />
                 </div>
               </div>
             </div>

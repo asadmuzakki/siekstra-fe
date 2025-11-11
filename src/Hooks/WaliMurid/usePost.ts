@@ -5,12 +5,12 @@ import { useForm } from "react-hook-form";
 import { useGlobalContext } from "../../Context/Context";
 
 type PendaftaranEkskulType = {
-  ekskul_id: number;   // id ekskul yang dipilih
+  kelas_ekskul_id: number;   // id ekskul yang dipilih
   siswa_id: number;    // id siswa (wali murid mendaftarkan anaknya)
 };
 
 const createPendaftaranEkskul = async (
-  data: { siswa_id: number; ekskul_id: number },
+  data: { siswa_id: number; kelas_ekskul_id: number },
   token: string
 ) => {
   console.log("📦 Payload Daftar Ekskul:", data); // debug

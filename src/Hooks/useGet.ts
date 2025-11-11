@@ -2,13 +2,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axiosInstance";
 
-import type {
-  EkskulType,
-
-  SiswaType,
-} from "../Types/general.type";
+import type { EkskulType, SiswaType } from "../Types/general.type";
 import { useCookies } from "react-cookie";
-
 
 const siswa = async (): Promise<SiswaType> => {
   const response = await axiosInstance.get("/api/tutor/siswas");
@@ -78,10 +73,7 @@ export const useGetEkskul = () => {
   };
 };
 
-const riwayatAbsensi = async (
-  id: string,
-  token: string
-): Promise<any> => {
+const riwayatAbsensi = async (id: string, token: string): Promise<any> => {
   const response = await axiosInstance.get(`api/tutor/riwayat-absensi/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -104,8 +96,8 @@ export const useRiwayatAbsensi = (id: string) => {
     error,
   };
 };
-const ekskulById = async (id: string, token:string): Promise<any> => {
-  const response = await axiosInstance.get(`api/tutor/ekskul/${id}`,{
+const ekskulById = async (id: string, token: string): Promise<any> => {
+  const response = await axiosInstance.get(`api/tutor/ekskul/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -114,8 +106,8 @@ const ekskulById = async (id: string, token:string): Promise<any> => {
 };
 
 export const useGetEkskulById = (id: string) => {
-   const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery<any>({
     queryKey: ["get_ekskul"],
     queryFn: () => ekskulById(id, token),
@@ -127,7 +119,7 @@ export const useGetEkskulById = (id: string) => {
     error,
   };
 };
-const absensiEkskulById = async (id: string, token:string): Promise<any> => {
+const absensiEkskulById = async (id: string, token: string): Promise<any> => {
   const response = await axiosInstance.get(`api/tutor/absensi/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -137,8 +129,8 @@ const absensiEkskulById = async (id: string, token:string): Promise<any> => {
 };
 
 export const useGetAbsensiEkskulById = (id: string) => {
-   const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery<any>({
     queryKey: ["get_absesnsi_ekskul_id", id],
     queryFn: () => absensiEkskulById(id, token),
@@ -152,18 +144,21 @@ export const useGetAbsensiEkskulById = (id: string) => {
   };
 };
 
-const riwayatKegiatan = async (id: string, token:string) => {
-  const response = await axiosInstance.get(`/api/tutor/riwayat-kegiatan/${id}`,{
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const riwayatKegiatan = async (id: string, token: string) => {
+  const response = await axiosInstance.get(
+    `/api/tutor/riwayat-kegiatan/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
 export const useRiwayatKegiatan = (id: string) => {
-   const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery<any>({
     queryKey: ["get_riwayat_kegiatan", id],
     queryFn: () => riwayatKegiatan(id, token),
@@ -176,8 +171,8 @@ export const useRiwayatKegiatan = (id: string) => {
   };
 };
 
-const absensiKegiatanEkskulById = async (id: string, token:string) => {
-  const response = await axiosInstance.get(`/api/tutor/kegiatan/${id}`,{
+const absensiKegiatanEkskulById = async (id: string, token: string) => {
+  const response = await axiosInstance.get(`/api/tutor/kegiatan/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -186,8 +181,8 @@ const absensiKegiatanEkskulById = async (id: string, token:string) => {
 };
 
 export const useGetAbsensiKegiatanEkskulById = (id: string) => {
-   const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get_kegiatan_ekskul_by_id", id],
     queryFn: () => absensiKegiatanEkskulById(id, token),
@@ -201,8 +196,8 @@ export const useGetAbsensiKegiatanEkskulById = (id: string) => {
   };
 };
 
-const getAbsensiTutor = async (token:string) => {
-  const response = await axiosInstance.get(`/api/tutor/absensi-tutor`,{
+const getAbsensiTutor = async (token: string) => {
+  const response = await axiosInstance.get(`/api/tutor/absensi-tutor`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -211,8 +206,8 @@ const getAbsensiTutor = async (token:string) => {
 };
 
 export const useGetAbsensiTutor = () => {
-   const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get_absensi_tutor"],
     queryFn: () => getAbsensiTutor(token),
@@ -225,8 +220,8 @@ export const useGetAbsensiTutor = () => {
   };
 };
 
-const getAbsensiTutorById = async (id: string, token:string) => {
-  const response = await axiosInstance.get(`/api/tutor/absensi-tutor/${id}`,{
+const getAbsensiTutorById = async (id: string, token: string) => {
+  const response = await axiosInstance.get(`/api/tutor/absensi-tutor/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -235,8 +230,8 @@ const getAbsensiTutorById = async (id: string, token:string) => {
 };
 
 export const useGetAbsensiByTutor = (id: string) => {
-   const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get_absensi_tutor_by_id", id],
     queryFn: () => getAbsensiTutorById(id, token),
@@ -248,21 +243,37 @@ export const useGetAbsensiByTutor = (id: string) => {
     error,
   };
 };
-const getNilaiSiswaTutor = async (token:string, id:string, limit_page:string, page:string) => {
-  const response = await axiosInstance.get(`/api/tutor/nilaiByEkskul/${id}/${limit_page}?page=${page}`,{
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const getNilaiSiswaTutor = async (
+  token: string,
+  id: string,
+  limit_page: string,
+
+  periode: string,
+  tahun: string
+) => {
+  const response = await axiosInstance.get(
+    `/api/tutor/nilaiByEkskul/${id}/${limit_page}?periode=${periode}&tahun=${tahun}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
-export const useGetNilaiSiswaTutor = (id:string, entries:string, page:string) => {
-   const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken
+export const useGetNilaiSiswaTutor = (
+  id: string,
+  entries: string,
+  page: string,
+  periode: string,
+  tahun: string
+) => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get_nilai_siswa_tutor", id,entries, page],
-    queryFn: () => getNilaiSiswaTutor(token, id, entries, page),
+    queryKey: ["get_nilai_siswa_tutor", id, entries, page, periode, tahun],
+    queryFn: () => getNilaiSiswaTutor(token, id, entries, periode, tahun),
   });
   return {
     data,
@@ -272,8 +283,8 @@ export const useGetNilaiSiswaTutor = (id:string, entries:string, page:string) =>
   };
 };
 
-const getNilaiSiswaTutorById = async (id: string, token:string) => {
-  const response = await axiosInstance.get(`/api/tutor/nilais/${id}`,{
+const getNilaiSiswaTutorById = async (id: string, token: string) => {
+  const response = await axiosInstance.get(`/api/tutor/nilais/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -282,8 +293,8 @@ const getNilaiSiswaTutorById = async (id: string, token:string) => {
 };
 
 export const useGetNilaiSiswaTutorById = (id: string) => {
-   const [cookies] = useCookies(["authToken"]);
-  const token = cookies.authToken
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get_nilai_siswa_tutor_by_id"],
     queryFn: () => getNilaiSiswaTutorById(id, token),
@@ -295,7 +306,6 @@ export const useGetNilaiSiswaTutorById = (id: string) => {
     error,
   };
 };
-
 
 const getProfile = async (token: string) => {
   const response = await axiosInstance.get(`/api/profile`, {
@@ -324,3 +334,26 @@ export const useGetProfile = () => {
   };
 };
 
+const dataKelas = async (id: string, token: string) => {
+  const response = await axiosInstance.get(
+    `/api/tutor/getkelasByEkskul/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const useDataKelas = (id: string) => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { data } = useQuery({
+    queryKey: ["get_data_kelas", id],
+    queryFn: () => dataKelas(id, token),
+  });
+  return {
+    data_kelas: data,
+  };
+};

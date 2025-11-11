@@ -5,13 +5,24 @@ import {
   useGetEkskulForWali,
   useGetDataAnak,
 } from "../../Hooks/WaliMurid/useGet";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCreatePendaftaranEkskul } from "../../Hooks/WaliMurid/usePost";
+import { useGetKelasByEkskulId } from "../../Hooks/WaliMurid/useGet"; // pastikan import hook ini
+
 import Popup from "../../Components/Popup"; // ✅ import popup
 
 const EkstraKurikuler = () => {
   const { data, isLoading, isError, error } = useGetEkskulForWali();
   const { data: dataAnak } = useGetDataAnak();
+
+  const [selectedEkskul, setSelectedEkskul] = useState<any>(null);
+  const [selectedSiswa, setSelectedSiswa] = useState<any>(null);
+  const [showPopupKelas, setShowPopupKelas] = useState(false);
+  const [selectedKelas, setSelectedKelas] = useState<any>(null);
+
+  const { data: kelasData, isLoading: isLoadingKelas } = useGetKelasByEkskulId(
+    selectedEkskul?.id ?? ""
+  );
 
   // hook daftar ekskul
   const {
@@ -25,10 +36,13 @@ const EkstraKurikuler = () => {
   useEffect(() => {
     console.log("📦 Data Ekskul Wali Murid:", data);
     console.log("📦 Data Anak Wali Murid:", dataAnak);
-  }, [data, dataAnak]);
+    console.log("Data Kelas", kelasData);
+  }, [data, dataAnak, kelasData]);
 
-  const handleDaftar = (ekskulId: number, siswaId: number) => {
-    onSubmit({ ekskul_id: ekskulId, siswa_id: siswaId });
+  const handleDaftar = (ekskul: any, siswa: any) => {
+    setSelectedEkskul(ekskul);
+    setSelectedSiswa(siswa);
+    setShowPopupKelas(true);
   };
 
   return (
@@ -68,7 +82,9 @@ const EkstraKurikuler = () => {
                       (a: any) => a.nama === anak.siswa
                     );
 
-                     const adaTerdaftar = anak.ekskul.some((ekskul: any) => ekskul.is_registered);
+                    const adaTerdaftar = anak.ekskul.some(
+                      (ekskul: any) => ekskul.is_registered
+                    );
 
                     return (
                       <div key={`${anak.siswa}-${idx}`} className="mb-10">
@@ -117,7 +133,7 @@ const EkstraKurikuler = () => {
                                 {!adaTerdaftar && !ekskul.is_registered && (
                                   <button
                                     onClick={() =>
-                                      siswa && handleDaftar(ekskul.id, siswa.id)
+                                      siswa && handleDaftar(ekskul, siswa)
                                     }
                                     disabled={isLoadingDaftar}
                                     className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-10 py-1 rounded-full transition disabled:bg-gray-400"
@@ -168,6 +184,74 @@ const EkstraKurikuler = () => {
         stateConcition={errorDaftar}
         stateName="post"
       />
+
+      {showPopupKelas && (
+        <div className="fixed inset-0 bg-black/20 bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl shadow-lg p-6 w-[90%] sm:w-[500px]">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Daftar ke Ekskul:{" "}
+              <span className="text-blue-600">
+                {selectedEkskul?.nama_ekskul}
+              </span>
+            </h2>
+
+            {isLoadingKelas ? (
+              <p className="text-gray-500">Memuat kelas...</p>
+            ) : kelasData?.data?.length > 0 ? (
+              <div className="flex flex-col gap-3">
+                {kelasData.data.map((kelas: any) => (
+                  <label
+                    key={kelas.id}
+                    className={`border rounded-md p-3 cursor-pointer hover:bg-blue-50 ${
+                      selectedKelas?.id === kelas.id
+                        ? "border-blue-500 bg-blue-50"
+                        : ""
+                    }`}
+                    onClick={() => setSelectedKelas(kelas)}
+                  >
+                    <div className="font-semibold text-gray-700">
+                      {kelas.nama_kelas}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {kelas.tahun_ajaran} - {kelas.periode}
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      Status: {kelas.status}
+                    </div>
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">Tidak ada kelas untuk ekskul ini.</p>
+            )}
+
+            {/* Tombol Aksi */}
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setShowPopupKelas(false)}
+                className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
+              >
+                Batal
+              </button>
+              <button
+                disabled={!selectedKelas || isLoadingDaftar}
+                onClick={() => {
+                  if (selectedEkskul && selectedSiswa && selectedKelas) {
+                    onSubmit({
+                      kelas_ekskul_id: selectedKelas.id, // ✅ ini yang benar
+                      siswa_id: selectedSiswa.id,
+                    });
+                    setShowPopupKelas(false);
+                  }
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition disabled:bg-gray-400"
+              >
+                {isLoadingDaftar ? "Mendaftar..." : "Konfirmasi"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

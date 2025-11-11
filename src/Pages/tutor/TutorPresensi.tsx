@@ -56,6 +56,7 @@ const TutorPresensi = () => {
     setOpenEdit(false);
     stateHandle("showPopAbsen", false);
   };
+  const [formattedData, setFormattedData] = useState<any[]>([]);
 
   const renderPopup = () => (
     <>
@@ -122,8 +123,18 @@ const TutorPresensi = () => {
     </>
   );
   useEffect(() => {
+    if (data?.data) {
+      const temp = data?.data?.map((item: any) => ({
+        ...item,
+        nama_ekskul: item.kelas_ekskul.ekskul?.nama_ekskul || "-",
+      }));
+      setFormattedData(temp);
+    }
+  }, [data, errorUpdate, successUpdate, errorPost, errorDelete]);
+
+  useEffect(() => {
     if (searchQuery.trim() !== "") {
-      const hasilFilter = data?.data?.filter((item: any) =>
+      const hasilFilter = formattedData.filter((item: any) =>
         String(item.ekskul.nama_ekskul)
           .toLowerCase()
           .includes(searchQuery.toLowerCase())
@@ -131,9 +142,10 @@ const TutorPresensi = () => {
       setDataFiltered(hasilFilter);
       console.log(dataFiltered);
     } else {
-      setDataFiltered(data?.data);
+      setDataFiltered(formattedData);
     }
-  }, [data, searchQuery]);
+    console.log(formattedData);
+  }, [data, searchQuery, formattedData]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -219,7 +231,7 @@ const TutorPresensi = () => {
                     data={dataFiltered || []}
                     action={true}
                     keys={[
-                      "ekskul",
+                      "nama_ekskul",
                       "status",
                       "keterangan",
                       "tanggal",

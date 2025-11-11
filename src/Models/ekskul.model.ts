@@ -16,7 +16,7 @@ export const FormModel = z.object({
 export type FormModelType = z.infer<typeof FormModel>;
 
 export const KegiatanEkskulModel = z.object({
-  ekskul_id: z.number(),
+  kelas_ekskul_id: z.number(),
   nama_kegiatan: z.string(),
   kategori: z.enum(["lomba", "non-lomba", "lainnya"]),
   tingkat: z.enum(["sekolah", "kota", "provinsi", "nasional"]),

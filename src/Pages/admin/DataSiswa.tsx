@@ -10,9 +10,11 @@ import { useDeleteDataSiswaById } from "../../Hooks/Admin/useDelete";
 import { FiSearch } from "react-icons/fi";
 
 const DataSiswa = () => {
-  const [periode, setPeriode] = useState("");
+  const [kelas, setKelas] = useState("");
 
-  const { data, isLoading } = useGetDataSiswaAdmin();
+  const { data, isLoading } = useGetDataSiswaAdmin({
+    kelas: kelas || undefined,
+  });
   const { onDelete, isLoadingDelete, errorDelete, successDelete } =
     useDeleteDataSiswaById();
   const { state } = useGlobalContext();
@@ -26,7 +28,6 @@ const DataSiswa = () => {
 
   const [dataFiltered, setDataFiltered] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-
 
   const handleDeleteDataSiswa = (id: string) => {
     onDelete(id);
@@ -147,17 +148,30 @@ const DataSiswa = () => {
               </div>
 
               <div className="p-5 bg-white shadow-md rounded-md mb-10">
-                <div className="flex justify-between items-center py-3">
-                  <p>Daftar Data Siswa</p>
+                  <p>Daftar Data Siswa</p>  
+                <div className="flex justify-end items-center py-3 gap 2">
                   <button
                     onClick={() => {
                       setShowPopup(true);
                       setIsEdit(false);
                     }}
-                    className="px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400"
+                    className="mr-2 px-6 py-2 cursor-pointer flex items-center justify-between gap-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400"
                   >
                     Tambah
                   </button>
+                  <select
+                    value={kelas}
+                    onChange={(e) => setKelas(e.target.value)}
+                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
+                    <option value="">Kelas</option>
+                    <option value="1">Kelas 1</option>
+                    <option value="2">Kelas 2</option>
+                    <option value="3">Kelas 3</option>
+                    <option value="4">Kelas 4</option>
+                    <option value="5">Kelas 5</option>
+                    <option value="6">Kelas 6</option>
+                  </select>
                 </div>
 
                 {showPopup && (

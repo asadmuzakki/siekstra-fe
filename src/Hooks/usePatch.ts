@@ -9,7 +9,6 @@ import {
   type AbsenTutorModelType,
   type FormModelType,
   type KegiatanEkskulModelType,
-  type NilaiEkskulModelType,
 } from "../Models/ekskul.model";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -149,7 +148,7 @@ export const useUpdateAbsenTutor = (id: string) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationKey: ["update_absen_tutor", id],
-    mutationFn: (data: AbsenTutorModelType) =>
+    mutationFn: (data: any) =>
       updateAbsenTutor(id, data, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["get_absensi_tutor"] });
@@ -173,7 +172,7 @@ export const useUpdateAbsenTutor = (id: string) => {
 };
 const updateNilaiSiswaByTutor = async (
   id: string,
-  data: NilaiEkskulModelType,
+  data: any,
   token: string
 ) => {
   const response = await axiosInstance.patch(`/api/tutor/nilais/${id}`, data, {
@@ -189,7 +188,7 @@ export const useupdateNilaiSiswaByTutor = (id: string) => {
   const token = cookies.authToken;
   const { stateHandle } = useGlobalContext();
   const { register, handleSubmit, setValue, control } =
-    useForm<NilaiEkskulModelType>({
+    useForm<any>({
       resolver: zodResolver(NilaiEkskulModel),
     });
   const { fields } = useFieldArray({
@@ -199,7 +198,7 @@ export const useupdateNilaiSiswaByTutor = (id: string) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationKey: ["update_absen_tutor", id],
-    mutationFn: (data: NilaiEkskulModelType) =>
+    mutationFn: (data: any) =>
       updateNilaiSiswaByTutor(id, data, token),
     onSuccess: () => {
   

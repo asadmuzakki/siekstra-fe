@@ -39,6 +39,7 @@ import Nilai from "./Pages/WaliMurid/Nilai";
 import KegiatanSiswa from "./Pages/WaliMurid/Kegiatan";
 import DashboardEkskul from "./Pages/WaliMurid/DashboardEkskul";
 import DataKelasEkskul from "./Pages/admin/DataKelas";
+import RiwayatKelas from "./Pages/tutor/DataKelas";
 
 const App = () => {
   return (
@@ -138,7 +139,6 @@ const App = () => {
         }
       />
 
-
       <Route
         path="/riwayat-pendaftaran"
         element={
@@ -147,7 +147,7 @@ const App = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* admin */}
 
       {/* Orang Tua */}
@@ -218,7 +218,9 @@ const App = () => {
           </ProtectedRoute>
         }
       />
-      <Route path="/tutor-kegiatan/riwayat/:id" element={<RiwayatKegiatan />} />
+      <Route path="/tutor-kegiatan/riwayat-kelas/:id" element={<RiwayatKelas />} />
+      <Route path="/tutor-kegiatan/riwayat-kelas/:id/absen/:id" element={<RiwayatKegiatan />} />
+
       <Route
         path="/tutor-kegiatan/riwayat/kegiatan/:id"
         element={<KegiatanEkskul />}

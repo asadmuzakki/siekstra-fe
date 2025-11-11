@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axiosInstance";
 import { useCookies } from "react-cookie";
+// import Header from "../../Components/Header";
 
 const getDataAnak = async (token: string) => {
   const response = await axiosInstance.get("/api/wali_murid/anak-wali", {
@@ -19,14 +20,21 @@ export const useGetDataAnak = () => {
     queryFn: () => getDataAnak(token),
   });
   return {
-    data,isLoading,isError,error
-  }
+    data,
+    isLoading,
+    isError,
+    error,
+  };
 };
 
 // ==================== ABSENSI ====================
-const getAbsensiBySiswa = async (token: string, siswaId: string, tahun?: string) => {
-  const url = tahun 
-    ? `/api/wali_murid/absensiBySiswa/${siswaId}/${tahun}` 
+const getAbsensiBySiswa = async (
+  token: string,
+  siswaId: string,
+  tahun?: string
+) => {
+  const url = tahun
+    ? `/api/wali_murid/absensiBySiswa/${siswaId}/${tahun}`
     : `/api/wali_murid/absensiBySiswa/${siswaId}`;
 
   const response = await axiosInstance.get(url, {
@@ -47,9 +55,13 @@ export const useGetAbsensiBySiswa = (siswaId: string, tahun?: string) => {
 };
 
 // ==================== NILAI ====================
-const getNilaiBySiswa = async (token: string, siswaId: string, tahun?: string) => {
-  const url = tahun 
-    ? `/api/wali_murid/nilaiBySiswa/${siswaId}/${tahun}` 
+const getNilaiBySiswa = async (
+  token: string,
+  siswaId: string,
+  tahun?: string
+) => {
+  const url = tahun
+    ? `/api/wali_murid/nilaiBySiswa/${siswaId}/${tahun}`
     : `/api/wali_murid/nilaiBySiswa/${siswaId}`;
 
   const response = await axiosInstance.get(url, {
@@ -70,9 +82,13 @@ export const useGetNilaiBySiswa = (siswaId: string, tahun?: string) => {
 };
 
 // ==================== KEGIATAN ====================
-const getKegiatanBySiswa = async (token: string, siswaId: string, tahun?: string) => {
-  const url = tahun 
-    ? `/api/wali_murid/kegiatanBySiswa/${siswaId}/${tahun}` 
+const getKegiatanBySiswa = async (
+  token: string,
+  siswaId: string,
+  tahun?: string
+) => {
+  const url = tahun
+    ? `/api/wali_murid/kegiatanBySiswa/${siswaId}/${tahun}`
     : `/api/wali_murid/kegiatanBySiswa/${siswaId}`;
 
   const response = await axiosInstance.get(url, {
@@ -122,7 +138,6 @@ const getEkskul = async (token: string) => {
   return response.data; // langsung return body
 };
 
-
 export const useGetEkskul = () => {
   const [cookies] = useCookies(["authToken"]);
   const token = cookies.authToken;
@@ -134,4 +149,31 @@ export const useGetEkskul = () => {
   });
 };
 
+const getKelasByEkskulId = async (id: string, token: string): Promise<any> => {
+  const response = await axiosInstance.get(
+    `api/wali_murid/getkelasByEkskul/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
 
+export const useGetKelasByEkskulId = (id: string) => {
+  const [cookies] = useCookies(["authToken"]);
+  const token = cookies.authToken;
+  const { data, isLoading, isError, error } = useQuery<any>({
+    queryKey: ["get_kelas_ekskul_by_id"],
+    queryFn: () => getKelasByEkskulId(id, token),
+    enabled: !!id && !!token, // ✅ hanya jalan kalau id dan token ada
+    refetchOnWindowFocus: false, // optional: biar gak auto-refetch pas ganti tab
+  });
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+  };
+};
