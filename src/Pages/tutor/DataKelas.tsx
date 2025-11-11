@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams, useNavigate } from "react-router-dom";
 import * as Get from "../../Hooks/useGet";
 import Header from "../../Components/Header";

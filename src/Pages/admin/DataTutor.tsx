@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import GeneralTable from "../../Components/GeneralTable";
 import Header from "../../Components/Header";
@@ -24,7 +26,7 @@ const DataTutor = () => {
 
   const [dataFiltered, setDataFiltered] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const formattedData = data?.data.map((item: any) => ({
     ...item,
     created_at: new Date(item.created_at).toLocaleDateString("id-ID"),
